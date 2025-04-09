@@ -202,22 +202,22 @@
         <div class="plans">
             <div class="plan">
                 <h3>Entrenamiento Personal</h3>
-                <p>$50/mes</p>
+                <p>$60/mes</p>
                 <p>Plan de entrenamiento personalizado, seguimiento semanal y ajustes según progreso.</p>
             </div>
             <div class="plan">
                 <h3>Nutrición</h3>
-                <p>$40/mes</p>
+                <p>$50/mes</p>
                 <p>Plan nutricional personalizado, estrategias de alimentación consciente y seguimiento quincenal.</p>
             </div>
             <div class="plan">
                 <h3>Psicología y Motivación</h3>
-                <p>$35/mes</p>
+                <p>$50/mes</p>
                 <p>Sesiones de coaching motivacional, ejercicios para superar creencias limitantes y seguimiento quincenal.</p>
             </div>
             <div class="plan">
                 <h3>PsicoFitness Completo</h3>
-                <p>$90/mes</p>
+                <p>$120/mes</p>
                 <p>Entrenamiento, nutrición y psicología, seguimiento semanal y acceso prioritario a consultas.</p>
             </div>
         </div>
@@ -260,6 +260,35 @@
                 <div class="form-group">
                     <label for="altura">Altura (cm):</label>
                     <input type="number" id="altura" name="altura" required>
+                </div>
+                <div class="form-group">
+                    <label for="grasa_corporal">Porcentaje de Grasa Corporal (% - Opcional):</label>
+                    <input type="number" id="grasa_corporal" name="grasa_corporal" step="0.1">
+                    <p style="font-size: 0.9em; color: #555;">Si no lo sabes, puedes medirlo con una báscula de bioimpedancia o en un gimnasio.</p>
+                </div>
+                <div class="form-group">
+                    <label for="medidas">Medidas Corporales (cm - Opcional):</label>
+                    <p style="font-size: 0.9em; color: #555;">Ingresa tus medidas en centímetros (puedes usar una cinta métrica).</p>
+                    <div style="margin-bottom: 10px;">
+                        <label for="medida_cintura" style="font-weight: normal;">Cintura:</label>
+                        <input type="number" id="medida_cintura" name="medida_cintura" step="0.1" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="medida_cadera" style="font-weight: normal;">Cadera:</label>
+                        <input type="number" id="medida_cadera" name="medida_cadera" step="0.1" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="medida_pecho" style="font-weight: normal;">Pecho:</label>
+                        <input type="number" id="medida_pecho" name="medida_pecho" step="0.1" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="medida_brazo" style="font-weight: normal;">Brazo (bíceps relajado):</label>
+                        <input type="number" id="medida_brazo" name="medida_brazo" step="0.1" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label for="medida_muslo" style="font-weight: normal;">Muslo:</label>
+                        <input type="number" id="medida_muslo" name="medida_muslo" step="0.1" style="width: 100%;">
+                    </div>
                 </div>
 
                 <!-- Objetivos y Nivel de Actividad -->
@@ -401,7 +430,7 @@
     <section id="donaciones">
         <h2>Apóyame</h2>
         <p>Si te ha sido útil mi contenido o quieres apoyar mi trabajo, puedes hacer una donación. ¡Cada aporte cuenta y me ayuda a seguir creando recursos para ti!</p>
-        <p><a href= "https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Hacer una Donación</a></p>
+        <p><a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Hacer una Donación</a></p>
     </section>
 
     <!-- Sección Contacto -->
