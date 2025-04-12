@@ -3,71 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Básico: Meta Descripción -->
+    <meta name="description" content="Transforma tu vida con PsicoFitness. Michel Marrero Ponce te guía con psicología, nutrición y entrenamiento para un cambio real y sostenible. Descubre planes y descarga el libro.">
+    <!-- Favicon (Ejemplo - Debes crear y subir tu propio archivo favicon.ico) -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>PsicoFitness con Michel Marrero</title>
+    <!-- Google Fonts (Ejemplo: Montserrat para títulos, Open Sans para cuerpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            /* Cambio de Fuente: Usamos Open Sans como base, Montserrat para títulos */
+            font-family: 'Open Sans', Arial, sans-serif;
         }
 
         body {
             background-color: #f4f4f4;
             color: #333;
+            line-height: 1.6; /* Mejoramos legibilidad general */
         }
 
         /* Estilo del encabezado */
         header {
-            background-color: #1A3C34;
-            color: #F5E8C7;
+            background-color: #1A3C34; /* Verde Bosque Oscuro */
+            color: #F5E8C7; /* Crema Claro */
             text-align: center;
-            padding: 50px 20px;
+            padding: 60px 20px; /* Un poco más de padding */
         }
 
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            /* Usamos Montserrat para el título principal */
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8em; /* Ligeramente más grande */
+            margin-bottom: 15px;
+            font-weight: 700;
         }
 
         header p {
             font-size: 1.2em;
+            max-width: 800px; /* Limitamos ancho para mejor lectura */
+            margin: 0 auto;
         }
 
         /* Estilo de las secciones */
         section {
-            padding: 40px 20px;
+            padding: 50px 20px; /* Aumentamos padding vertical */
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 20px auto; /* Añadimos margen vertical entre secciones */
+            background-color: #fff; /* Fondo blanco para secciones para contraste */
+            border-radius: 8px; /* Bordes redondeados suaves */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra sutil */
         }
 
         section h2 {
+            /* Usamos Montserrat para títulos de sección */
+            font-family: 'Montserrat', sans-serif;
             color: #1A3C34;
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: 2.2em; /* Ligeramente más grande */
+            margin-bottom: 30px; /* Más espacio después del título */
             text-align: center;
+            font-weight: 700;
         }
 
-        section p {
-            line-height: 1.6;
+        section p, section ul li {
+            font-size: 1.1em; /* Un poco más grande para legibilidad */
             margin-bottom: 20px;
+            color: #555; /* Gris oscuro para texto, menos duro que #333 */
         }
 
         /* Estilo de los botones */
         .btn {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #F28C38;
+            padding: 12px 25px; /* Botones un poco más grandes */
+            background-color: #F28C38; /* Naranja Vibrante */
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
             margin: 10px 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Transición suave */
+            font-weight: bold; /* Texto del botón en negrita */
+            border: none; /* Quitamos borde por defecto */
+            text-align: center;
         }
 
         .btn:hover {
-            background-color: #D9742F;
+            background-color: #D9742F; /* Naranja más oscuro al pasar el ratón */
+            transform: translateY(-2px); /* Efecto sutil de elevación */
         }
 
         /* Estilo para los contenedores de botones */
@@ -75,34 +102,76 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 15px; /* Un poco más de espacio */
+            margin-top: 20px; /* Espacio antes de los botones */
         }
 
         /* Estilo de los planes de precios */
         .plans {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 30px; /* Más espacio entre planes */
             justify-content: center;
         }
 
         .plan {
-            background-color: #fff;
+            background-color: #ffffff; /* Blanco */
             border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
+            border-radius: 8px; /* Bordes más redondeados */
+            padding: 25px;
             width: 100%;
-            max-width: 300px;
+            max-width: 320px; /* Ligeramente más ancho */
             text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08); /* Sombra muy sutil */
+            transition: transform 0.3s ease; /* Transición para hover */
+        }
+        .plan:hover {
+             transform: scale(1.03); /* Efecto de zoom sutil al pasar el ratón */
         }
 
         .plan h3 {
+             /* Usamos Montserrat */
+            font-family: 'Montserrat', sans-serif;
             color: #1A3C34;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.5em; /* Título del plan más grande */
+        }
+         .plan .price { /* Estilo específico para el precio */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #F28C38; /* Precio en naranja */
+            margin-bottom: 15px;
         }
 
-        .plan p {
-            margin-bottom: 15px;
+        .plan p { /* Descripciones cortas */
+            margin-bottom: 10px;
+             color: #555;
+             font-size: 1em;
+        }
+
+        /* Mejora: Estilo para las viñetas dentro de los planes */
+        .plan ul {
+            list-style: none; /* Quitar puntos por defecto */
+            padding: 0;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: left; /* Alinear texto de viñetas a la izquierda */
+        }
+        .plan ul li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+             color: #555;
+             padding-left: 20px; /* Espacio para el icono */
+             position: relative; /* Para posicionar el icono */
+        }
+         /* Mejora: Icono de checkmark para viñetas */
+        .plan ul li::before {
+            content: '✓'; /* Símbolo de checkmark */
+            color: #1A3C34; /* Color verde oscuro */
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
 
         /* Estilo del footer */
@@ -110,19 +179,22 @@
             background-color: #1A3C34;
             color: #F5E8C7;
             text-align: center;
-            padding: 20px;
-            position: relative;
-            bottom: 0;
-            width: 100%;
+            padding: 30px 20px; /* Más padding */
+            margin-top: 40px; /* Separación del último contenido */
         }
 
         footer a {
             color: #F28C38;
             text-decoration: none;
+            margin: 0 10px; /* Espacio entre enlaces */
         }
 
         footer a:hover {
             text-decoration: underline;
+        }
+        footer p { /* Párrafo de copyright */
+             font-size: 0.9em;
+             margin-bottom: 10px;
         }
 
         /* Estilo para las imágenes */
@@ -136,16 +208,95 @@
 
         /* Estilo específico para la foto en "Acerca de Mí" */
         .profile-pic {
-            width: 150px;
-            height: 150px;
+            width: 180px; /* Un poco más grande */
+            height: 180px;
             object-fit: cover;
-            border: 2px solid #1A3C34;
+            border-radius: 50%; /* Hacerla redonda */
+            border: 4px solid #1A3C34; /* Borde más grueso */
+            margin-bottom: 30px; /* Más espacio debajo */
         }
 
         /* Estilo específico para la portada del libro */
         .book-cover {
-            width: 200px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 220px; /* Un poco más grande */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+             margin-bottom: 30px; /* Más espacio debajo */
+        }
+
+         /* Estilos para el formulario (Básico - Necesitará más detalle) */
+        #formulario-cliente { /* Estilo para la sección del formulario si la creas */
+             background-color: #e9e9e9; /* Fondo ligeramente diferente */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-weight: bold;
+            color: #1A3C34;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="number"],
+        form textarea,
+        form select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+             width: 100%; /* Ocupar ancho disponible */
+        }
+         form textarea {
+             min-height: 100px; /* Altura mínima para áreas de texto */
+         }
+
+        form .checkbox-container { /* Contenedor para checkbox y label */
+             display: flex;
+             align-items: center;
+             gap: 10px;
+             margin-top: 10px;
+         }
+         form .checkbox-container input[type="checkbox"] {
+             width: auto; /* Devolver tamaño normal al checkbox */
+         }
+         form .checkbox-container label {
+             font-weight: normal; /* Texto normal para label del checkbox */
+             color: #555;
+             font-size: 0.9em;
+         }
+
+        form button[type="submit"] { /* Estilo para el botón de envío */
+             align-self: center; /* Centrar el botón */
+             margin-top: 20px;
+         }
+
+         /* Nota de Privacidad */
+        .privacy-note {
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .privacy-note svg { /* Estilo para el icono de candado */
+             width: 1em;
+             height: 1em;
+             vertical-align: middle;
+             margin-right: 5px;
+             fill: #1A3C34; /* Color del icono */
+         }
+
+        /* Media Queries para Responsividad (Ejemplo Básico) */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2em; }
+            section h2 { font-size: 1.8em; }
+            .plans { flex-direction: column; align-items: center;}
+            .plan { max-width: 90%; } /* Ocupar más ancho en móviles */
+             .profile-pic { width: 120px; height: 120px; }
+             .book-cover { width: 180px; }
         }
     </style>
 </head>
@@ -153,95 +304,226 @@
     <!-- Encabezado -->
     <header>
         <h1>Transforma tu Vida con PsicoFitness</h1>
-        <p>Psicología, Nutrición y Entrenamiento para una Transformación Total - Por Michel Marrero Ponce</p>
+        <p>Psicología, Nutrición y Entrenamiento para una Transformación Total<br>Por Michel Marrero Ponce</p>
     </header>
 
     <!-- Sección Introductoria -->
     <section id="intro">
-        <h2>¿Cansado de Dietas y Rutinas que No Funcionan? Transforma tu Vida con PsicoFitness</h2>
+        <h2>¿Cansado de Dietas y Rutinas que No Funcionan?</h2> <!-- Título más corto -->
         <p>En un mundo lleno de consejos contradictorios – "elimina los carbohidratos", "entrena hasta el agotamiento", "sigue esta dieta milagrosa" – es fácil sentirse perdido y frustrado. Quizás has intentado de todo para mejorar tu salud, pero los resultados no duran, y terminas sintiéndote peor que antes. No estás solo: millones de personas enfrentan la misma lucha, abrumadas por la desinformación y la presión de cumplir con estándares irreales.</p>
-        <p>Con PsicoFitness, basado en los principios de mi libro <em>La Mente Anabólica</em>, te ofrezco un camino diferente: una transformación integral que combina <strong>psicología</strong>, <strong>nutrición</strong> y <strong>entrenamiento</strong> para que logres un cambio real y sostenible. No se trata de restricciones ni de agotarte en el gimnasio, sino de construir una mentalidad fuerte, un cuerpo saludable y una vida equilibrada – todo mientras te unes a una comunidad que te apoya en cada paso.</p>
-        <p><strong>Imagina esto:</strong> superar tus creencias limitantes, disfrutar de una alimentación que nutre tu cuerpo y tu mente, y moverte de una manera que te haga sentir fuerte y lleno de energía. Con PsicoFitness, no solo transformarás tu cuerpo, sino también tu forma de pensar y vivir. ¿Estás listo para empezar?</p>
-        <p><a href="#servicios" class="btn">Descubre Cómo Empezar</a></p>
+        <p>Con PsicoFitness, basado en los principios de mi libro <em>La Mente Anabólica</em>, te ofrezco un camino diferente: una transformación integral que combina <strong>psicología</strong>, <strong>nutrición</strong> y <strong>entrenamiento</strong> para que logres un cambio real y sostenible. No se trata de restricciones ni de agotarte en el gimnasio, sino de construir una mentalidad fuerte, un cuerpo saludable y una vida equilibrada.</p>
+        <p><strong>Imagina superar tus creencias limitantes,</strong> disfrutar de una alimentación que nutre tu cuerpo y tu mente, y moverte de una manera que te haga sentir fuerte y lleno de energía. Con PsicoFitness, no solo transformarás tu cuerpo, sino también tu forma de pensar y vivir. ¿Estás listo para empezar?</p>
+        <!-- Botón principal de la intro -->
+        <div style="text-align: center;"> <!-- Centramos el botón -->
+             <a href="#servicios" class="btn">Descubre Mis Planes</a>
+        </div>
     </section>
 
-    <!-- Sección Acerca de Mí -->
+    <!-- Sección Acerca de Mí (Ajustada) -->
     <section id="acerca">
-        <h2>Acerca de Mí</h2>
-        <img src="https://drive.google.com/uc?export=view&id=1SHrG1J67BbEyahSGxMsnnfisXU3pEmGs" alt="Michel Marrero Ponce" class="profile-pic">
-        <p>Soy Michel Marrero Ponce, Licenciado en Psicología, con formación en entrenamiento personal y nutrición. A través de mi enfoque PsicoFitness, busco ayudarte a transformar tu vida combinando mente, cuerpo y alimentación de manera práctica y sostenible. Mi libro <em>La Mente Anabólica</em> refleja mi pasión por guiar a otros hacia un cambio real, basado en principios simples y efectivos.</p>
+        <h2>Acerca de Mí: Michel Marrero Ponce</h2>
+        <img src="images/michel.jpg" alt="Michel Marrero Ponce" class="profile-pic">
+        <p>Hola, soy Michel Marrero, un apasionado del fitness, la nutrición y la psicología. Mi misión es ayudarte a transformar tu vida de una manera real y sostenible, combinando el poder de tu mente con un enfoque práctico para tu cuerpo. Estudié Psicología en la Universidad de Matanzas, Cuba (y revalidé mi título en la Universidad de la República, Uruguay), y complementé mi formación con diplomados en Entrenamiento Personal y Nutrición Deportiva.</p>
+        <p>Entre 2014 y 2018, cofundé GYM 9.8, donde trabajé como entrenador y nutricionista junto a mi gran amigo Roberto Ruiz (Were). Esos años fueron una etapa increíble de aprendizaje, donde desarrollé el método PsicoFitness que hoy comparto contigo. También he trabajado con jóvenes en Aldeas Infantiles SOS Uruguay, una experiencia que me enseñó mucho sobre resiliencia y motivación, y que me inspira a ofrecerte un enfoque humano y completo.</p>
+        <p>Con PsicoFitness, quiero guiarte para que logres tus objetivos –ya sea mejorar tu salud, tu cuerpo o tu mentalidad– de una forma que sea sostenible y que realmente disfrutes. ¿Te animas a dar el primer paso conmigo?</p>
+        <div style="text-align: center;">
+            <a href="#servicios" class="btn">Ver Cómo Puedo Ayudarte</a>
+        </div>
     </section>
 
-    <!-- Sección Servicios y Planes -->
+    <!-- Sección Servicios y Planes (Con Viñetas) -->
     <section id="servicios">
-        <h2>Elige el Plan Perfecto para Ti</h2>
-        <p>Después de realizar tu pago, serás redirigido a un formulario para proporcionarme más detalles sobre tus objetivos y necesidades.</p>
+        <h2>Elige el Plan PsicoFitness Perfecto para Ti</h2>
+        <p>Selecciona el plan que mejor se adapte a tus necesidades. Una vez completes el pago seguro, te guiaremos al formulario inicial para conocerte mejor y empezar a diseñar tu camino personalizado.</p>
         <div class="plans">
             <div class="plan">
                 <h3>Entrenamiento Personal</h3>
-                <p>US$60/mes</p>
-                <p>Plan de entrenamiento personalizado, seguimiento semanal y ajustes según progreso.</p>
+                <p class="price">US$60/mes</p>
+                <ul>
+                    <li>Rutina de entrenamiento 100% personalizada.</li>
+                    <li>Adaptada a tu nivel, objetivos y equipo disponible.</li>
+                    <li>Seguimiento semanal detallado (vía [Tu Método: Email, App, etc.]).</li>
+                    <li>Ajustes continuos basados en tu progreso y feedback.</li>
+                </ul>
                 <div class="payment-options">
-                    <a href="https://www.paypal.com/ncp/payment/NAUZPC5L32BME?return=https://psicofitness.netlify.app/formulario.html" class="btn" target="_blank">Pagar con PayPal</a>
-                    <a href="ENLACE_MERCADO_PAGO_ENTRENAMIENTO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                    <a href="https://www.paypal.com/ncp/payment/NAUZPC5L32BME" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="[TU_ENLACE_MERCADO_PAGO_ENTRENAMIENTO]" class="btn" target="_blank">Pagar con Mercado Pago</a> <!-- Reemplazar enlace -->
                 </div>
             </div>
             <div class="plan">
-                <h3>Nutrición</h3>
-                <p>US$50/mes</p>
-                <p>Plan nutricional personalizado, estrategias de alimentación consciente y seguimiento quincenal.</p>
+                <h3>Nutrición Inteligente</h3>
+                <p class="price">US$50/mes</p>
+                 <ul>
+                    <li>Plan nutricional flexible y adaptado a tus gustos.</li>
+                    <li>Estrategias de alimentación consciente y manejo de hábitos.</li>
+                    <li>Enfoque en sostenibilidad a largo plazo (no dietas restrictivas).</li>
+                    <li>Seguimiento y ajustes quincenales.</li>
+                </ul>
                 <div class="payment-options">
-                    <a href="https://www.paypal.com/ncp/payment/LFKQG4CAWERH6?return=https://psicofitness.netlify.app/formulario.html" class="btn" target="_blank">Pagar con PayPal</a>
-                    <a href="ENLACE_MERCADO_PAGO_NUTRICION" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                    <a href="https://www.paypal.com/ncp/payment/LFKQG4CAWERH6" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="[TU_ENLACE_MERCADO_PAGO_NUTRICION]" class="btn" target="_blank">Pagar con Mercado Pago</a> <!-- Reemplazar enlace -->
                 </div>
             </div>
             <div class="plan">
-                <h3>Psicología y Motivación</h3>
-                <p>US$50/mes</p>
-                <p>Sesiones de coaching motivacional, ejercicios para superar creencias limitantes y seguimiento quincenal.</p>
+                <h3>Coaching Psicológico y Motivacional</h3>
+                <p class="price">US$50/mes</p>
+                 <ul>
+                    <li>Sesiones enfocadas en mentalidad y motivación.</li>
+                    <li>Herramientas para superar creencias limitantes.</li>
+                    <li>Estrategias para construir disciplina y resiliencia.</li>
+                    <li>Seguimiento y apoyo quincenal.</li>
+                </ul>
                 <div class="payment-options">
-                    <a href="https://www.paypal.com/ncp/payment/36YLEXPSEHZVS?return=https://psicofitness.netlify.app/formulario.html" class="btn" target="_blank">Pagar con PayPal</a>
-                    <a href="ENLACE_MERCADO_PAGO_PSICOLOGIA" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                    <a href="https://www.paypal.com/ncp/payment/36YLEXPSEHZVS" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="[TU_ENLACE_MERCADO_PAGO_PSICOLOGIA]" class="btn" target="_blank">Pagar con Mercado Pago</a> <!-- Reemplazar enlace -->
                 </div>
             </div>
             <div class="plan">
-                <h3>PsicoFitness Completo</h3>
-                <p>US$120/mes</p>
-                <p>Entrenamiento, nutrición y psicología, seguimiento semanal y acceso prioritario a consultas.</p>
+                <h3>Plan PsicoFitness Completo</h3>
+                 <p class="price">US$120/mes</p>
+                 <ul>
+                    <li><strong>Todo incluido:</strong> Entrenamiento + Nutrición + Psicología.</li>
+                    <li>Enfoque integral para máximos resultados.</li>
+                    <li>Seguimiento semanal intensivo y personalizado.</li>
+                    <li>Acceso prioritario para consultas y dudas.</li>
+                </ul>
                 <div class="payment-options">
-                    <a href="https://www.paypal.com/ncp/payment/73U7B2MSQJ2DG?return=https://psicofitness.netlify.app/formulario.html" class="btn" target="_blank">Pagar con PayPal</a>
-                    <a href="ENLACE_MERCADO_PAGO_COMPLETO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                    <a href="https://www.paypal.com/ncp/payment/73U7B2MSQJ2DG" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="[TU_ENLACE_MERCADO_PAGO_COMPLETO]" class="btn" target="_blank">Pagar con Mercado Pago</a> <!-- Reemplazar enlace -->
                 </div>
             </div>
         </div>
     </section>
 
+     <!-- Sección Formulario Cliente (Ejemplo Integrado - Adaptar según tu implementación con EmailJS) -->
+     <section id="formulario-cliente">
+         <h2>Comienza Tu Transformación: Cuéntame Sobre Ti</h2>
+         <p>Completa este formulario inicial para que pueda entender mejor tus punto de partida y objetivos. ¡Es el primer paso hacia tu plan personalizado!</p>
+         <!--
+            IMPORTANTE: Este es un formulario HTML básico.
+            Necesitarás conectar esto con EmailJS (o tu servicio backend)
+            para que realmente envíe la información a tu correo.
+            Consulta la documentación de EmailJS para la configuración específica
+            (añadir IDs de servicio, plantilla y usuario, y el script JS).
+         -->
+         <form id="contact-form"> <!-- Añadir ID para el script de EmailJS -->
+             <input type="hidden" name="contact_number"> <!-- Campo oculto a menudo usado por EmailJS -->
+
+             <label for="user_name">Nombre Completo:</label>
+             <input type="text" id="user_name" name="user_name" required>
+
+             <label for="user_email">Email de Contacto:</label>
+             <input type="email" id="user_email" name="user_email" required>
+
+             <label for="age">Edad:</label>
+             <input type="number" id="age" name="age">
+
+             <label for="current_weight">Peso Actual (kg):</label>
+             <input type="number" id="current_weight" name="current_weight" step="0.1">
+
+             <label for="height">Altura (cm):</label>
+             <input type="number" id="height" name="height">
+
+             <label for="main_goal">Objetivo Principal:</label>
+             <textarea id="main_goal" name="main_goal" rows="3" required placeholder="Describe qué quieres lograr y por qué es importante para ti..."></textarea>
+
+              <label for="experience">Experiencia con Entrenamiento/Nutrición:</label>
+             <textarea id="experience" name="experience" rows="3" placeholder="Cuéntame brevemente tu historial..."></textarea>
+
+              <label for="limitations">Lesiones o Limitaciones Físicas:</label>
+             <textarea id="limitations" name="limitations" rows="2" placeholder="¿Algo importante que deba saber?"></textarea>
+
+              <label for="barriers">Mayores Barreras / Desafíos:</label>
+             <textarea id="barriers" name="barriers" rows="3" placeholder="¿Qué te dificulta ser constante? (Tiempo, motivación, antojos...)"></textarea>
+
+             <!-- Checkbox de Aceptación -->
+             <div class="checkbox-container">
+                 <input type="checkbox" id="privacy_policy" name="privacy_policy" required>
+                 <label for="privacy_policy">Acepto que mis datos sean utilizados para fines de asesoramiento personalizado según la <a href="/politica-privacidad.html" target="_blank">política de privacidad</a>.</label> <!-- Enlazar a tu política -->
+             </div>
+
+             <button type="submit" class="btn">Enviar Información para Mi Plan</button>
+         </form>
+         <!-- Nota de Privacidad -->
+          <p class="privacy-note">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"/></svg>
+             Tus datos están seguros. Solo serán utilizados para crear tu plan personalizado y nunca serán compartidos con terceros.
+         </p>
+     </section>
+
     <!-- Sección Acceso al Libro -->
     <section id="libro">
-        <h2>Descarga Mi Libro</h2>
-        <img src="https://drive.google.com/uc?export=view&id=1XdoU2ucREszMGx4kzMxBGRU9Ikgd_dK-" alt="Portada de La Mente Anabólica" class="book-cover">
-        <p>Descarga <em>La Mente Anabólica: Psicología, Nutrición y Entrenamiento para una Transformación Total</em> y comienza tu viaje hacia un cambio sostenible.</p>
-        <p><a href="https://a.co/d/365VV6v" class="btn" target="_blank">Descargar el Libro</a></p>
+        <h2>Mi Libro: La Mente Anabólica</h2>
+        <img src="images/la-mente-anabolica.jpg" alt="Portada de La Mente Anabólica" class="book-cover">
+        <p>Profundiza en el enfoque PsicoFitness. Descarga <em>La Mente Anabólica: Psicología, Nutrición y Entrenamiento para una Transformación Total</em> y comienza hoy mismo tu viaje hacia un cambio real y sostenible.</p>
+         <div style="text-align: center;">
+            <a href="https://a.co/d/365VV6v" class="btn" target="_blank">Ver el Libro en Amazon</a>
+         </div>
     </section>
 
     <!-- Sección Donaciones -->
     <section id="donaciones">
-        <h2>Apóyame</h2>
-        <p>Si te ha sido útil mi contenido o quieres apoyar mi trabajo, puedes hacer una donación. ¡Cada aporte cuenta y me ayuda a seguir creando recursos para ti!</p>
-        <p><a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Hacer una Donación</a></p>
+        <h2>¿Te Gusta Mi Trabajo? Apóyame</h2>
+        <p>Si encuentras valor en el contenido que comparto o simplemente quieres apoyar mi misión de ayudar a otros a transformar sus vidas, puedes considerar hacer una donación. ¡Cada aporte, por pequeño que sea, es muy apreciado y me ayuda a seguir creando!</p>
+        <div style="text-align: center;">
+            <a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Hacer una Donación vía PayPal</a>
+        </div>
     </section>
 
     <!-- Sección Contacto -->
     <section id="contacto">
-        <h2>Contacto</h2>
-        <p>Si tienes alguna pregunta o necesitas más información, contáctame directamente:</p>
-        <p>Email: michelmarreroponce88@gmail.com</p>
-        <p>WhatsApp: +598096403943</p>
+        <h2>¿Preguntas? Hablemos</h2>
+        <p>Si tienes alguna duda sobre los planes, el libro, o simplemente quieres saludar, no dudes en contactarme:</p>
+        <p><strong>Email:</strong> michelmarreroponce88@gmail.com</p>
+        <p><strong>WhatsApp:</strong> +598 096 403 943</p>
+        <!-- Añadir enlaces a Redes Sociales si los tienes -->
+        <!-- <p>Sígueme en: <a href="URL_TIKTOK">TikTok</a> | <a href="URL_INSTAGRAM">Instagram</a></p> -->
     </section>
 
     <!-- Footer -->
     <footer>
         <p>© 2025 Michel Marrero Ponce - PsicoFitness. Todos los derechos reservados.</p>
+        <!-- Enlace a Política de Privacidad -->
+        <p><a href="/politica-privacidad.html">Política de Privacidad</a></p>
     </footer>
+
+     <!-- Script para EmailJS (Ejemplo Básico - Necesitarás tus IDs reales) -->
+     <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+     </script>
+     <script type="text/javascript">
+        (function(){
+           // Reemplaza con tus IDs de EmailJS
+           emailjs.init({
+             publicKey: "TU_PUBLIC_KEY",
+           });
+        })();
+
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+           event.preventDefault();
+
+           const submitButton = this.querySelector('button[type="submit"]');
+           submitButton.disabled = true; // Deshabilitar botón
+           submitButton.innerText = 'Enviando...'; // Cambiar texto
+
+           // Reemplaza con tus IDs de servicio y plantilla
+           const serviceID = 'TU_SERVICE_ID';
+           const templateID = 'TU_TEMPLATE_ID';
+
+           emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+               // Mensaje de confirmación personalizado
+               alert('¡Formulario enviado con éxito! Gracias por completar el formulario. Estoy revisando tu información y te responderé personalmente en las próximas 24-48 horas para comenzar tu transformación con PsicoFitness.\n\nSi tienes dudas urgentes, escríbeme a michelmarreroponce88@gmail.com o por WhatsApp al +598 096 403 943.');
+               document.getElementById('contact-form').reset(); // Limpiar formulario
+               submitButton.disabled = false; // Habilitar botón
+               submitButton.innerText = 'Enviar Información para Mi Plan'; // Restaurar texto
+            }, (err) => {
+               alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo o contáctame directamente.\nError: ' + JSON.stringify(err));
+               submitButton.disabled = false; // Habilitar botón
+               submitButton.innerText = 'Enviar Información para Mi Plan'; // Restaurar texto
+            });
+        });
+     </script>
+
 </body>
 </html>
