@@ -11,43 +11,36 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-
         body {
             background-color: #f4f4f4;
             color: #333;
         }
-
         header {
             background-color: #1A3C34;
             color: #F5E8C7;
             text-align: center;
             padding: 50px 20px;
         }
-
         header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
         }
-
         section {
             padding: 40px 20px;
             max-width: 1000px;
             margin: 0 auto;
         }
-
         section h2 {
             color: #1A3C34;
             font-size: 2em;
             margin-bottom: 20px;
             text-align: center;
         }
-
         section p {
             line-height: 1.6;
             margin-bottom: 20px;
             text-align: center;
         }
-
         form {
             display: flex;
             flex-direction: column;
@@ -55,11 +48,9 @@
             max-width: 500px;
             margin: 0 auto;
         }
-
         form label {
             font-weight: bold;
         }
-
         form input,
         form textarea {
             padding: 10px;
@@ -67,12 +58,10 @@
             border-radius: 5px;
             font-size: 1em;
         }
-
         form textarea {
             resize: vertical;
             min-height: 100px;
         }
-
         form button {
             padding: 10px;
             background-color: #F28C38;
@@ -82,11 +71,9 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         form button:hover {
             background-color: #D9742F;
         }
-
         footer {
             background-color: #1A3C34;
             color: #F5E8C7;
@@ -96,14 +83,16 @@
             bottom: 0;
             width: 100%;
         }
-
         footer a {
             color: #F28C38;
             text-decoration: none;
         }
-
         footer a:hover {
             text-decoration: underline;
+        }
+        #form-message {
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -111,12 +100,10 @@
     <header>
         <h1>Formulario de PsicoFitness</h1>
     </header>
-
     <section>
         <h2>Completa tus Datos</h2>
         <p>Gracias por tu pago. Por favor, completa el siguiente formulario para que podamos personalizar tu plan de PsicoFitness.</p>
-        <form method="POST" data-netlify="true" action="/formulario.html">
-            <input type="hidden" name="form-name" value="contacto">
+        <form id="contact-form">
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required placeholder="Tu nombre">
             <label for="email">Email:</label>
@@ -125,11 +112,30 @@
             <textarea id="message" name="message" required placeholder="Cuéntame más sobre tus objetivos y necesidades"></textarea>
             <button type="submit">Enviar Mensaje</button>
         </form>
+        <div id="form-message"></div>
     </section>
-
     <footer>
         <p>© 2025 Michel Marrero Ponce - PsicoFitness. Todos los derechos reservados.</p>
         <p><a href="index.html">Volver a la página principal</a></p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("cjSRI6rXOegC3LelU"); // User ID
+        })();
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            emailjs.send("service_y8jif9f", "d9sb6lr", { // Service ID y Template ID
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            }).then(function() {
+                document.getElementById('form-message').textContent = '¡Mensaje enviado con éxito!';
+                document.getElementById('contact-form').reset();
+            }, function(error) {
+                document.getElementById('form-message').textContent = 'Error al enviar el mensaje: ' + JSON.stringify(error);
+            });
+        });
+    </script>
 </body>
 </html>
