@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsicoFitness con Michel Marrero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Estilo del encabezado */
+        header {
+            background-color: #1A3C34;
+            color: #F5E8C7;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+        }
+
+        /* Estilo de las secciones */
+        section {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            color: #1A3C34;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        section p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo de los botones */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #F28C38;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #D9742F;
+        }
+
+        /* Estilo para los contenedores de botones */
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Estilo de los planes de precios */
+        .plans {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .plan {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .plan h3 {
+            color: #1A3C34;
+            margin-bottom: 10px;
+        }
+
+        .plan p {
+            margin-bottom: 15px;
+        }
+
+        /* Estilo del footer */
+        footer {
+            background-color: #1A3C34;
+            color: #F5E8C7;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #F28C38;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para las imágenes */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: 5px;
+        }
+
+        /* Estilo específico para la foto en "Acerca de Mí" */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 2px solid #1A3C34;
+        }
+
+        /* Estilo específico para la portada del libro */
+        .book-cover {
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header>
+        <h1>Transforma tu Vida con PsicoFitness</h1>
+        <p>Psicología, Nutrición y Entrenamiento para una Transformación Total - Por Michel Marrero Ponce</p>
+    </header>
+
+    <!-- Sección Introductoria -->
+    <section id="intro">
+        <h2>¿Cansado de Dietas y Rutinas que No Funcionan? Transforma tu Vida con PsicoFitness</h2>
+        <p>En un mundo lleno de consejos contradictorios – "elimina los carbohidratos", "entrena hasta el agotamiento", "sigue esta dieta milagrosa" – es fácil sentirse perdido y frustrado. Quizás has intentado de todo para mejorar tu salud, pero los resultados no duran, y terminas sintiéndote peor que antes. No estás solo: millones de personas enfrentan la misma lucha, abrumadas por la desinformación y la presión de cumplir con estándares irreales.</p>
+        <p>Con PsicoFitness, basado en los principios de mi libro <em>La Mente Anabólica</em>, te ofrezco un camino diferente: una transformación integral que combina <strong>psicología</strong>, <strong>nutrición</strong> y <strong>entrenamiento</strong> para que logres un cambio real y sostenible. No se trata de restricciones ni de agotarte en el gimnasio, sino de construir una mentalidad fuerte, un cuerpo saludable y una vida equilibrada – todo mientras te unes a una comunidad que te apoya en cada paso.</p>
+        <p><strong>Imagina esto:</strong> superar tus creencias limitantes, disfrutar de una alimentación que nutre tu cuerpo y tu mente, y moverte de una manera que te haga sentir fuerte y lleno de energía. Con PsicoFitness, no solo transformarás tu cuerpo, sino también tu forma de pensar y vivir. ¿Estás listo para empezar?</p>
+        <p><a href="#servicios" class="btn">Descubre Cómo Empezar</a></p>
+    </section>
+
+    <!-- Sección Acerca de Mí -->
+    <section id="acerca">
+        <h2>Acerca de Mí</h2>
+        <img src="https://michelmarreroponce.github.io/michel-marrero.jpg" alt="Michel Marrero Ponce" class="profile-pic">
+        <p>Soy Michel Marrero Ponce, Licenciado en Psicología, con formación en entrenamiento personal y nutrición. A través de mi enfoque PsicoFitness, busco ayudarte a transformar tu vida combinando mente, cuerpo y alimentación de manera práctica y sostenible. Mi libro <em>La Mente Anabólica</em> refleja mi pasión por guiar a otros hacia un cambio real, basado en principios simples y efectivos.</p>
+    </section>
+
+    <!-- Sección Servicios y Planes -->
+    <section id="servicios">
+        <h2>Elige el Plan Perfecto para Ti</h2>
+        <div class="plans">
+            <div class="plan">
+                <h3>Entrenamiento Personal</h3>
+                <p>US$60/mes</p>
+                <p>Plan de entrenamiento personalizado, seguimiento semanal y ajustes según progreso.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/NAUZPC5L32BME" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_ENTRENAMIENTO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
+            </div>
+            <div class="plan">
+                <h3>Nutrición</h3>
+                <p>US$50/mes</p>
+                <p>Plan nutricional personalizado, estrategias de alimentación consciente y seguimiento quincenal.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/LFKQG4CAWERH6" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_NUTRICION" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
+            </div>
+            <div class="plan">
+                <h3>Psicología y Motivación</h3>
+                <p>US$50/mes</p>
+                <p>Sesiones de coaching motivacional, ejercicios para superar creencias limitantes y seguimiento quincenal.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/36YLEXPSEHZVS" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_PSICOLOGIA" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
+            </div>
+            <div class="plan">
+                <h3>PsicoFitness Completo</h3>
+                <p>US$120/mes</p>
+                <p>Entrenamiento, nutrición y psicología, seguimiento semanal y acceso prioritario a consultas.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/73U7B2MSQJ2DG" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_COMPLETO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Acceso al Libro -->
+    <section id="libro">
+        <h2>Descarga Mi Libro</h2>
+        <img src="https://michelmarreroponce.github.io/la-mente-anabolica.PNG" alt="Portada de La Mente Anabólica" class="book-cover">
+        <p>Descarga <em>La Mente Anabólica: Psicología, Nutrición y Entrenamiento para una Transformación Total</em> y comienza tu viaje hacia un cambio sostenible.</p>
+        <p><a href="https://a.co/d/365VV6v" class="btn" target="_blank">Descargar el Libro</a></p>
+    </section>
+
+    <!-- Sección Donaciones -->
+    <section id="donaciones">
+        <h2>Apóyame</h2>
+        <p>Si te ha sido útil mi contenido o quieres apoyar mi trabajo, puedes hacer una donación. ¡Cada aporte cuenta y me ayuda a seguir creando recursos para ti!</p>
+        <p><a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Hacer una Donación</a></p>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto">
+        <h2>Contacto</h2>
+        <p>Email: michelmarreroponce88@gmail.com</p>
+        <p>WhatsApp: +598096403943</p>
+        <p>Contáctame para más información o para comenzar tu transformación con PsicoFitness.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Michel Marrero Ponce - PsicoFitness. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
