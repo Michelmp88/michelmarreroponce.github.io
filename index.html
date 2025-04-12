@@ -61,13 +61,21 @@
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
-            margin: 10px 0;
+            margin: 10px 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
         .btn:hover {
             background-color: #D9742F;
+        }
+
+        /* Estilo para los contenedores de botones */
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
         /* Estilo de los planes de precios */
@@ -97,70 +105,6 @@
             margin-bottom: 15px;
         }
 
-        /* Estilo del modal (formulario emergente) */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 10px;
-            position: relative;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-        }
-
-        /* Estilo del formulario */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
         /* Estilo del footer */
         footer {
             background-color: #1A3C34;
@@ -180,6 +124,29 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        /* Estilo para las imágenes */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: 5px;
+        }
+
+        /* Estilo específico para la foto en "Acerca de Mí" */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 2px solid #1A3C34;
+        }
+
+        /* Estilo específico para la portada del libro */
+        .book-cover {
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -187,12 +154,21 @@
     <header>
         <h1>Transforma tu Vida con PsicoFitness</h1>
         <p>Psicología, Nutrición y Entrenamiento para una Transformación Total - Por Michel Marrero Ponce</p>
-        <button class="btn" onclick="openModal()">Llena el Formulario</button>
     </header>
+
+    <!-- Sección Introductoria -->
+    <section id="intro">
+        <h2>¿Cansado de Dietas y Rutinas que No Funcionan? Transforma tu Vida con PsicoFitness</h2>
+        <p>En un mundo lleno de consejos contradictorios – "elimina los carbohidratos", "entrena hasta el agotamiento", "sigue esta dieta milagrosa" – es fácil sentirse perdido y frustrado. Quizás has intentado de todo para mejorar tu salud, pero los resultados no duran, y terminas sintiéndote peor que antes. No estás solo: millones de personas enfrentan la misma lucha, abrumadas por la desinformación y la presión de cumplir con estándares irreales.</p>
+        <p>Con PsicoFitness, basado en los principios de mi libro <em>La Mente Anabólica</em>, te ofrezco un camino diferente: una transformación integral que combina <strong>psicología</strong>, <strong>nutrición</strong> y <strong>entrenamiento</strong> para que logres un cambio real y sostenible. No se trata de restricciones ni de agotarte en el gimnasio, sino de construir una mentalidad fuerte, un cuerpo saludable y una vida equilibrada – todo mientras te unes a una comunidad que te apoya en cada paso.</p>
+        <p><strong>Imagina esto:</strong> superar tus creencias limitantes, disfrutar de una alimentación que nutre tu cuerpo y tu mente, y moverte de una manera que te haga sentir fuerte y lleno de energía. Con PsicoFitness, no solo transformarás tu cuerpo, sino también tu forma de pensar y vivir. ¿Estás listo para empezar?</p>
+        <p><a href="#servicios" class="btn">Descubre Cómo Empezar</a></p>
+    </section>
 
     <!-- Sección Acerca de Mí -->
     <section id="acerca">
         <h2>Acerca de Mí</h2>
+        <img src="https://michelmarreroponce.github.io/michel-marrero.jpg" alt="Michel Marrero Ponce" class="profile-pic">
         <p>Soy Michel Marrero Ponce, Licenciado en Psicología, con formación en entrenamiento personal y nutrición. A través de mi enfoque PsicoFitness, busco ayudarte a transformar tu vida combinando mente, cuerpo y alimentación de manera práctica y sostenible. Mi libro <em>La Mente Anabólica</em> refleja mi pasión por guiar a otros hacia un cambio real, basado en principios simples y efectivos.</p>
     </section>
 
@@ -202,228 +178,49 @@
         <div class="plans">
             <div class="plan">
                 <h3>Entrenamiento Personal</h3>
-                <p>$60/mes</p>
+                <p>US$60/mes</p>
                 <p>Plan de entrenamiento personalizado, seguimiento semanal y ajustes según progreso.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/NAUZPC5L32BME" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_ENTRENAMIENTO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
             </div>
             <div class="plan">
                 <h3>Nutrición</h3>
-                <p>$50/mes</p>
+                <p>US$50/mes</p>
                 <p>Plan nutricional personalizado, estrategias de alimentación consciente y seguimiento quincenal.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/LFKQG4CAWERH6" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_NUTRICION" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
             </div>
             <div class="plan">
                 <h3>Psicología y Motivación</h3>
-                <p>$50/mes</p>
+                <p>US$50/mes</p>
                 <p>Sesiones de coaching motivacional, ejercicios para superar creencias limitantes y seguimiento quincenal.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/36YLEXPSEHZVS" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_PSICOLOGIA" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
             </div>
             <div class="plan">
                 <h3>PsicoFitness Completo</h3>
-                <p>$120/mes</p>
+                <p>US$120/mes</p>
                 <p>Entrenamiento, nutrición y psicología, seguimiento semanal y acceso prioritario a consultas.</p>
+                <div class="payment-options">
+                    <a href="https://www.paypal.com/ncp/payment/73U7B2MSQJ2DG" class="btn" target="_blank">Pagar con PayPal</a>
+                    <a href="ENLACE_MERCADO_PAGO_COMPLETO" class="btn" target="_blank">Pagar con Mercado Pago</a>
+                </div>
             </div>
         </div>
-        <p style="text-align: center;">Para comenzar, llena el formulario y me pondré en contacto contigo para personalizar tu plan.</p>
     </section>
-
-    <!-- Sección Formulario (Modal) -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">×</span>
-            <h2>Formulario de Contacto</h2>
-            <p>Llena este formulario para que podamos crear un plan personalizado para ti. ¡Comencemos tu transformación hoy!</p>
-            <form id="contactForm" action="https://formspree.io/f/xyzelklq" method="POST">
-                <!-- Información Básica -->
-                <div class="form-group">
-                    <label for="nombre">Nombre Completo:</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="edad">Edad:</label>
-                    <input type="number" id="edad" name="edad" required>
-                </div>
-                <div class="form-group">
-                    <label for="genero">Género:</label>
-                    <select id="genero" name="genero" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="peso">Peso Actual (kg):</label>
-                    <input type="number" id="peso" name="peso" step="0.1" required>
-                </div>
-                <div class="form-group">
-                    <label for="altura">Altura (cm):</label>
-                    <input type="number" id="altura" name="altura" required>
-                </div>
-                <div class="form-group">
-                    <label for="grasa_corporal">Porcentaje de Grasa Corporal (% - Opcional):</label>
-                    <input type="number" id="grasa_corporal" name="grasa_corporal" step="0.1">
-                    <p style="font-size: 0.9em; color: #555;">Si no lo sabes, puedes medirlo con una báscula de bioimpedancia o en un gimnasio.</p>
-                </div>
-                <div class="form-group">
-                    <label for="medidas">Medidas Corporales (cm - Opcional):</label>
-                    <p style="font-size: 0.9em; color: #555;">Ingresa tus medidas en centímetros (puedes usar una cinta métrica).</p>
-                    <div style="margin-bottom: 10px;">
-                        <label for="medida_cintura" style="font-weight: normal;">Cintura:</label>
-                        <input type="number" id="medida_cintura" name="medida_cintura" step="0.1" style="width: 100%;">
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <label for="medida_cadera" style="font-weight: normal;">Cadera:</label>
-                        <input type="number" id="medida_cadera" name="medida_cadera" step="0.1" style="width: 100%;">
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <label for="medida_pecho" style="font-weight: normal;">Pecho:</label>
-                        <input type="number" id="medida_pecho" name="medida_pecho" step="0.1" style="width: 100%;">
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <label for="medida_brazo" style="font-weight: normal;">Brazo (bíceps relajado):</label>
-                        <input type="number" id="medida_brazo" name="medida_brazo" step="0.1" style="width: 100%;">
-                    </div>
-                    <div>
-                        <label for="medida_muslo" style="font-weight: normal;">Muslo:</label>
-                        <input type="number" id="medida_muslo" name="medida_muslo" step="0.1" style="width: 100%;">
-                    </div>
-                </div>
-
-                <!-- Objetivos y Nivel de Actividad -->
-                <div class="form-group">
-                    <label for="objetivo">Objetivo Principal:</label>
-                    <select id="objetivo" name="objetivo" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="perder_grasa">Perder grasa</option>
-                        <option value="ganar_musculo">Ganar músculo</option>
-                        <option value="mejorar_salud">Mejorar salud general</option>
-                        <option value="aumentar_energia">Aumentar energía/vitalidad</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="nivel_actividad">Nivel de Actividad Actual:</label>
-                    <select id="nivel_actividad" name="nivel_actividad" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="sedentario">Sedentario</option>
-                        <option value="ligera">Actividad ligera</option>
-                        <option value="2-3_dias">2-3 días de ejercicio/semana</option>
-                        <option value="4+_dias">4+ días de ejercicio/semana</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="experiencia">¿Tienes experiencia previa con planes de nutrición o entrenamiento?</label>
-                    <select id="experiencia" name="experiencia" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="experiencia_detalle">Si respondiste "Sí", explica tu experiencia:</label>
-                    <textarea id="experiencia_detalle" name="experiencia_detalle"></textarea>
-                </div>
-
-                <!-- Hábitos Alimenticios -->
-                <div class="form-group">
-                    <label for="comidas_dia">¿Cuántas comidas haces al día?</label>
-                    <select id="comidas_dia" name="comidas_dia" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5+">5 o más</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="restricciones">¿Tienes alguna restricción alimenticia?</label>
-                    <select id="restricciones" name="restricciones" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="ninguna">Ninguna</option>
-                        <option value="vegetariano">Vegetariano</option>
-                        <option value="vegano">Vegano</option>
-                        <option value="sin_gluten">Sin gluten</option>
-                        <option value="sin_lacteos">Sin lácteos</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="conciencia_alimenticia">¿Qué tan consciente eres de tu alimentación?</label>
-                    <select id="conciencia_alimenticia" name="conciencia_alimenticia" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="nada">Nada consciente</option>
-                        <option value="algo">Algo consciente</option>
-                        <option value="muy">Muy consciente</option>
-                    </select>
-                </div>
-
-                <!-- Entrenamiento y Salud -->
-                <div class="form-group">
-                    <label for="lugar_entrenamiento">¿Tienes acceso a un gimnasio o prefieres entrenar en casa?</label>
-                    <select id="lugar_entrenamiento" name="lugar_entrenamiento" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="gimnasio">Gimnasio</option>
-                        <option value="casa">Casa</option>
-                        <option value="ambos">Ambos</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="lesiones">¿Tienes alguna lesión o condición médica que deba considerar?</label>
-                    <select id="lesiones" name="lesiones" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="lesiones_detalle">Si respondiste "Sí", explica tu lesión o condición:</label>
-                    <textarea id="lesiones_detalle" name="lesiones_detalle"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="dias_entrenamiento">¿Cuántos días a la semana puedes entrenar?</label>
-                    <select id="dias_entrenamiento" name="dias_entrenamiento" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="1-2">1-2 días</option>
-                        <option value="3-4">3-4 días</option>
-                        <option value="5+">5 o más días</option>
-                    </select>
-                </div>
-
-                <!-- Motivación y Mentalidad -->
-                <div class="form-group">
-                    <label for="por_que">¿Cuál es tu "Por Qué" profundo para alcanzar tus metas?</label>
-                    <textarea id="por_que" name="por_que" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="desafios">¿Qué desafíos enfrentas para alcanzar tus metas?</label>
-                    <textarea id="desafios" name="desafios" required></textarea>
-                </div>
-
-                <!-- Plan de Interés -->
-                <div class="form-group">
-                    <label for="plan_interes">¿Qué plan te interesa?</label>
-                    <select id="plan_interes" name="plan_interes" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="entrenamiento">Entrenamiento Personal</option>
-                        <option value="nutricion">Nutrición</option>
-                        <option value="psicologia">Psicología y Motivación</option>
-                        <option value="completo">PsicoFitness Completo</option>
-                    </select>
-                </div>
-
-                <!-- Botón de Envío -->
-                <button type="submit" class="btn">Enviar Formulario</button>
-            </form>
-        </div>
-    </div>
 
     <!-- Sección Acceso al Libro -->
     <section id="libro">
         <h2>Descarga Mi Libro</h2>
+        <img src="https://michelmarreroponce.github.io/la-mente-anabolica.PNG" alt="Portada de La Mente Anabólica" class="book-cover">
         <p>Descarga <em>La Mente Anabólica: Psicología, Nutrición y Entrenamiento para una Transformación Total</em> y comienza tu viaje hacia un cambio sostenible.</p>
-        <p><a href="[ENLACE_DEL_LIBRO]" class="btn" target="_blank">Descargar el Libro</a></p>
+        <p><a href="https://a.co/d/365VV6v" class="btn" target="_blank">Descargar el Libro</a></p>
     </section>
 
     <!-- Sección Donaciones -->
@@ -438,35 +235,12 @@
         <h2>Contacto</h2>
         <p>Email: michelmarreroponce88@gmail.com</p>
         <p>WhatsApp: +598096403943</p>
-        <p>También puedes llenar el formulario para una consulta personalizada.</p>
+        <p>Contáctame para más información o para comenzar tu transformación con PsicoFitness.</p>
     </section>
 
     <!-- Footer -->
     <footer>
         <p>© 2025 Michel Marrero Ponce - PsicoFitness. Todos los derechos reservados.</p>
     </footer>
-
-    <!-- JavaScript para el Modal -->
-    <script>
-        // Obtener el modal
-        var modal = document.getElementById("myModal");
-
-        // Función para abrir el modal
-        function openModal() {
-            modal.style.display = "block";
-        }
-
-        // Función para cerrar el modal
-        function closeModal() {
-            modal.style.display = "none";
-        }
-
-        // Cerrar el modal si se hace clic fuera de él
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 </body>
 </html>
