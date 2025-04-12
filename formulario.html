@@ -36,6 +36,12 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        section h3 {
+            color: #1A3C34;
+            font-size: 1.5em;
+            margin: 20px 0 10px;
+            text-align: left;
+        }
         section p {
             line-height: 1.6;
             margin-bottom: 20px;
@@ -48,21 +54,38 @@
             max-width: 500px;
             margin: 0 auto;
         }
-        form label {
-            font-weight: bold;
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
-        form input,
-        form textarea {
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 1em;
         }
-        form textarea {
+        .form-group textarea {
             resize: vertical;
             min-height: 100px;
         }
-        form button {
+        .form-group p {
+            font-size: 1em;
+            color: #444;
+            margin-top: 5px;
+        }
+        .form-group .sub-label {
+            font-weight: normal;
+            display: inline-block;
+            width: 120px;
+        }
+        .form-group button {
             padding: 10px;
             background-color: #F28C38;
             color: #fff;
@@ -71,7 +94,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        form button:hover {
+        .form-group button:hover {
             background-color: #D9742F;
         }
         footer {
@@ -102,15 +125,185 @@
     </header>
     <section>
         <h2>Completa tus Datos</h2>
-        <p>Gracias por tu pago. Por favor, completa el siguiente formulario para que podamos personalizar tu plan de PsicoFitness.</p>
+        <p>¡Felicidades por dar el primer paso hacia tu transformación con PsicoFitness! Por favor, completa este formulario con tus datos para que podamos personalizar tu plan y ayudarte a alcanzar tus objetivos.</p>
         <form id="contact-form">
-            <label for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required placeholder="Tu nombre">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="Tu correo electrónico">
-            <label for="message">Mensaje:</label>
-            <textarea id="message" name="message" required placeholder="Cuéntame más sobre tus objetivos y necesidades"></textarea>
-            <button type="submit">Enviar Mensaje</button>
+            <h3>Información Personal</h3>
+            <div class="form-group">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" required>
+            </div>
+            <div class="form-group">
+                <label for="genero">Género:</label>
+                <select id="genero" name="genero" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="objetivo">¿Cuál es tu objetivo principal?</label>
+                <select id="objetivo" name="objetivo" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="perder_grasa">Perder grasa</option>
+                    <option value="ganar_musculo">Ganar músculo</option>
+                    <option value="mejorar_salud">Mejorar salud general</option>
+                    <option value="aumentar_resistencia">Aumentar resistencia</option>
+                    <option value="mejorar_mentalidad">Mejorar mentalidad y motivación</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="plan_interes">¿Qué plan compraste?</label>
+                <select id="plan_interes" name="plan_interes" required>
+                    <option value="" disabled selected>Selecciona tu plan</option>
+                    <option value="entrenamiento">Entrenamiento Personal</option>
+                    <option value="nutricion">Nutrición</option>
+                    <option value="psicologia">Psicología y Motivación</option>
+                    <option value="completo">PsicoFitness Completo</option>
+                </select>
+            </div>
+
+            <h3>Medidas Físicas</h3>
+            <div class="form-group">
+                <label for="peso">Peso Actual (kg):</label>
+                <input type="number" id="peso" name="peso" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="altura">Altura (cm):</label>
+                <input type="number" id="altura" name="altura" required>
+            </div>
+            <div class="form-group">
+                <label for="grasa_corporal">Porcentaje de Grasa Corporal (% - Opcional):</label>
+                <input type="number" id="grasa_corporal" name="grasa_corporal" step="0.1">
+                <p>Si no lo sabes, puedes medirlo con una báscula de bioimpedancia o en un gimnasio.</p>
+            </div>
+            <div class="form-group">
+                <label for="medidas">Medidas Corporales (cm - Opcional):</label>
+                <p>Ingresa tus medidas en centímetros (puedes usar una cinta métrica).</p>
+                <div style="margin-bottom: 10px;">
+                    <label for="medida_cintura" class="sub-label">Cintura:</label>
+                    <input type="number" id="medida_cintura" name="medida_cintura" step="0.1">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="medida_cadera" class="sub-label">Cadera:</label>
+                    <input type="number" id="medida_cadera" name="medida_cadera" step="0.1">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="medida_pecho" class="sub-label">Pecho:</label>
+                    <input type="number" id="medida_pecho" name="medida_pecho" step="0.1">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="medida_brazo" class="sub-label">Brazo (bíceps relajado):</label>
+                    <input type="number" id="medida_brazo" name="medida_brazo" step="0.1">
+                </div>
+                <div>
+                    <label for="medida_muslo" class="sub-label">Muslo:</label>
+                    <input type="number" id="medida_muslo" name="medida_muslo" step="0.1">
+                </div>
+            </div>
+
+            <h3>Entrenamiento</h3>
+            <div class="form-group">
+                <label for="nivel_actividad">¿Cuál es tu nivel de actividad actual?</label>
+                <select id="nivel_actividad" name="nivel_actividad" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="sedentario">Sedentario (poco o nada de ejercicio)</option>
+                    <option value="ligero">Ligero (caminar, actividad leve 1-3 días/semana)</option>
+                    <option value="moderado">Moderado (ejercicio 3-5 días/semana)</option>
+                    <option value="activo">Activo (entrenamiento intenso 5-7 días/semana)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="experiencia">¿Tienes experiencia previa con entrenamiento?</label>
+                <select id="experiencia" name="experiencia" required onchange="toggleExperienciaDetalle()">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group" id="experiencia_detalle_group" style="display: none;">
+                <label for="experiencia_detalle">Describe tu experiencia previa (tipo de entrenamiento, duración, etc.):</label>
+                <textarea id="experiencia_detalle" name="experiencia_detalle"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="lugar_entrenamiento">¿Dónde prefieres entrenar?</label>
+                <select id="lugar_entrenamiento" name="lugar_entrenamiento" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="gimnasio">Gimnasio</option>
+                    <option value="casa">En casa</option>
+                    <option value="exterior">Al aire libre</option>
+                    <option value="mixto">Combinación de lugares</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lesiones">¿Tienes alguna lesión o condición médica?</label>
+                <select id="lesiones" name="lesiones" required onchange="toggleLesionesDetalle()">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group" id="lesiones_detalle_group" style="display: none;">
+                <label for="lesiones_detalle">Describe tu lesión o condición (ubicación, gravedad, etc.):</label>
+                <textarea id="lesiones_detalle" name="lesiones_detalle"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="dias_entrenamiento">¿Cuántos días a la semana puedes entrenar?</label>
+                <select id="dias_entrenamiento" name="dias_entrenamiento" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="1-2">1-2 días</option>
+                    <option value="3-4">3-4 días</option>
+                    <option value="5-6">5-6 días</option>
+                    <option value="7">7 días</option>
+                </select>
+            </div>
+
+            <h3>Hábitos Nutricionales</h3>
+            <div class="form-group">
+                <label for="comidas_dia">¿Cuántas comidas haces al día (incluyendo snacks)?</label>
+                <select id="comidas_dia" name="comidas_dia" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="1-2">1-2 comidas</option>
+                    <option value="3">3 comidas</option>
+                    <option value="4">4 comidas</option>
+                    <option value="5_o_mas">5 o más comidas</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="restricciones">¿Tienes alguna restricción alimenticia o de entrenamiento? (Ejemplo: alergias, dieta vegetariana, etc.)</label>
+                <textarea id="restricciones" name="restricciones"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="conciencia_alimenticia">¿Qué tan consciente eres de tu alimentación?</label>
+                <select id="conciencia_alimenticia" name="conciencia_alimenticia" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="nada">No presto atención a lo que como</option>
+                    <option value="basica">Tengo una idea básica (leo etiquetas, evito ciertos alimentos)</option>
+                    <option value="avanzada">Soy consciente y planifico mis comidas</option>
+                </select>
+            </div>
+
+            <h3>Aspectos Psicológicos</h3>
+            <div class="form-group">
+                <label for="que_te_motiva">¿Qué te motiva a empezar este cambio?</label>
+                <textarea id="que_te_motiva" name="que_te_motiva" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="por_que">¿Por qué es importante para ti alcanzar este objetivo?</label>
+                <textarea id="por_que" name="por_que" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Enviar Mensaje</button>
+            </div>
         </form>
         <div id="form-message"></div>
     </section>
@@ -123,15 +316,52 @@
         (function(){
             emailjs.init("cjSRI6rXOegC3LelU"); // User ID
         })();
+        function toggleExperienciaDetalle() {
+            const experiencia = document.getElementById('experiencia').value;
+            const detalleGroup = document.getElementById('experiencia_detalle_group');
+            detalleGroup.style.display = experiencia === 'si' ? 'block' : 'none';
+            document.getElementById('experiencia_detalle').required = experiencia === 'si';
+        }
+        function toggleLesionesDetalle() {
+            const lesiones = document.getElementById('lesiones').value;
+            const detalleGroup = document.getElementById('lesiones_detalle_group');
+            detalleGroup.style.display = lesiones === 'si' ? 'block' : 'none';
+            document.getElementById('lesiones_detalle').required = lesiones === 'si';
+        }
         document.getElementById('contact-form').addEventListener('submit', function(event) {
             event.preventDefault();
             emailjs.send("service_y8jif9f", "d9sb6lr", { // Service ID y Template ID
-                name: document.getElementById('name').value,
+                nombre: document.getElementById('nombre').value,
                 email: document.getElementById('email').value,
-                message: document.getElementById('message').value
+                edad: document.getElementById('edad').value,
+                genero: document.getElementById('genero').value,
+                objetivo: document.getElementById('objetivo').value,
+                plan_interes: document.getElementById('plan_interes').value,
+                peso: document.getElementById('peso').value,
+                altura: document.getElementById('altura').value,
+                grasa_corporal: document.getElementById('grasa_corporal').value || "No proporcionado",
+                medida_cintura: document.getElementById('medida_cintura').value || "No proporcionado",
+                medida_cadera: document.getElementById('medida_cadera').value || "No proporcionado",
+                medida_pecho: document.getElementById('medida_pecho').value || "No proporcionado",
+                medida_brazo: document.getElementById('medida_brazo').value || "No proporcionado",
+                medida_muslo: document.getElementById('medida_muslo').value || "No proporcionado",
+                nivel_actividad: document.getElementById('nivel_actividad').value,
+                experiencia: document.getElementById('experiencia').value,
+                experiencia_detalle: document.getElementById('experiencia_detalle').value || "No proporcionado",
+                lugar_entrenamiento: document.getElementById('lugar_entrenamiento').value,
+                lesiones: document.getElementById('lesiones').value,
+                lesiones_detalle: document.getElementById('lesiones_detalle').value || "No proporcionado",
+                dias_entrenamiento: document.getElementById('dias_entrenamiento').value,
+                comidas_dia: document.getElementById('comidas_dia').value,
+                restricciones: document.getElementById('restricciones').value || "No proporcionado",
+                conciencia_alimenticia: document.getElementById('conciencia_alimenticia').value,
+                que_te_motiva: document.getElementById('que_te_motiva').value,
+                por_que: document.getElementById('por_que').value
             }).then(function() {
                 document.getElementById('form-message').textContent = '¡Mensaje enviado con éxito!';
                 document.getElementById('contact-form').reset();
+                toggleExperienciaDetalle();
+                toggleLesionesDetalle();
             }, function(error) {
                 document.getElementById('form-message').textContent = 'Error al enviar el mensaje: ' + JSON.stringify(error);
             });
