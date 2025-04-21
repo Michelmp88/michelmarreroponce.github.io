@@ -3,15 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO Básico: Meta Descripción -->
-    <meta name="description" content="Transforma tu vida con PsicoFitness. Michel Marrero y Roberto Ruiz te guían con psicología, nutrición y entrenamiento para un cambio real y sostenible.">
-    <!-- Favicon (Ejemplo - Debes crear y subir tu propio archivo favicon.ico y nombrarlo así) -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- SEO Mejorado -->
     <title>PsicoFitness - Michel Marrero & Roberto Ruiz</title>
+    <meta name="description" content="Transforma tu vida con PsicoFitness. Michel Marrero y Roberto Ruiz te guían con psicología, nutrición y entrenamiento para un cambio real y sostenible.">
+    <meta name="keywords" content="psicofitness, psicología fitness, nutrición consciente, entrenamiento mental, transformación integral, michel marrero, la mente anabólica">
+    <meta name="author" content="Michel Marrero y Roberto Ruiz">
+    
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="PsicoFitness - Transformación Integral Mente y Cuerpo">
+    <meta property="og:description" content="Transforma tu vida con PsicoFitness. Michel Marrero y Roberto Ruiz te guían con psicología, nutrición y entrenamiento para un cambio real y sostenible.">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/la-mente-anabolica.png?alt=media&token=64a66eba-6d64-49c6-8665-c2096e9a250f">
+    <meta property="og:url" content="https://psicofitness-menteanabolica.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    
     <!-- Google Fonts: Montserrat para títulos, Open Sans para cuerpo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* --- Reset y Estilos Base --- */
@@ -24,6 +40,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* Para navegación con menú fijo */
         }
 
         body {
@@ -34,6 +51,96 @@
             position: relative;
         }
 
+        /* --- Navegación Mejorada --- */
+        .navbar {
+            background-color: #1A3C34;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            padding: 15px 0;
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+            background-color: rgba(26, 60, 52, 0.95);
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            color: #F5E8C7;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5em;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: #F5E8C7;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95em;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: #F28C38;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #F28C38;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #F5E8C7;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        
         /* --- Imágenes Decorativas de Fisiculturistas --- */
         .bodybuilder-left, .bodybuilder-right {
             position: fixed;
@@ -80,37 +187,17 @@
             background: linear-gradient(rgba(26, 60, 52, 0.3), rgba(26, 60, 52, 0.3)), url('') no-repeat center center/cover;
             background-blend-mode: overlay;
         }
-        @media (max-width: 1024px) {
-            .bodybuilder-img {
-                width: 200px;
-                height: 280px;
-            }
-            .roberto-img {
-                width: 240px;
-                height: 336px;
-            }
-            .bodybuilder-left {
-                left: 15px;
-            }
-            .bodybuilder-right {
-                right: 15px;
-            }
-        }
-        @media (max-width: 768px) {
-            .bodybuilder-left, .bodybuilder-right {
-                display: none;
-            }
-        }
 
-        /* --- Encabezado --- */
+        /* --- Encabezado Mejorado --- */
         header {
             background: linear-gradient(rgba(26, 60, 52, 0.85), rgba(26, 60, 52, 0.85)), url('https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/banner.png?alt=media&token=941f22e7-f153-45c2-9b7f-af26f96a5807') no-repeat center center/cover;
             background-color: #1A3C34;
             color: #F5E8C7;
             text-align: center;
-            padding: 100px 20px 80px 20px;
+            padding: 180px 20px 100px 20px;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
             border-bottom: 5px solid #F28C38;
+            position: relative;
         }
 
         header h1 {
@@ -126,8 +213,38 @@
             margin: 0 auto 30px auto;
             opacity: 0.9;
         }
+        
+        .header-cta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #F5E8C7;
+            font-size: 2em;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
 
-        /* --- Secciones --- */
+        /* --- Secciones Mejoradas --- */
         section {
             padding: 60px 25px;
             max-width: 1100px;
@@ -135,7 +252,20 @@
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
         }
+        
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1A3C34, #F28C38);
+        }
+        
         #acerca {
              background-color: #1A3C34;
              color: #F5E8C7;
@@ -147,6 +277,7 @@
          #acerca p { color: #e0e0e0; }
          #acerca .btn { background-color: #F28C38; }
          #acerca .btn:hover { background-color: #D9742F; }
+         #acerca::before { background: linear-gradient(90deg, #F28C38, #F5E8C7); }
 
         section h2 {
             font-family: 'Montserrat', sans-serif;
@@ -179,8 +310,8 @@
               margin-left: auto;
               margin-right: auto;
          }
-
-        /* --- Botones --- */
+         
+        /* --- Botones Mejorados --- */
         .btn {
             display: inline-block;
             padding: 14px 28px;
@@ -195,15 +326,40 @@
             border: none;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+        
         .btn:hover {
             background-color: #D9742F;
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             color: #ffffff !important;
         }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-secondary:hover { background-color: #5a6268; }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-secondary { 
+            background-color: #6c757d; 
+        }
+        .btn-secondary:hover { 
+            background-color: #5a6268; 
+        }
 
         .payment-options {
             display: flex;
@@ -213,7 +369,7 @@
             margin-top: 25px;
         }
 
-        /* --- Planes de Precios --- */
+        /* --- Planes de Precios Mejorados --- */
         .plans {
             display: grid;
             grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -233,49 +389,114 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
-         .plan > div:last-child { margin-top: auto; }
+        
+        .plan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1A3C34, #F28C38);
+        }
+        
+         .plan > div:last-child { 
+             margin-top: auto; 
+         }
+         
         .plan:hover {
              transform: translateY(-5px) scale(1.02);
              box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
+        
         .plan h3 {
             font-family: 'Montserrat', sans-serif;
             color: #1A3C34;
             margin-bottom: 15px;
             font-size: 1.6em;
         }
+        
          .plan .price {
             font-size: 2em;
             font-weight: 700;
             color: #F28C38;
             margin-bottom: 20px;
         }
-        .plan p { margin-bottom: 15px; color: #495057; font-size: 1em; }
-        .plan ul { list-style: none; padding: 0; margin: 15px 0 25px 0; text-align: left; flex-grow: 1; }
-        .plan ul li { margin-bottom: 10px; font-size: 1em; color: #495057; padding-left: 30px; position: relative; line-height: 1.5; }
-        .plan ul li::before { content: '✓'; color: #1A3C34; font-weight: bold; position: absolute; left: 0; top: 1px; font-size: 1.3em; }
-        .plan .payment-options { margin-top: auto; padding-top: 20px; }
-
-        /* --- Footer --- */
-        footer {
-            background-color: #1A3C34;
-            color: #F5E8C7;
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 50px;
+        
+        .plan p { 
+            margin-bottom: 15px; 
+            color: #495057; 
+            font-size: 1em; 
         }
-        footer a { color: #F28C38; text-decoration: none; margin: 0 15px; transition: color 0.3s ease; }
-        footer a:hover { color: #ffffff; text-decoration: none; }
-        footer p { font-size: 0.95em; margin-bottom: 15px; opacity: 0.8; }
+        
+        .plan ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 15px 0 25px 0; 
+            text-align: left; 
+            flex-grow: 1; 
+        }
+        
+        .plan ul li { 
+            margin-bottom: 10px; 
+            font-size: 1em; 
+            color: #495057; 
+            padding-left: 30px; 
+            position: relative; 
+            line-height: 1.5; 
+        }
+        
+        .plan ul li::before { 
+            content: '✓'; 
+            color: #1A3C34; 
+            font-weight: bold; 
+            position: absolute; 
+            left: 0; 
+            top: 1px; 
+            font-size: 1.3em; 
+        }
+        
+        .plan .payment-options { 
+            margin-top: auto; 
+            padding-top: 20px; 
+        }
 
-        /* --- Imágenes --- */
-        img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-right: auto; border-radius: 8px; }
-
-        /* "Sobre Nosotros" Layout y Fotos */
+        /* "Sobre Nosotros" Layout y Fotos Mejoradas */
         #acerca h2::after { width: 80px; }
-        .team-container { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; align-items: flex-start; margin-top: 40px; }
-        .team-member { flex: 1; min-width: 280px; max-width: 450px; text-align: center; }
+        .team-container { 
+            display: flex; 
+            gap: 40px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: flex-start; 
+            margin-top: 40px; 
+        }
+        
+        .team-member { 
+            flex: 1; 
+            min-width: 280px; 
+            max-width: 450px; 
+            text-align: center; 
+            position: relative;
+            z-index: 1;
+        }
+        
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background-color: rgba(242, 140, 56, 0.1);
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
         .team-member .profile-pic { 
             width: 180px; 
             height: 180px; 
@@ -287,15 +508,50 @@
             filter: brightness(90%) sepia(20%);
             transition: filter 0.3s ease, transform 0.3s ease;
         }
+        
         .team-member .profile-pic:hover { 
             filter: brightness(100%) sepia(0);
             transform: scale(1.05);
         }
-        .team-member h3 { font-family: 'Montserrat', sans-serif; color: #F5E8C7; margin: 15px 0 10px 0; font-size: 1.7em; }
-        .team-member p { text-align: justify; font-size: 1.05em; color: #e0e0e0; padding: 0 15px; }
-        #acerca .btn-container { text-align: center; margin-top: 40px; }
+        
+        .team-member h3 { 
+            font-family: 'Montserrat', sans-serif; 
+            color: #F5E8C7; 
+            margin: 15px 0 10px 0; 
+            font-size: 1.7em; 
+        }
+        
+        .team-member p { 
+            text-align: justify; 
+            font-size: 1.05em; 
+            color: #e0e0e0; 
+            padding: 0 15px; 
+        }
+        
+        .team-member .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .team-member .social-links a {
+            color: #F5E8C7;
+            font-size: 1.2em;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .team-member .social-links a:hover {
+            color: #F28C38;
+            transform: translateY(-3px);
+        }
+        
+        #acerca .btn-container { 
+            text-align: center; 
+            margin-top: 40px; 
+        }
 
-        /* Estilo para la sección del libro */
+        /* Estilo mejorado para la sección del libro */
         .book-container {
             display: flex;
             flex-wrap: wrap;
@@ -304,13 +560,18 @@
             gap: 20px;
             margin-bottom: 30px;
         }
+        
         .book-cover { 
             width: 240px; 
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
             border: 1px solid #ddd; 
             transition: transform 0.3s ease; 
         }
-        .book-cover:hover { transform: scale(1.05); }
+        
+        .book-cover:hover { 
+            transform: scale(1.05); 
+        }
+        
         .author-pic {
             width: 180px;
             height: 180px;
@@ -318,67 +579,364 @@
             border-radius: 50%;
             border: 5px solid #1A3C34;
             box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
         }
+        
+        .author-pic:hover {
+            border-color: #F28C38;
+            transform: scale(1.05);
+        }
+
+        /* --- Formulario Cliente Mejorado --- */
+        #formulario-cliente { 
+            background-color: #eef1f5; 
+            border-top: 5px solid #1A3C34; 
+        }
+        
+        #formulario-cliente h2::after { 
+            width: 80px; 
+            background-color: #1A3C34; 
+        }
+        
+        #formulario-cliente p { 
+            color: #495057; 
+            text-align: center; 
+            max-width: 700px; 
+            margin-left: auto; 
+            margin-right: auto;
+        }
+        
+        .form-container {
+            max-width: 650px;
+            margin: 20px auto 0 auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+        
+        form label { 
+            font-weight: 700; 
+            color: #1A3C34; 
+            margin-bottom: -10px; 
+            font-size: 1em; 
+        }
+        
+        form input[type="text"], 
+        form input[type="email"], 
+        form input[type="number"], 
+        form textarea, 
+        form select { 
+            padding: 14px; 
+            border: 1px solid #ced4da; 
+            border-radius: 5px; 
+            font-size: 1em; 
+            width: 100%; 
+            font-family: 'Open Sans', Arial, sans-serif; 
+            transition: border-color 0.3s ease; 
+        }
+        
+        form input:focus, 
+        form textarea:focus { 
+            border-color: #F28C38; 
+            outline: none; 
+            box-shadow: 0 0 0 2px rgba(242, 140, 56, 0.2); 
+        }
+        
+        form textarea { 
+            min-height: 130px; 
+            resize: vertical; 
+        }
+        
+        form .checkbox-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin: 5px 0 10px 0; 
+        }
+        
+        form .checkbox-container input[type="checkbox"] { 
+            width: auto; 
+            margin-top: 0px; 
+            accent-color: #1A3C34; 
+        }
+        
+        form .checkbox-container label { 
+            font-weight: normal; 
+            color: #495057; 
+            font-size: 0.95em; 
+            margin-bottom: 0; 
+            cursor: pointer; 
+        }
+        
+        form .checkbox-container label a { 
+            color: #1A3C34; 
+            text-decoration: underline; 
+            transition: color 0.3s ease;
+        }
+        
+        form .checkbox-container label a:hover {
+            color: #F28C38;
+        }
+        
+        form button[type="submit"] { 
+            align-self: center; 
+            margin-top: 25px; 
+            padding: 15px 35px; 
+            font-size: 1.1em; 
+        }
+
+        .privacy-note { 
+            font-size: 0.95em; 
+            color: #6c757d; 
+            text-align: center; 
+            margin-top: 35px; 
+        }
+        
+        .privacy-note i { 
+            margin-right: 6px; 
+            color: #6c757d; 
+        }
+
+        /* --- Sección de Contacto Mejorada --- */
+        #contacto p a {
+            color: #1A3C34;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        #contacto p a:hover {
+            color: #F28C38;
+        }
+
+        /* --- Footer Mejorado --- */
+        footer {
+            background-color: #1A3C34;
+            color: #F5E8C7;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+        
+        footer a { 
+            color: #F28C38; 
+            text-decoration: none; 
+            margin: 0 15px; 
+            transition: color 0.3s ease; 
+        }
+        
+        footer a:hover { 
+            color: #ffffff; 
+            text-decoration: none; 
+        }
+        
+        footer p { 
+            font-size: 0.95em; 
+            margin-bottom: 15px; 
+            opacity: 0.8; 
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #F28C38;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .back-to-top:hover {
+            background-color: #D9742F;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* --- Responsividad Mejorada --- */
+        @media (max-width: 1024px) {
+            .bodybuilder-img {
+                width: 200px;
+                height: 280px;
+            }
+            .roberto-img {
+                width: 240px;
+                height: 336px;
+            }
+            .bodybuilder-left {
+                left: 15px;
+            }
+            .bodybuilder-right {
+                right: 15px;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .book-cover { width: 220px; }
-            .author-pic { width: 160px; height: 160px; }
+            .bodybuilder-left, .bodybuilder-right {
+                display: none;
+            }
+            .navbar-container {
+                padding: 0 15px;
+            }
+            .logo-text {
+                font-size: 1.3em;
+            }
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(26, 60, 52, 0.95);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 30px;
+                transition: left 0.3s ease;
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .nav-links li {
+                margin: 15px 0;
+            }
+            .nav-links a {
+                font-size: 1.1em;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            header {
+                padding: 150px 15px 80px 15px;
+            }
+            header h1 {
+                font-size: 2.4em;
+            }
+            header p {
+                font-size: 1.1em;
+            }
+            section {
+                padding: 60px 20px;
+                margin: 30px 15px;
+            }
+            section h2 {
+                font-size: 1.9em;
+            }
+            .plans {
+                grid-template-columns: 1fr;
+            }
+            .plan {
+                max-width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .team-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 40px;
+            }
+            .team-member {
+                max-width: 90%;
+            }
+            .profile-pic {
+                width: 160px;
+                height: 160px;
+            }
+            section p, section ul li {
+                font-size: 1em;
+            }
+            form {
+                padding: 20px 25px;
+                max-width: 95%;
+            }
+            form label {
+                font-size: 0.95em;
+            }
+            form input, form textarea {
+                padding: 12px;
+                font-size: 0.95em;
+            }
+            form button[type="submit"] {
+                padding: 14px 30px;
+                font-size: 1em;
+            }
         }
+        
         @media (max-width: 480px) {
-            .book-cover { width: 200px; }
-            .author-pic { width: 140px; height: 140px; }
+            header {
+                padding: 130px 15px 70px 15px;
+            }
+            header h1 {
+                font-size: 2.2em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            section {
+                padding: 40px 20px;
+            }
+            section h2 {
+                font-size: 1.7em;
+            }
+            .plan {
+                padding: 20px;
+            }
+            .plan .price {
+                font-size: 1.8em;
+            }
+            .plan ul li {
+                font-size: 0.95em;
+            }
+            .btn {
+                padding: 14px 26px;
+                font-size: 1em;
+            }
+            form button[type="submit"] {
+                padding: 14px 30px;
+                width: auto;
+            }
+            .profile-pic {
+                width: 140px;
+                height: 140px;
+            }
         }
-
-        /* --- Formulario Cliente --- */
-        #formulario-cliente { background-color: #eef1f5; border-top: 5px solid #1A3C34; }
-        #formulario-cliente h2::after { width: 80px; background-color: #1A3C34; }
-        #formulario-cliente p { color: #495057; text-align: center; max-width: 700px; margin-left: auto; margin-right: auto;}
-
-        form { display: flex; flex-direction: column; gap: 20px; max-width: 650px; margin: 20px auto 0 auto; background-color: #fff; padding: 30px 40px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-        form label { font-weight: 700; color: #1A3C34; margin-bottom: -10px; font-size: 1em; }
-        form input[type="text"], form input[type="email"], form input[type="number"], form textarea, form select { padding: 14px; border: 1px solid #ced4da; border-radius: 5px; font-size: 1em; width: 100%; font-family: 'Open Sans', Arial, sans-serif; transition: border-color 0.3s ease; }
-        form input:focus, form textarea:focus { border-color: #F28C38; outline: none; box-shadow: 0 0 0 2px rgba(242, 140, 56, 0.2); }
-        form textarea { min-height: 130px; resize: vertical; }
-        form .checkbox-container { display: flex; align-items: center; gap: 10px; margin: 5px 0 10px 0; }
-        form .checkbox-container input[type="checkbox"] { width: auto; margin-top: 0px; accent-color: #1A3C34; }
-        form .checkbox-container label { font-weight: normal; color: #495057; font-size: 0.95em; margin-bottom: 0; cursor: pointer; }
-        form .checkbox-container label a { color: #1A3C34; text-decoration: underline; }
-        form button[type="submit"] { align-self: center; margin-top: 25px; padding: 15px 35px; font-size: 1.1em; }
-
-        .privacy-note { font-size: 0.95em; color: #6c757d; text-align: center; margin-top: 35px; }
-        .privacy-note svg { width: 1em; height: 1em; vertical-align: -2px; margin-right: 6px; fill: #6c757d; }
-
-        /* --- Responsividad --- */
-        @media (max-width: 768px) {
-            header h1 { font-size: 2.4em; }
-            header p { font-size: 1.1em; }
-            section h2 { font-size: 1.9em; }
-            .plans { grid-template-columns: 1fr; }
-            .plan { max-width: 90%; margin-left: auto; margin-right: auto;}
-            .team-container { flex-direction: column; align-items: center; gap: 40px;}
-            .team-member { max-width: 90%; }
-            .profile-pic { width: 160px; height: 160px; }
-            section p, section ul li { font-size: 1em; }
-            form { padding: 20px 25px; max-width: 95%; }
-            form label { font-size: 0.95em; }
-            form input, form textarea { padding: 12px; font-size: 0.95em;}
-            form button[type="submit"] { padding: 14px 30px; font-size: 1em;}
-        }
-         @media (max-width: 480px) {
-             header { padding: 60px 15px 40px 15px; }
-             header h1 { font-size: 2.2em; }
-             header p { font-size: 1em; }
-             section { padding: 40px 20px; }
-             section h2 { font-size: 1.7em; }
-             .plan { padding: 20px; }
-             .plan .price { font-size: 1.8em; }
-             .plan ul li { font-size: 0.95em; }
-             .btn { padding: 14px 26px; font-size: 1em;}
-             form button[type="submit"] { padding: 14px 30px; width: auto; }
-             .profile-pic { width: 140px; height: 140px; }
-         }
     </style>
 </head>
 <body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="logo">
+                <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/logo-psicofitness.png?alt=media&token=64a66eba-6d64-49c6-8665-c2096e9a250f" alt="Logo PsicoFitness">
+                <span class="logo-text">PsicoFitness</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#intro">Inicio</a></li>
+                <li><a href="#acerca">Nosotros</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#libro">Libro</a></li>
+                <li><a href="#formulario-cliente">Contacto</a></li>
+            </ul>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
     <!-- Imágenes Decorativas de Fisiculturistas -->
     <div class="bodybuilder-left">
         <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/michel-fisico1.png?alt=media&token=4a06149d-d223-4489-ac7f-a28515bc54e8" alt="Fisiculturista 1" class="bodybuilder-img">
@@ -386,18 +944,24 @@
         <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/michel-fisico3.png?alt=media&token=313afc6e-5281-480b-b687-eb81f64d8bd4" alt="Fisiculturista 3" class="bodybuilder-img">
     </div>
     <div class="bodybuilder-right">
-        <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-fisico1.png?alt=media&token=f4c66016-ee5a-4beb-9bb3-d7197f46ff9f" alt="Fisiculturista 4" class="bodybuilder-img roberto-img">
-        <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-fisico2.png?alt=media&token=37d5c955-ec61-415b-a10d-369204629615" alt="Fisiculturista 5" class="bodybuilder-img roberto-img">
-        <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-fisico3.png?alt=media&token=33c46dc3-b7fe-4dc2-99c6-a3b6e4141296" alt="Fisiculturista 6" class="bodybuilder-img roberto-img">
+        <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-fisico1.png?alt=media&token=f4f6e5a3-5281-480b-b687-eb81f64d8bd4" alt="Fisiculturista 4" class="bodybuilder-img roberto-img">
+        <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-fisico2.png?alt=media&token=60b72c6d-495f-4d57-9f90-2f8a19092759" alt="Fisiculturista 5" class="bodybuilder-img">
     </div>
 
     <!-- Encabezado -->
     <header>
-        <h1>Transforma tu Vida con PsicoFitness</h1>
-        <p>Psicología, Nutrición y Entrenamiento para una Transformación Total<br>Por Michel Marrero & Roberto Ruiz</p>
+        <h1>Transforma tu vida con PsicoFitness</h1>
+        <p>Psicología, nutrición y entrenamiento para una transformación total.</p>
+        <div class="header-cta">
+            <a href="#servicios" class="btn">Ver Servicios</a>
+            <a href="#formulario-cliente" class="btn btn-secondary">Comenzar Ahora</a>
+        </div>
+        <a href="#intro" class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </a>
     </header>
 
-    <!-- Sección Introductoria -->
+    <!-- Sección Introducción -->
     <section id="intro">
         <h2>¿Cansado de Dietas y Rutinas que No Funcionan?</h2>
         <p>En un mundo lleno de consejos contradictorios – "elimina los carbohidratos", "entrena hasta el agotamiento", "sigue esta dieta milagrosa" – es fácil sentirse perdido y frustrado. Quizás has intentado de todo para mejorar tu salud, pero los resultados no duran, y terminas sintiéndote peor que antes. No estás solo: millones de personas enfrentan la misma lucha, abrumadas por la desinformación y la presión de cumplir con estándares irreales.</p>
@@ -416,11 +980,21 @@
                 <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/michel-marrero.jpg?alt=media&token=e094b0c2-0f49-435d-8d1a-9505a9d9083a" alt="Michel Marrero Ponce" class="profile-pic">
                 <h3>Michel Marrero Ponce</h3>
                 <p>Soy licenciado en Psicología (Univ. Matanzas, Cuba / Univ. de la República, Uruguay) con diplomados en Nutrición Deportiva y Entrenamiento Personal. Mi pasión es fortalecer mente y cuerpo para lograr transformaciones integrales. Como cofundador de GYM 9.8, fui preparador físico de Roberto Ruiz en sus inicios, guiándolo en su camino hacia el éxito competitivo. Durante esos años, también ayudé a numerosos clientes a alcanzar sus metas de fitness y bienestar, combinando estrategias psicológicas y físicas para resultados sostenibles. Además, he compartido mi enfoque en mi libro <em>La Mente Anabólica</em>, una guía para transformar cuerpo y mente. Durante más de 7 años, he trabajado en Aldeas Infantiles SOS Uruguay, apoyando el desarrollo integral de niños, niñas, adolescentes y familias vulnerables, lo que me ha enseñado la importancia de construir una base sólida de bienestar físico y mental—un principio que aplico en PsicoFitness para empoderar a las personas a transformar sus vidas de manera sostenible.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
             <div class="team-member">
                 <img src="https://firebasestorage.googleapis.com/v0/b/psicofitness-510ae.firebasestorage.app/o/roberto-perfil.png?alt=media&token=b89f583c-3be2-418c-9c8c-81d2a3a4d37a" alt="Roberto Ruiz" class="profile-pic">
                 <h3>Roberto Ruiz</h3>
                 <p>Soy preparador físico titulado y competidor destacado con más de 10 años de experiencia práctica en el mundo del fitness y el fisicoculturismo. He logrado ser subcampeón provincial de novatos en Matanzas, Cuba (2018, categoría 75 kg), tercer lugar provincial en 2019, y campeón provincial en 2024 (categoría 75 kg), además de un tercer lugar en la categoría absoluta y un cuarto lugar en el evento nacional de la FUFC 2024. Como cofundador y actual dueño de GYM 9.8, he tenido el privilegio de preparar a innumerables atletas que han alcanzado premiaciones y trofeos en sus categorías, así como a personas sin experiencia que buscan transformaciones significativas en su vida. Mi enfoque se centra en el progreso sostenible, la técnica impecable y la motivación constante para ayudarte a alcanzar tu máximo potencial físico y mental.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
             </div>
         </div>
         <div class="btn-container">
@@ -496,47 +1070,49 @@
      <section id="formulario-cliente">
          <h2>Comienza Tu Transformación: Cuéntanos Sobre Ti</h2>
          <p>Completa este formulario inicial para que podamos entender mejor tu punto de partida y objetivos. ¡Es el primer paso hacia tu plan personalizado!</p>
-         <form id="contact-form">
-             <input type="hidden" name="contact_number">
-
-             <label for="user_name">Nombre Completo:</label>
-             <input type="text" id="user_name" name="user_name" required>
-
-             <label for="user_email">Email de Contacto:</label>
-             <input type="email" id="user_email" name="user_email" required>
-
-             <label for="age">Edad:</label>
-             <input type="number" id="age" name="age" min="16" max="100">
-
-             <label for="current_weight">Peso Actual (kg):</label>
-             <input type="number" id="current_weight" name="current_weight" step="0.1" min="30" max="300">
-
-             <label for="height">Altura (cm):</label>
-             <input type="number" id="height" name="height" min="100" max="250">
-
-             <label for="main_goal">Objetivo Principal y Motivación:</label>
-             <textarea id="main_goal" name="main_goal" rows="4" required placeholder="Describe qué quieres lograr y por qué es importante para ti... (Sé lo más detallado/a posible)" maxlength="1000"></textarea>
-
-              <label for="experience">Experiencia (Entrenamiento/Nutrición):</label>
-             <textarea id="experience" name="experience" rows="4" placeholder="¿Qué has probado antes? ¿Qué funcionó o no? ¿Tu nivel actual?"></textarea>
-
-              <label for="limitations">Lesiones o Limitaciones Físicas/Médicas:</label>
-             <textarea id="limitations" name="limitations" rows="3" placeholder="¿Alguna lesión pasada/actual, dolor crónico, condición médica relevante (diabetes, tiroides, etc.)?"></textarea>
-
-              <label for="barriers">Mayores Barreras / Desafíos Psicológicos:</label>
-             <textarea id="barriers" name="barriers" rows="4" placeholder="¿Qué te frena? (Ej: falta de tiempo, motivación, antojos, estrés, comer emocional, perfeccionismo, miedo al fracaso...)" maxlength="1500"></textarea>
-
-             <div class="checkbox-container">
-                 <input type="checkbox" id="privacy_policy" name="privacy_policy" value="accepted" required>
-                 <label for="privacy_policy">He leído y acepto la <a href="politica-privacidad.html" target="_blank">Política de Privacidad</a> y el uso de mis datos para el asesoramiento.</label>
-             </div>
-
-             <button type="submit" class="btn">Enviar Mi Información</button>
-         </form>
-          <p class="privacy-note">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="vertical-align: -2px; margin-right: 5px;"><path d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"></path></svg>
-             Tu privacidad es importante. Tus datos están seguros y solo se usarán para crear tu plan personalizado.
-         </p>
+         <div class="form-container">
+             <form id="contact-form">
+                 <input type="hidden" name="contact_number">
+    
+                 <label for="user_name">Nombre Completo:</label>
+                 <input type="text" id="user_name" name="user_name" required>
+    
+                 <label for="user_email">Email de Contacto:</label>
+                 <input type="email" id="user_email" name="user_email" required>
+    
+                 <label for="age">Edad:</label>
+                 <input type="number" id="age" name="age" min="16" max="100">
+    
+                 <label for="current_weight">Peso Actual (kg):</label>
+                 <input type="number" id="current_weight" name="current_weight" step="0.1" min="30" max="300">
+    
+                 <label for="height">Altura (cm):</label>
+                 <input type="number" id="height" name="height" min="100" max="250">
+    
+                 <label for="main_goal">Objetivo Principal y Motivación:</label>
+                 <textarea id="main_goal" name="main_goal" rows="4" required placeholder="Describe qué quieres lograr y por qué es importante para ti... (Sé lo más detallado/a posible)" maxlength="1000"></textarea>
+    
+                  <label for="experience">Experiencia (Entrenamiento/Nutrición):</label>
+                 <textarea id="experience" name="experience" rows="4" placeholder="¿Qué has probado antes? ¿Qué funcionó o no? ¿Tu nivel actual?"></textarea>
+    
+                  <label for="limitations">Lesiones o Limitaciones Físicas/Médicas:</label>
+                 <textarea id="limitations" name="limitations" rows="3" placeholder="¿Alguna lesión pasada/actual, dolor crónico, condición médica relevante (diabetes, tiroides, etc.)?"></textarea>
+    
+                  <label for="barriers">Mayores Barreras / Desafíos Psicológicos:</label>
+                 <textarea id="barriers" name="barriers" rows="4" placeholder="¿Qué te frena? (Ej: falta de tiempo, motivación, antojos, estrés, comer emocional, perfeccionismo, miedo al fracaso...)" maxlength="1500"></textarea>
+    
+                 <div class="checkbox-container">
+                     <input type="checkbox" id="privacy_policy" name="privacy_policy" value="accepted" required>
+                     <label for="privacy_policy">He leído y acepto la <a href="politica-privacidad.html" target="_blank">Política de Privacidad</a> y el uso de mis datos para el asesoramiento.</label>
+                 </div>
+    
+                 <button type="submit" class="btn">Enviar Mi Información</button>
+             </form>
+              <p class="privacy-note">
+                 <i class="fas fa-lock"></i>
+                 Tu privacidad es importante. Tus datos están seguros y solo se usarán para crear tu plan personalizado.
+             </p>
+         </div>
      </section>
 
     <!-- Sección Acceso al Libro -->
@@ -557,7 +1133,9 @@
         <h2>¿Valorás Nuestro Trabajo? Apóyanos</h2>
         <p>Si encuentras valor en el contenido que compartimos o simplemente quieres apoyar nuestra misión de ayudar a otros a transformar sus vidas, puedes considerar hacer una donación. ¡Cada aporte es muy apreciado y nos ayuda a seguir creando!</p>
         <div style="text-align: center;">
-            <a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">Donar vía PayPal</a>
+            <a href="https://paypal.me/rafiemp?country.x=UY&locale.x=es_XC" class="btn" target="_blank">
+                <i class="fab fa-paypal"></i> Donar vía PayPal
+            </a>
         </div>
     </section>
 
@@ -577,12 +1155,91 @@
         <p><a href="politica-privacidad.html">Política de Privacidad</a></p>
     </footer>
 
-     <!-- Scripts de Firebase SDK -->
-     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- Botón Volver Arriba -->
+    <a href="#" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
 
-     <!-- Script Personalizado para Inicializar Firebase y Manejar Formulario -->
-     <script type="text/javascript">
+    <!-- Scripts de Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- Script Personalizado -->
+    <script type="text/javascript">
+        // Navegación y UI
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menú móvil
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (navLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+            
+            // Cerrar menú al hacer clic en un enlace
+            const menuLinks = document.querySelectorAll('.nav-links a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Smooth scroll para todos los enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Back to top button
+            const backToTopButton = document.querySelector('.back-to-top');
+            if (backToTopButton) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                        backToTopButton.style.opacity = '1';
+                        backToTopButton.style.visibility = 'visible';
+                    } else {
+                        backToTopButton.style.opacity = '0';
+                        backToTopButton.style.visibility = 'hidden';
+                    }
+                });
+            }
+        });
+        
+        // Firebase y manejo de formulario
         (function() {
             const firebaseConfig = {
                 apiKey: "AIzaSyAvGRZbfzR8-GvKLCwRtyS6kzPuArzIdjU",
@@ -612,7 +1269,7 @@
                          }
 
                          submitButton.disabled = true;
-                         submitButton.innerText = 'Enviando...';
+                         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
                          const formData = new FormData(contactForm);
                          const clientData = {};
@@ -639,7 +1296,7 @@
                              })
                              .finally(() => {
                                  submitButton.disabled = false;
-                                 submitButton.innerText = 'Enviar Mi Información';
+                                 submitButton.innerHTML = 'Enviar Mi Información';
                              });
                      });
                  } else {
@@ -652,6 +1309,6 @@
                  alert("Error al inicializar los servicios. Por favor, recarga la página o contacta al administrador.");
              }
         })();
-     </script>
+    </script>
 </body>
 </html>
