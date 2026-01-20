@@ -154,25 +154,6 @@ export default function CalendarView() {
 
           <div className="flex items-center gap-3">
             <Button
-              onClick={() => handleExport('excel')}
-              variant="outline"
-              data-testid="export-excel-btn"
-              className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
-            >
-              <FileSpreadsheet className="w-4 h-4 mr-2" />
-              Excel
-            </Button>
-            <Button
-              onClick={() => handleExport('pdf')}
-              variant="outline"
-              data-testid="export-pdf-btn"
-              className="border-rose-300 text-rose-700 hover:bg-rose-50"
-            >
-              <FileText className="w-4 h-4 mr-2" />
-              PDF
-            </Button>
-            <div className="h-8 w-px bg-slate-300" />
-            <Button
               onClick={() => changeMonth(-1)}
               variant="outline"
               data-testid="prev-month-btn"
@@ -191,32 +172,55 @@ export default function CalendarView() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Filter className="w-5 h-5 text-slate-500" />
-          <Select value={filterHouse} onValueChange={setFilterHouse}>
-            <SelectTrigger className="w-48" data-testid="filter-house">
-              <SelectValue placeholder="Todas las casas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas las casas</SelectItem>
-              {houses.map(house => (
-                <SelectItem key={house.house_id} value={house.house_id}>
-                  {house.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Filter className="w-5 h-5 text-slate-500" />
+            <Select value={filterHouse} onValueChange={setFilterHouse}>
+              <SelectTrigger className="w-48" data-testid="filter-house">
+                <SelectValue placeholder="Todas las casas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas las casas</SelectItem>
+                {houses.map(house => (
+                  <SelectItem key={house.house_id} value={house.house_id}>
+                    {house.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-48" data-testid="filter-status">
-              <SelectValue placeholder="Todos los estados" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos los estados</SelectItem>
-              <SelectItem value="complete">Completas</SelectItem>
-              <SelectItem value="incomplete">Incompletas</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-48" data-testid="filter-status">
+                <SelectValue placeholder="Todos los estados" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los estados</SelectItem>
+                <SelectItem value="complete">Completas</SelectItem>
+                <SelectItem value="incomplete">Incompletas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => handleExport('excel')}
+              variant="outline"
+              data-testid="export-excel-btn"
+              className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              Excel
+            </Button>
+            <Button
+              onClick={() => handleExport('pdf')}
+              variant="outline"
+              data-testid="export-pdf-btn"
+              className="border-rose-300 text-rose-700 hover:bg-rose-50"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+          </div>
         </div>
       </div>
 
