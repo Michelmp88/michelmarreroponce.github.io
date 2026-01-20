@@ -4,7 +4,8 @@ import { API } from '@/App';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { ChevronLeft, ChevronRight, Filter, Download, Sparkles, FileText, FileSpreadsheet } from 'lucide-react';
 import { toast } from 'sonner';
 import AssignmentModal from '@/components/AssignmentModal';
 
