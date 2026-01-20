@@ -152,7 +152,26 @@ export default function CalendarView() {
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => handleExport('excel')}
+              variant="outline"
+              data-testid="export-excel-btn"
+              className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              Excel
+            </Button>
+            <Button
+              onClick={() => handleExport('pdf')}
+              variant="outline"
+              data-testid="export-pdf-btn"
+              className="border-rose-300 text-rose-700 hover:bg-rose-50"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+            <div className="h-8 w-px bg-slate-300" />
             <Button
               onClick={() => changeMonth(-1)}
               variant="outline"
