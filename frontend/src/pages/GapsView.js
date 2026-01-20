@@ -48,9 +48,11 @@ export default function GapsView() {
     });
   };
 
-  const handleAssignmentComplete = () => {
+  const handleAssignmentComplete = async () => {
     setSelectedCell(null);
-    fetchData();
+    setLoading(true);
+    await fetchData();
+    setLoading(false);
   };
 
   const groupedGaps = gaps.reduce((acc, gap) => {
