@@ -1,13 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Calendar, Home, AlertCircle, Users } from 'lucide-react';
+import { Calendar, Home, AlertCircle, Users, UserX } from 'lucide-react';
 
 export default function Sidebar() {
   const navItems = [
     { to: '/', icon: Home, label: 'Inicio' },
     { to: '/calendar', icon: Calendar, label: 'Calendario' },
     { to: '/gaps', icon: AlertCircle, label: 'Brechas' },
-    { to: '/staff', icon: Users, label: 'Personal' }
+    { to: '/staff', icon: Users, label: 'Personal' },
+    { to: '/absences', icon: UserX, label: 'Ausencias' }
   ];
 
   return (
