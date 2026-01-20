@@ -1,0 +1,144 @@
+{
+  "identity": {
+    "name": "E1",
+    "principles": [
+      "Fusion over Imitation",
+      "Emotion First",
+      "Content is King",
+      "Zoom In",
+      "Negative Space",
+      "Contrast"
+    ],
+    "anti_patterns": [
+      "Purple/Teal for CTA",
+      "Inter everywhere (Headings must be Manrope)",
+      "Center-Everything",
+      "Gradient Overload"
+    ]
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "rules": [
+      "Headings (>32px) must use tracking-tight",
+      "Overlines/Labels must be Uppercase + tracking-widest + text-xs",
+      "Line height: tight for headers, relaxed for body"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Slate Indigo",
+        "hex": "#4F46E5",
+        "tailwind": "indigo-600",
+        "usage": "Primary Actions, Active States"
+      },
+      "secondary": {
+        "name": "Slate",
+        "hex": "#64748B",
+        "tailwind": "slate-500",
+        "usage": "Secondary text, borders"
+      },
+      "background": {
+        "name": "Soft Stone",
+        "hex": "#F8FAFC",
+        "tailwind": "bg-slate-50",
+        "usage": "App Background"
+      },
+      "surface": {
+        "name": "Pure White",
+        "hex": "#FFFFFF",
+        "tailwind": "bg-white",
+        "usage": "Cards, Modals, Sidebar"
+      },
+      "status": {
+        "success": {
+          "hex": "#10B981",
+          "tailwind": "text-emerald-600 bg-emerald-50 border-emerald-200",
+          "label": "Cubierto (Complete)"
+        },
+        "warning": {
+          "hex": "#F59E0B",
+          "tailwind": "text-amber-600 bg-amber-50 border-amber-200",
+          "label": "Parcial (Partial)"
+        },
+        "error": {
+          "hex": "#F43F5E",
+          "tailwind": "text-rose-600 bg-rose-50 border-rose-200",
+          "label": "Incompleto (Gap)"
+        }
+      }
+    },
+    "theme": "light"
+  },
+  "layout": {
+    "spacing": {
+      "scale": ["p-1", "p-2", "p-4", "p-6", "p-8", "p-12", "p-16"],
+      "rule": "Use 2x more spacing than typical. Containers with borders must have p-6 or p-8."
+    },
+    "grid_system": {
+      "dashboard": "Grid Mode B (High Density): grid-cols-1 md:grid-cols-12 gap-6",
+      "calendar_matrix": "Custom Grid: First col fixed (Houses), remaining cols scrollable (Days)"
+    },
+    "radius": "rounded-lg"
+  },
+  "components": {
+    "shadcn_customization": {
+      "card": "Remove default shadow. Use border-slate-200 and shadow-sm. Hover: shadow-md transition-all duration-300.",
+      "button": "Pill shaped or rounded-md. No default sharp edges unless 'outline' variant.",
+      "dialog": "Backdrop blur-sm bg-slate-900/20. Modal bg-white rounded-xl shadow-2xl.",
+      "table": "Header: bg-slate-50 text-slate-500 uppercase text-xs tracking-wider. Row hover: bg-slate-50/50."
+    },
+    "custom_components": {
+      "CoverageCell": "A specific component for the calendar matrix. Must show status color and assigned staff initials.",
+      "StaffCard": "Card showing staff photo, role, and assigned hours."
+    }
+  },
+  "visual_enhancers": {
+    "textures": "Use subtle noise/grain on the Sidebar background to reduce sterility.",
+    "empty_states": "Use the 'wooden toys' image with a grayscale filter and opacity-50 for empty states.",
+    "shadows": "Soft, diffuse shadows: shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+  },
+  "images": {
+    "staff_avatars": [
+      "https://images.pexels.com/photos/33871730/pexels-photo-33871730.jpeg",
+      "https://images.pexels.com/photos/4926684/pexels-photo-4926684.jpeg"
+    ],
+    "houses": [
+      "https://images.pexels.com/photos/17158664/pexels-photo-17158664.jpeg",
+      "https://images.pexels.com/photos/34188578/pexels-photo-34188578.jpeg"
+    ],
+    "decorative": [
+      "https://images.pexels.com/photos/31061855/pexels-photo-31061855.jpeg",
+      "https://images.pexels.com/photos/3662669/pexels-photo-3662669.jpeg"
+    ]
+  },
+  "page_specifics": {
+    "dashboard": {
+      "title": "Centro de Control",
+      "layout": "Sidebar Left (Fixed). Main Content Right.",
+      "widgets": [
+        "Coverage Overview (Donut Chart)",
+        "Urgent Gaps (List)",
+        "Upcoming Shifts (Timeline)"
+      ]
+    },
+    "calendar": {
+      "view_mode": "Matrix (Rows=Houses, Cols=Days)",
+      "interactions": "Click cell to assign. Drag to move (if possible).",
+      "filters": "By House, By Staff Type"
+    }
+  },
+  "universal_guidelines": [
+    "Do not use generic centered layouts.",
+    "Create depth through layered design elements.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur) for sticky headers.",
+    "Every interaction needs micro-animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Use 'sonner' for toasts."
+  ],
+  "instructions_to_main_agent": "Implement the design using the provided palette and typography. Focus on the 'Matrix View' for the calendar as it is the core operational tool. Ensure the 'Coverage Gaps' are visually striking (Red/Rose). Use the provided images for mock data."
+}
