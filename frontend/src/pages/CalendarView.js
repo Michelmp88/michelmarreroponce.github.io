@@ -56,9 +56,11 @@ export default function CalendarView() {
     setSelectedCell({ house, date, coverageType, entry });
   };
 
-  const handleAssignmentComplete = () => {
+  const handleAssignmentComplete = async () => {
     setSelectedCell(null);
-    fetchData();
+    setLoading(true);
+    await fetchData();
+    setLoading(false);
   };
 
   const changeMonth = (delta) => {
