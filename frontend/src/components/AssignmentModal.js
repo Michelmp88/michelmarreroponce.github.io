@@ -72,6 +72,9 @@ export default function AssignmentModal({ open, onClose, cell, staff, onComplete
           <DialogTitle className="text-2xl font-bold text-slate-900">
             Asignar Personal
           </DialogTitle>
+          <DialogDescription className="text-slate-600">
+            Selecciona un miembro del personal para asignar a esta cobertura
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
