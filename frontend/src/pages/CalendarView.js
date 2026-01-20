@@ -316,6 +316,47 @@ export default function CalendarView() {
           onComplete={handleAssignmentComplete}
         />
       )}
+
+      <Dialog open={showAutoAssignModal} onOpenChange={setShowAutoAssignModal}>
+        <DialogContent className="max-w-md" data-testid="auto-assign-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900">
+              Generar Cobertura Automática
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              Se generarán asignaciones automáticas para todo el mes respetando las asignaciones existentes
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-sm text-amber-800">
+                <strong>Importante:</strong> El sistema asignará personal siguiendo las reglas de prioridad 
+                (Encargada → Rotativa → Jornalera) y verificando disponibilidad según ausencias registradas.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => setShowAutoAssignModal(false)}
+              variant="outline"
+              disabled={autoAssigning}
+              data-testid="cancel-auto-assign"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleAutoAssign}
+              disabled={autoAssigning}
+              className="bg-indigo-600 hover:bg-indigo-700"
+              data-testid="confirm-auto-assign"
+            >
+              {autoAssigning ? 'Generando...' : 'Generar Coberturas'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
