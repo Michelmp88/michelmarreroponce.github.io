@@ -234,8 +234,20 @@ export default function CalendarView() {
 
           {filteredHouses.map(house => (
             <React.Fragment key={house.house_id}>
-              <div className="house-label flex items-center justify-center font-bold text-slate-900 p-4 border border-slate-200 rounded-lg">
-                {house.name}
+              <div className="house-label flex flex-col items-center justify-center font-bold text-slate-900 p-4 border border-slate-200 rounded-lg space-y-2">
+                <span>{house.name}</span>
+                <Button
+                  onClick={() => {
+                    setSelectedHouse(house.house_id);
+                    setShowAutoAssignModal(true);
+                  }}
+                  size="sm"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-xs"
+                  data-testid={`auto-assign-${house.house_id}`}
+                >
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Auto
+                </Button>
               </div>
               {days.map(day => {
                 const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
