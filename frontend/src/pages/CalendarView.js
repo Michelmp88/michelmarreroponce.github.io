@@ -83,6 +83,47 @@ export default function CalendarView() {
     setYear(newYear);
   };
 
+  const handleAutoAssign = async () => {
+    if (!selectedHouse) return;
+    
+    setAutoAssigning(true);
+    try {
+      const response = await axios.post(`${API}/coverage/auto-assign/${selectedHouse}/${year}/${month}`);
+      toast.success(`Asignación completada: ${response.data.assignments_made} coberturas asignadas`);
+      setShowAutoAssignModal(false);
+      setSelectedHouse(null);
+      await fetchData();
+    } catch (error) {
+      console.error('Error auto-assigning:', error);
+      toast.error('Error al generar asignaciones automáticas');
+    } finally {
+      setAutoAssigning(false);
+    }
+  };
+
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get(`${API}/coverage/export/${year}/${month}?format=${format}`, {
+        responseType: 'blob'
+      });
+      
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `coberturas_${year}_${month}.${format === 'excel' ? 'xlsx' : 'pdf'}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Archivo ${format.toUpperCase()} descargado correctamente`);
+    } catch (error) {
+      console.error('Error exporting:', error);
+      toast.error('Error al exportar datos');
+    }
+  };
+
   const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
