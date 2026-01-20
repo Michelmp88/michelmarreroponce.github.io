@@ -19,6 +19,9 @@ export default function CalendarView() {
   const [selectedCell, setSelectedCell] = useState(null);
   const [filterHouse, setFilterHouse] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showAutoAssignModal, setShowAutoAssignModal] = useState(false);
+  const [selectedHouse, setSelectedHouse] = useState(null);
+  const [autoAssigning, setAutoAssigning] = useState(false);
 
   useEffect(() => {
     fetchData();
