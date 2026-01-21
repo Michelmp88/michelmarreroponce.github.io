@@ -23,6 +23,9 @@ export default function StaffManagement() {
     work_days: '',
     rest_days: '',
     weekly_hours: '',
+    max_hours_daily: '',
+    max_hours_monthly: '',
+    hours_per_shift: '',
     fixed_house_id: '',
     work_schedule: '',
     notes: ''
