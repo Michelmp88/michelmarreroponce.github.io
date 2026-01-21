@@ -77,6 +77,9 @@ class Staff(BaseModel):
     work_days: Optional[int] = None
     rest_days: Optional[int] = None
     weekly_hours: Optional[int] = None
+    max_hours_daily: Optional[int] = None
+    max_hours_monthly: Optional[int] = None
+    hours_per_shift: Optional[int] = None
     fixed_house_id: Optional[str] = None
     work_schedule: Optional[str] = None
     notes: Optional[str] = None
@@ -89,6 +92,9 @@ class StaffCreate(BaseModel):
     work_days: Optional[int] = None
     rest_days: Optional[int] = None
     weekly_hours: Optional[int] = None
+    max_hours_daily: Optional[int] = None
+    max_hours_monthly: Optional[int] = None
+    hours_per_shift: Optional[int] = None
     fixed_house_id: Optional[str] = None
     work_schedule: Optional[str] = None
     notes: Optional[str] = None
