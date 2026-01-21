@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Calendar, Home, AlertCircle, Users, UserX } from 'lucide-react';
+import { Calendar, Home, AlertCircle, Users, UserX, BarChart3 } from 'lucide-react';
 
 export default function Sidebar() {
   const navItems = [
@@ -8,7 +8,8 @@ export default function Sidebar() {
     { to: '/calendar', icon: Calendar, label: 'Calendario' },
     { to: '/gaps', icon: AlertCircle, label: 'Brechas' },
     { to: '/staff', icon: Users, label: 'Personal' },
-    { to: '/absences', icon: UserX, label: 'Ausencias' }
+    { to: '/absences', icon: UserX, label: 'Ausencias' },
+    { to: '/reports', icon: BarChart3, label: 'Reportes' }
   ];
 
   return (
