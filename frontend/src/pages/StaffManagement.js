@@ -244,14 +244,16 @@ export default function StaffManagement() {
           </h1>
           <p className="text-slate-500 mt-2">Personal disponible para asignación</p>
         </div>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          data-testid="add-staff-btn"
-          className="bg-indigo-600 hover:bg-indigo-700"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Agregar Personal
-        </Button>
+        {hasPermission('manage_staff') && (
+          <Button
+            onClick={() => setShowAddModal(true)}
+            data-testid="add-staff-btn"
+            className="bg-indigo-600 hover:bg-indigo-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Agregar Personal
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
