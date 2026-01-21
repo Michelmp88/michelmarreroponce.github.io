@@ -1,0 +1,161 @@
+<analysis>**original_problem_statement:**
+Build a web application for internal use to manage monthly 24/7 staff coverage for child-care houses. This is a rule-based coverage system with strict priorities and constraints.
+
+**PRODUCT REQUIREMENTS:**
+-   **Core Functionality:** A monthly calendar view to manage staff assignments for different houses. The system must distinguish between caregivers (24h shifts) and assistants (8h shifts) and handle houses with different staffing needs (1 or 2 caregivers). It must clearly show complete vs. incomplete coverage.
+-   **Staff & House Rules:** The system must enforce a strict hierarchy for assigning staff (e.g., House Manager -> Rotating -> Day-based). Specific houses have fixed staff and unique rules (e.g., House 9 always needs 2 caregivers).
+-   **UI:** A single monthly calendar view is the primary interface. It needs filters by house, staff, and status. A dedicated Coverage Gaps view is required.
+-   **Data Model:** Must include , , and .
+-   **User-Added Features:**
+    -   Export and print the monthly schedule (PDF and Excel).
+    -   View historical coverage data.
+    -   An automatic assignment feature that respects all rules and priorities, with an option for manual override.
+    -   Absence management (sickness, vacation, etc.) to block staff availability.
+    -   Full CRUD (Create, Read, Update, Delete) for staff and houses.
+    -   Ability to edit staff work hour rules (max daily/monthly hours, rest days).
+    -   The auto-assignment logic must be intelligent: prevent double-booking staff on the same day, respect priorities, and allow hour distribution across multiple houses if a staff member has available hours.
+    -   The app should consider preferences written in the notes section of a staff member's profile during auto-assignment.
+
+**User's preferred language**: Spanish. The user explicitly requested to be communicated with in Spanish (en español escribeme). The next agent MUST continue the conversation in Spanish.
+
+**what currently exists?**
+A full-stack web application built with React and FastAPI. The application features:
+-   A dashboard, a main calendar view, and dedicated pages for staff management, house management, absence tracking, hour tracking, and reports.
+-   Full CRUD functionality for managing staff and houses, including their specific rules and properties.
+-   A basic, non-secure role-based access system (Administrator/Operator) with a login screen. Admins have full CRUD access, while Operators have read-only access.
+-   Functionality to export the calendar to PDF and Excel.
+-   An Auto assignment feature is present but is logically flawed, which is the current focus of development.
+
+**Last working item**:
+The agent started to refactor the auto-assignment algorithm after the user reported a critical flaw: the system was assigning the same assistant to multiple houses on the same day. The goal is to make the algorithm smarter by preventing double-booking and considering staff priorities and preferences.
+
+-   **Last item agent was working**: Adding priority fields to the backend data models to support a more intelligent auto-assignment logic. The agent modified the  and  Pydantic models in  to include  fields.
+-   **Status**: IN PROGRESS
+-   **Agent Testing Done**: N
+-   **Which testing method agent to use?**: backend testing agent. After the backend logic is rewritten, the  endpoint must be thoroughly tested to ensure it respects availability, priorities, and hour limits.
+-   **User Testing Done**: N
+
+**All Pending/In progress Issue list**:
+-   **Issue 1**: The auto-assignment logic is fundamentally flawed. (P0)
+
+**Issues Detail:**
+-   **Issue 1:**
+    -   **Description**: The current auto-assignment algorithm () does not check if a staff member is already assigned to another house on the same day. This results in impossible schedules (e.g., Nellina being assigned to three houses simultaneously). It also fails to properly use staff/house priorities and hour limits.
+    -   **Attempted fixes**: The agent added  to the  and  models in . The actual algorithm rewrite has not started yet.
+    -   **Next debug checklist**:
+        1.  In , completely rewrite the auto-assignment function.
+        2.  The new logic must fetch all existing assignments for a specific day across ALL houses *before* making a new assignment.
+        3.  Implement a check to ensure a staff member is not assigned more than once on the same calendar day (unless their role and hours permit distribution).
+        4.  Incorporate the new  fields from the  and  models to guide the selection process.
+        5.  Add logic to parse the  field on the  model for keywords indicating preferences (e.g., prefers house X, no weekends).
+        6.  Track worked hours against  and  to stop assigning staff who have reached their limit.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is the application's core feature. Fixing it will make the auto-assignment tool usable and reliable, which is a primary user requirement.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Backend primarily. The frontend should be checked to ensure the correctly assigned data is displayed.
+    -   **Blocked on other issue**: None
+
+**In progress Task List**:
+-   **Task 1**: Implement the intelligent auto-assignment algorithm. (P0)
+
+**Task Detail:**
+-   **Task 1:**
+    -   **Where to resume**: . The agent needs to rewrite the function handling the  endpoint, using the newly added  fields and implementing the logic described in Issue 1 above.
+    -   **What will be achieved with this?**: A functional, correct, and reliable auto-assignment feature that adheres to all business rules.
+    -   **Status**: IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?**: Backend
+    -   **Blocked on something**: None
+
+**Upcoming and Future Tasks**
+-   **Upcoming Tasks**:
+    -   **Task**: Implement automatic notifications. (P1)
+        -   **Description**: The user approved the agent's suggestion to send automatic notifications (e.g., email/SMS) to staff when they are assigned to a new shift.
+        -   **Files**: This will require new backend logic in  and likely a third-party integration (e.g., SendGrid, Twilio).
+    -   **Task**: Verify and fix the hour-editing functionality. (P1)
+        -   **Description**: The user reported that generating coverage doesn't work and they cannot edit hours in the Control de horas view. The agent worked on this, but the user's latest feedback implies issues persist. The functionality needs to be re-verified end-to-end.
+        -   **Files**: , , .
+-   **Future Tasks**:
+    -   **Task**: Implement automatic backup and data restoration. (P2)
+        -   **Description**: The user approved the agent's suggestion for a system to automatically back up and restore historical data.
+
+**Completed work in this session**
+-   **Application Scaffolding**: Created a full-stack FastAPI (backend) and React (frontend) application.
+-   **Core UI Views**: Implemented Dashboard, Calendar, Staff Management, House Management, Absence Tracking, and a Reports/Metrics page.
+-   **CRUD Operations**: Enabled full Create, Read, Update, and Delete functionality for Staff and Houses.
+-   **Scheduling Features**:
+    -   Implemented manual and a (currently flawed) automatic assignment system.
+    -   Added a calendar with month/year selection.
+    -   Enabled export of schedules to PDF and Excel.
+-   **HR Features**:
+    -   Created views for tracking staff absences and worked hours.
+    -   Added fields for max daily/monthly work hours for staff.
+-   **Access Control**: Implemented a basic login screen with Admin/Operator roles to control view/edit permissions.
+-   **Bug Fixes**: Resolved multiple UI bugs, including form submission errors, component rendering issues, and broken layouts.
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Backend**: FastAPI, Pydantic for data modeling, Motor (async driver for MongoDB).
+-   **Frontend**: React,  for API calls, TailwindCSS for styling,  for icons.
+-   **Database**: MongoDB.
+-   **Architecture**: REST API backend serving a Single Page Application (SPA) frontend.
+-   **State Management**: Simple React state (, ) and Context API for global state (auth role).
+
+**key DB schema**
+-   **houses**: 
+-   **staff**: 
+-   **coverage**: 
+-   **absences**: 
+
+**All files of reference**
+-   : Contains all API endpoints and the critical auto-assignment logic that needs to be fixed.
+-   : The main UI where the user interacts with the schedule and triggers the auto-assignment.
+-   : UI for staff CRUD; was the source of several bugs that were fixed.
+-   : UI for viewing and editing staff worked hours.
+-   : UI for house CRUD.
+
+**key api endpoints**
+-   : The critical endpoint for automatic scheduling that is currently being fixed.
+-   : Endpoint for manual staff assignment.
+-   : Fetches all coverage entries for a given month.
+-   : Endpoints for Staff CRUD.
+-   : Endpoints for House CRUD.
+-   : Fetches aggregated work hours for a staff member.
+
+**Critical Info for New Agent**
+-   The highest priority is to fix the auto-assignment logic. The user is technically savvy and provides clear, direct feedback. The current implementation is incorrect and does not meet the core business requirement.
+-   The authentication system is a mock. It uses  to store a selected role ('administrador' or 'operador') without any real user accounts or passwords. This is sufficient for the internal tool's purpose.
+-   The user wants the system to be intelligent. When implementing the auto-assignment fix, focus on making it robust by checking all constraints: availability, hour limits, priorities, and preferences from notes.
+
+**documents and test reports created in this job**
+-   
+-   
+
+**Last 10 User Messages and any pending HUMAN messages**
+1.  **User (Latest)**: Reports the auto-assignment logic is flawed because it assigns one assistant to multiple houses on the same day. Suggests adding intelligence: check daily availability, use priorities, distribute hours, and parse preferences from notes. (IN PROGRESS)
+2.  **User**: Reports auto-assignment shows 0 assigned and provides a screenshot of a staff editing error. (FIXED)
+3.  **User**: Reports coverage generation and hour editing features are not working. (PARTIALLY ADDRESSED, PENDING VERIFICATION)
+4.  **User**: Provides a screenshot of a blank screen caused by a syntax error. (FIXED)
+5.  **User**: Approves agent's suggestions for efficiency metrics and automatic notifications. Requests that staff absences block them from being assigned. Asks for CRUD for staff and the ability to select the month/year on the calendar. (IMPLEMENTED/PENDING)
+6.  **User**: Approves agent's suggestions for export, auto-assignment, and a generate coverage per house button. Asks for manual overrides and a section for staff leave/sickness. (IMPLEMENTED)
+7.  **User**: Reports an error when trying to edit houses. (FIXED)
+8.  **User**: Approves agent's suggestions and asks to implement CRUD for houses and the ability to modify rules for houses/people to influence auto-generation. (IMPLEMENTED)
+9.  **User**: Provides a screenshot of a blank screen after the agent implemented a login page. (FIXED)
+10. **User**: Acknowledges user clarifications, asking for data export (PDF/Excel), historical data view, auto-assignment with manual override, and no authentication. (ACKNOWLEDGED)
+
+**Project Health Check:**
+-   **Broken**: The core auto-assignment feature is logically broken and does not meet user requirements, making it unusable.
+-   **Mocked**: The authentication system is a simple role-selector with no real security, which is by design for this internal tool.
+
+**3rd Party Integrations**
+-   None.
+
+**Testing status**
+-   **Testing agent used after significant changes**: YES (early in development)
+-   **Troubleshoot agent used after agent stuck in loop**: NO
+-   **Test files created**: []
+-   **Known regressions**: The auto-assignment feature, while technically working (i.e., the endpoint responds), produces incorrect data, which is a regression from a usable state.
+
+**Credentials to test flow:**
+-   On the login page, enter any username and select a role from the dropdown ('administrador' for full access). No password is required.</analysis>
