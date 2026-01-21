@@ -153,6 +153,25 @@ async def create_house(house: HouseCreate):
     await db.houses.insert_one(house_dict)
     return House(**house_dict)
 
+@api_router.put("/houses/{house_id}", response_model=House)
+async def update_house(house_id: str, house: HouseCreate):
+    existing = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="House not found")
+    
+    house_dict = house.model_dump()
+    await db.houses.update_one({"house_id": house_id}, {"$set": house_dict})
+    
+    updated = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
+    return House(**updated)
+
+@api_router.delete("/houses/{house_id}")
+async def delete_house(house_id: str):
+    result = await db.houses.delete_one({"house_id": house_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="House not found")
+    return {"message": "House deleted successfully"}
+
 @api_router.get("/staff", response_model=List[Staff])
 async def get_staff():
     staff_list = await db.staff.find({}, {"_id": 0}).to_list(100)
