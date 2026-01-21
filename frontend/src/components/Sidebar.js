@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Calendar, Home, AlertCircle, Users, UserX, BarChart3, Building2, LogOut, Shield } from 'lucide-react';
+import { Calendar, Home, AlertCircle, Users, UserX, BarChart3, Building2, LogOut, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 
@@ -14,6 +14,7 @@ export default function Sidebar() {
     { to: '/staff', icon: Users, label: 'Personal', permission: 'manage_staff' },
     { to: '/houses', icon: Building2, label: 'Casas', permission: 'manage_houses' },
     { to: '/absences', icon: UserX, label: 'Ausencias', permission: 'manage_absences' },
+    { to: '/hours', icon: Clock, label: 'Control Horas', permission: 'view_reports' },
     { to: '/reports', icon: BarChart3, label: 'Reportes', permission: 'view_reports' }
   ];
 
