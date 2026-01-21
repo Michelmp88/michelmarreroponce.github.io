@@ -51,6 +51,39 @@ export default function HoursTrackingView() {
     }
   };
 
+  const handleEditHours = (hoursInfo) => {
+    const staffMember = staff.find(s => s.staff_id === hoursInfo.staff_id);
+    setEditingStaff(staffMember);
+    setEditForm({
+      max_hours_daily: staffMember?.max_hours_daily || '',
+      max_hours_monthly: staffMember?.max_hours_monthly || '',
+      hours_per_shift: staffMember?.hours_per_shift || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleSaveHours = async () => {
+    if (!editingStaff) return;
+
+    try {
+      const updateData = {
+        ...editingStaff,
+        max_hours_daily: editForm.max_hours_daily ? parseInt(editForm.max_hours_daily) : null,
+        max_hours_monthly: editForm.max_hours_monthly ? parseInt(editForm.max_hours_monthly) : null,
+        hours_per_shift: editForm.hours_per_shift ? parseInt(editForm.hours_per_shift) : null
+      };
+
+      await axios.put(`${API}/staff/${editingStaff.staff_id}`, updateData);
+      toast.success('Límites de horas actualizados');
+      setShowEditModal(false);
+      setLoading(true);
+      fetchData();
+    } catch (error) {
+      console.error('Error updating hours:', error);
+      toast.error('Error al actualizar límites');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
