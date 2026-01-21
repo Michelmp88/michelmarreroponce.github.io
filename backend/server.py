@@ -395,7 +395,8 @@ async def get_staff_absences(staff_id: str):
     absences = await db.absences.find({"staff_id": staff_id}, {"_id": 0}).to_list(1000)
     return absences
 
-async def is_staff_available(staff_id: str, check_date: str) -> bool:
+async def is_staff_on_absence(staff_id: str, check_date: str) -> bool:
+    """Check if staff has an absence on the given date"""
     absences = await db.absences.find(
         {
             "staff_id": staff_id,
@@ -404,10 +405,179 @@ async def is_staff_available(staff_id: str, check_date: str) -> bool:
         },
         {"_id": 0}
     ).to_list(100)
-    return len(absences) == 0
+    return len(absences) > 0
+
+async def is_staff_already_assigned(staff_id: str, check_date: str, exclude_house_id: str = None) -> bool:
+    """Check if staff is already assigned to ANY house on the given date"""
+    query = {
+        "assigned_staff_id": staff_id,
+        "date": check_date,
+        "status": "complete"
+    }
+    if exclude_house_id:
+        query["house_id"] = {"$ne": exclude_house_id}
+    
+    existing = await db.coverage.find(query, {"_id": 0}).to_list(10)
+    return len(existing) > 0
+
+async def get_staff_hours_for_month(staff_id: str, year: int, month: int) -> int:
+    """Calculate total hours worked by staff in a month"""
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    assignments = await db.coverage.find(
+        {
+            "assigned_staff_id": staff_id,
+            "date": {"$gte": start_date, "$lt": end_date},
+            "status": "complete"
+        },
+        {"_id": 0}
+    ).to_list(1000)
+    
+    staff = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    if not staff:
+        return 0
+    
+    hours_per_shift = staff.get("hours_per_shift", 24 if staff["staff_type"] == "caregiver" else 8)
+    return len(assignments) * hours_per_shift
+
+async def get_staff_hours_for_day(staff_id: str, check_date: str) -> int:
+    """Calculate total hours worked by staff on a specific day"""
+    assignments = await db.coverage.find(
+        {
+            "assigned_staff_id": staff_id,
+            "date": check_date,
+            "status": "complete"
+        },
+        {"_id": 0}
+    ).to_list(10)
+    
+    staff = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    if not staff:
+        return 0
+    
+    hours_per_shift = staff.get("hours_per_shift", 24 if staff["staff_type"] == "caregiver" else 8)
+    return len(assignments) * hours_per_shift
+
+def parse_staff_preferences(notes: str, house_id: str) -> dict:
+    """Parse staff notes to extract preferences"""
+    if not notes:
+        return {"prefers_house": False, "avoids_house": False, "no_weekends": False}
+    
+    notes_lower = notes.lower()
+    house_num = house_id.replace("house_", "").replace("casa_", "")
+    
+    prefers_house = any([
+        f"prefiere casa {house_num}" in notes_lower,
+        f"prefer casa {house_num}" in notes_lower,
+        f"casa {house_num} preferida" in notes_lower,
+        f"prefers house {house_num}" in notes_lower
+    ])
+    
+    avoids_house = any([
+        f"evitar casa {house_num}" in notes_lower,
+        f"no casa {house_num}" in notes_lower,
+        f"avoid house {house_num}" in notes_lower
+    ])
+    
+    no_weekends = any([
+        "no fines de semana" in notes_lower,
+        "sin fines de semana" in notes_lower,
+        "no weekends" in notes_lower,
+        "evitar sabado" in notes_lower,
+        "evitar domingo" in notes_lower
+    ])
+    
+    return {
+        "prefers_house": prefers_house,
+        "avoids_house": avoids_house,
+        "no_weekends": no_weekends
+    }
+
+def is_weekend(date_str: str) -> bool:
+    """Check if a date is Saturday or Sunday"""
+    d = datetime.fromisoformat(date_str)
+    return d.weekday() >= 5  # 5=Saturday, 6=Sunday
+
+async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int, month: int, shift_hours: int) -> tuple:
+    """
+    Comprehensive check if staff can work on a given date for a specific house.
+    Returns (can_work: bool, reason: str, score: int)
+    Score is used for ranking candidates (higher is better)
+    """
+    staff_id = staff["staff_id"]
+    score = 100  # Base score
+    
+    # Check 1: Is staff on absence?
+    if await is_staff_on_absence(staff_id, check_date):
+        return (False, "en ausencia", 0)
+    
+    # Check 2: Is staff already assigned to another house on this day?
+    if await is_staff_already_assigned(staff_id, check_date, exclude_house_id=house_id):
+        return (False, "ya asignado a otra casa", 0)
+    
+    # Check 3: Daily hour limit
+    max_daily = staff.get("max_hours_daily", 24 if staff["staff_type"] == "caregiver" else 12)
+    current_daily_hours = await get_staff_hours_for_day(staff_id, check_date)
+    if current_daily_hours + shift_hours > max_daily:
+        return (False, f"excede limite diario ({current_daily_hours + shift_hours}/{max_daily}h)", 0)
+    
+    # Check 4: Monthly hour limit
+    max_monthly = staff.get("max_hours_monthly", 480)
+    current_monthly_hours = await get_staff_hours_for_month(staff_id, year, month)
+    if current_monthly_hours + shift_hours > max_monthly:
+        return (False, f"excede limite mensual ({current_monthly_hours + shift_hours}/{max_monthly}h)", 0)
+    
+    # Parse preferences from notes
+    preferences = parse_staff_preferences(staff.get("notes", ""), house_id)
+    
+    # Check 5: Weekend preference
+    if preferences["no_weekends"] and is_weekend(check_date):
+        score -= 50  # Penalize but don't exclude
+    
+    # Check 6: House preference
+    if preferences["avoids_house"]:
+        score -= 30  # Penalize avoiding this house
+    if preferences["prefers_house"]:
+        score += 30  # Bonus for preferring this house
+    
+    # Check 7: Fixed house assignment
+    if staff.get("fixed_house_id"):
+        if staff["fixed_house_id"] == house_id:
+            score += 50  # Big bonus for being assigned to this house
+        else:
+            score -= 40  # Penalize assigning to different house
+    
+    # Check 8: Priority (lower priority number = higher priority = higher score)
+    priority = staff.get("priority", 50)
+    score += (100 - priority)  # Convert priority to score bonus
+    
+    # Check 9: Work/rest day pattern (simplified check)
+    work_days = staff.get("work_days")
+    rest_days = staff.get("rest_days")
+    if work_days and rest_days:
+        # This is a simplified check - could be more sophisticated
+        cycle = work_days + rest_days
+        day_of_month = int(check_date.split("-")[2])
+        if (day_of_month % cycle) >= work_days:
+            score -= 20  # Might be a rest day
+    
+    return (True, "disponible", score)
 
 @api_router.post("/coverage/auto-assign/{house_id}/{year}/{month}")
 async def auto_assign_coverage(house_id: str, year: int, month: int):
+    """
+    Intelligent auto-assignment algorithm that:
+    1. Prevents double-booking staff on the same day
+    2. Respects hour limits (daily and monthly)
+    3. Uses priorities (staff and house)
+    4. Parses preferences from notes
+    5. Respects absences
+    6. Follows the hierarchy: Encargada -> Rotativa -> Jornalera
+    """
     house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
     if not house:
         raise HTTPException(status_code=404, detail="House not found")
@@ -421,6 +591,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     start_date_str = start_date.isoformat()
     end_date_str = end_date.isoformat()
     
+    # Get all coverage entries for this house this month
     coverage_entries = await db.coverage.find(
         {
             "house_id": house_id,
@@ -429,60 +600,132 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
         {"_id": 0}
     ).to_list(1000)
     
+    # Get all staff
     all_staff = await db.staff.find({}, {"_id": 0}).to_list(100)
     
-    caregivers = [s for s in all_staff if s["staff_type"] == "caregiver"]
-    assistants = [s for s in all_staff if s["staff_type"] == "assistant"]
+    # Separate and sort by priority
+    caregivers = sorted(
+        [s for s in all_staff if s["staff_type"] == "caregiver"],
+        key=lambda x: x.get("priority", 50)
+    )
+    assistants = sorted(
+        [s for s in all_staff if s["staff_type"] == "assistant"],
+        key=lambda x: x.get("priority", 50)
+    )
     
+    # Further categorize caregivers by subtype for hierarchy
     encargadas = [s for s in caregivers if s["subtype"] == "encargada"]
     rotativas = [s for s in caregivers if s["subtype"] == "rotativa_mensual"]
-    jornaleras = [s for s in caregivers if s["subtype"] == "jornalera"]
+    jornaleras_cuidadora = [s for s in caregivers if s["subtype"] == "jornalera"]
     
     mensuales = [s for s in assistants if s["subtype"] == "mensual"]
     jornaleras_asist = [s for s in assistants if s["subtype"] == "jornalera"]
     
     assignments_made = 0
     assignments_details = []
+    skipped_details = []
     
-    for entry in coverage_entries:
-        if entry["status"] == "complete":
-            continue
-        
+    # Sort entries by date to process in order
+    incomplete_entries = sorted(
+        [e for e in coverage_entries if e["status"] != "complete"],
+        key=lambda x: x["date"]
+    )
+    
+    for entry in incomplete_entries:
         check_date = entry["date"]
         coverage_type = entry["coverage_type"]
         
         selected_staff = None
+        best_score = -1
+        skip_reason = None
         
         if coverage_type == "caregiver_24h":
+            shift_hours = 24
+            
+            # Priority 1: House's assigned encargada
             if house.get("encargada_staff_id"):
-                encargada = next((s for s in encargadas if s["staff_id"] == house["encargada_staff_id"]), None)
-                if encargada and await is_staff_available(encargada["staff_id"], check_date):
-                    selected_staff = encargada
+                encargada = next(
+                    (s for s in encargadas if s["staff_id"] == house["encargada_staff_id"]), 
+                    None
+                )
+                if encargada:
+                    can_work, reason, score = await can_staff_work(
+                        encargada, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work and score > best_score:
+                        selected_staff = encargada
+                        best_score = score
             
+            # Priority 2: Rotativas (monthly rotating caregivers)
             if not selected_staff:
+                candidates = []
                 for staff in rotativas:
-                    if await is_staff_available(staff["staff_id"], check_date):
-                        selected_staff = staff
-                        break
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    # Sort by score (highest first) and select best
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
+            
+            # Priority 3: Jornaleras (day workers)
+            if not selected_staff:
+                candidates = []
+                for staff in jornaleras_cuidadora:
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
             
             if not selected_staff:
-                for staff in jornaleras:
-                    if await is_staff_available(staff["staff_id"], check_date):
-                        selected_staff = staff
-                        break
+                skip_reason = "No hay cuidadoras disponibles"
         
         elif coverage_type == "assistant_8h":
+            shift_hours = 8
+            
+            # Priority 1: Mensuales (monthly assistants)
+            candidates = []
             for staff in mensuales:
-                if await is_staff_available(staff["staff_id"], check_date):
-                    selected_staff = staff
-                    break
+                can_work, reason, score = await can_staff_work(
+                    staff, check_date, house_id, year, month, shift_hours
+                )
+                if can_work:
+                    candidates.append((staff, score))
+            
+            if candidates:
+                candidates.sort(key=lambda x: x[1], reverse=True)
+                selected_staff = candidates[0][0]
+                best_score = candidates[0][1]
+            
+            # Priority 2: Jornaleras asistentes
+            if not selected_staff:
+                candidates = []
+                for staff in jornaleras_asist:
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
             
             if not selected_staff:
-                for staff in jornaleras_asist:
-                    if await is_staff_available(staff["staff_id"], check_date):
-                        selected_staff = staff
-                        break
+                skip_reason = "No hay asistentes disponibles"
         
+        # Make the assignment if we found someone
         if selected_staff:
             await db.coverage.update_one(
                 {"coverage_id": entry["coverage_id"]},
@@ -498,7 +741,14 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
             assignments_details.append({
                 "date": check_date,
                 "coverage_type": coverage_type,
-                "assigned_staff": selected_staff["name"]
+                "assigned_staff": selected_staff["name"],
+                "score": best_score
+            })
+        else:
+            skipped_details.append({
+                "date": check_date,
+                "coverage_type": coverage_type,
+                "reason": skip_reason or "Sin personal disponible"
             })
     
     return {
