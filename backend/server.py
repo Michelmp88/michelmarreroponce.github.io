@@ -753,9 +753,11 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     
     return {
         "house_id": house_id,
-        "total_assignments": len([e for e in coverage_entries if e["status"] == "incomplete"]),
+        "total_slots": len(incomplete_entries),
         "assignments_made": assignments_made,
-        "assignments_details": assignments_details[:20]
+        "assignments_skipped": len(skipped_details),
+        "assignments_details": assignments_details[:30],
+        "skipped_details": skipped_details[:10]
     }
 
 @api_router.get("/coverage/export/{year}/{month}")
