@@ -11,6 +11,7 @@ import StaffManagement from '@/pages/StaffManagement';
 import HousesManagement from '@/pages/HousesManagement';
 import AbsencesView from '@/pages/AbsencesView';
 import ReportsView from '@/pages/ReportsView';
+import HoursTrackingView from '@/pages/HoursTrackingView';
 import Sidebar from '@/components/Sidebar';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -44,6 +45,7 @@ function ProtectedRoutes() {
           <Route path="/houses" element={<HousesManagement />} />
           <Route path="/absences" element={<AbsencesView />} />
           <Route path="/reports" element={<ReportsView />} />
+          <Route path="/hours" element={<HoursTrackingView />} />
         </Routes>
       </main>
     </div>
