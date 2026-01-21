@@ -13,6 +13,7 @@ export default function StaffManagement() {
   const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingStaff, setEditingStaff] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     staff_type: 'caregiver',
