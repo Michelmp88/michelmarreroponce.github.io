@@ -167,6 +167,9 @@ export default function StaffManagement() {
       work_days: member.work_days || '',
       rest_days: member.rest_days || '',
       weekly_hours: member.weekly_hours || '',
+      max_hours_daily: member.max_hours_daily || '',
+      max_hours_monthly: member.max_hours_monthly || '',
+      hours_per_shift: member.hours_per_shift || '',
       fixed_house_id: member.fixed_house_id || '',
       work_schedule: member.work_schedule || '',
       notes: member.notes || ''
