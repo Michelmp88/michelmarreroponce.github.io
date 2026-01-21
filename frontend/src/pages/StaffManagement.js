@@ -67,6 +67,9 @@ export default function StaffManagement() {
           work_days: formData.work_days ? parseInt(formData.work_days) : null,
           rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
           weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
+          max_hours_daily: formData.max_hours_daily ? parseInt(formData.max_hours_daily) : null,
+          max_hours_monthly: formData.max_hours_monthly ? parseInt(formData.max_hours_monthly) : null,
+          hours_per_shift: formData.hours_per_shift ? parseInt(formData.hours_per_shift) : null,
           fixed_house_id: formData.fixed_house_id || null,
           work_schedule: formData.work_schedule || null,
           notes: formData.notes || null
@@ -76,6 +79,48 @@ export default function StaffManagement() {
         toast.success('Personal actualizado correctamente');
       } else {
         const staffId = `staff_${formData.name.toLowerCase().replace(/\s+/g, '_')}`;
+        const dataToSend = {
+          staff_id: staffId,
+          name: formData.name,
+          staff_type: formData.staff_type,
+          subtype: formData.subtype,
+          work_days: formData.work_days ? parseInt(formData.work_days) : null,
+          rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
+          weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
+          max_hours_daily: formData.max_hours_daily ? parseInt(formData.max_hours_daily) : null,
+          max_hours_monthly: formData.max_hours_monthly ? parseInt(formData.max_hours_monthly) : null,
+          hours_per_shift: formData.hours_per_shift ? parseInt(formData.hours_per_shift) : null,
+          fixed_house_id: formData.fixed_house_id || null,
+          work_schedule: formData.work_schedule || null,
+          notes: formData.notes || null
+        };
+
+        await axios.post(`${API}/staff`, dataToSend);
+        toast.success('Personal agregado correctamente');
+      }
+      
+      setShowAddModal(false);
+      setEditingStaff(null);
+      setFormData({
+        name: '',
+        staff_type: 'caregiver',
+        subtype: 'encargada',
+        work_days: '',
+        rest_days: '',
+        weekly_hours: '',
+        max_hours_daily: '',
+        max_hours_monthly: '',
+        hours_per_shift: '',
+        fixed_house_id: '',
+        work_schedule: '',
+        notes: ''
+      });
+      fetchData();
+    } catch (error) {
+      console.error('Error saving staff:', error);
+      toast.error('Error al guardar personal');
+    }
+  };
         const dataToSend = {
           staff_id: staffId,
           name: formData.name,
