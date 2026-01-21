@@ -121,42 +121,6 @@ export default function StaffManagement() {
       toast.error('Error al guardar personal');
     }
   };
-        const dataToSend = {
-          staff_id: staffId,
-          name: formData.name,
-          staff_type: formData.staff_type,
-          subtype: formData.subtype,
-          work_days: formData.work_days ? parseInt(formData.work_days) : null,
-          rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
-          weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
-          fixed_house_id: formData.fixed_house_id || null,
-          work_schedule: formData.work_schedule || null,
-          notes: formData.notes || null
-        };
-
-        await axios.post(`${API}/staff`, dataToSend);
-        toast.success('Personal agregado correctamente');
-      }
-      
-      setShowAddModal(false);
-      setEditingStaff(null);
-      setFormData({
-        name: '',
-        staff_type: 'caregiver',
-        subtype: 'encargada',
-        work_days: '',
-        rest_days: '',
-        weekly_hours: '',
-        fixed_house_id: '',
-        work_schedule: '',
-        notes: ''
-      });
-      fetchData();
-    } catch (error) {
-      console.error('Error saving staff:', error);
-      toast.error('Error al guardar personal');
-    }
-  };
 
   const handleEditStaff = (member) => {
     setEditingStaff(member);
