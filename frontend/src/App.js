@@ -7,6 +7,7 @@ import CalendarView from '@/pages/CalendarView';
 import GapsView from '@/pages/GapsView';
 import StaffManagement from '@/pages/StaffManagement';
 import AbsencesView from '@/pages/AbsencesView';
+import ReportsView from '@/pages/ReportsView';
 import Sidebar from '@/components/Sidebar';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/gaps" element={<GapsView />} />
               <Route path="/staff" element={<StaffManagement />} />
               <Route path="/absences" element={<AbsencesView />} />
+              <Route path="/reports" element={<ReportsView />} />
             </Routes>
           </main>
         </div>
