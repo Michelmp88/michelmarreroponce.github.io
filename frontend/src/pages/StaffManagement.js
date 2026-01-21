@@ -495,7 +495,7 @@ export default function StaffManagement() {
                   <SelectValue placeholder="Ninguna" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Ninguna</SelectItem>
+                  <SelectItem value="none">Ninguna</SelectItem>
                   {houses.map(house => (
                     <SelectItem key={house.house_id} value={house.house_id}>
                       {house.name}
