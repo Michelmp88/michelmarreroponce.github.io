@@ -265,7 +265,7 @@ export default function HousesManagement() {
                   <SelectValue placeholder="Seleccionar encargada (opcional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Ninguna</SelectItem>
+                  <SelectItem value="none">Ninguna</SelectItem>
                   {encargadas.map(s => (
                     <SelectItem key={s.staff_id} value={s.staff_id}>{s.name}</SelectItem>
                   ))}
