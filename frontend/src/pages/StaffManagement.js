@@ -361,7 +361,7 @@ export default function StaffManagement() {
       </div>
 
       <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent className="max-w-2xl" data-testid="add-staff-modal">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="add-staff-modal">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-slate-900">
               {editingStaff ? 'Editar Personal' : 'Agregar Personal'}
