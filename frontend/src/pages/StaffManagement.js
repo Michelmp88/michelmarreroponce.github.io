@@ -343,10 +343,10 @@ export default function StaffManagement() {
         <DialogContent className="max-w-2xl" data-testid="add-staff-modal">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-slate-900">
-              Agregar Personal
+              {editingStaff ? 'Editar Personal' : 'Agregar Personal'}
             </DialogTitle>
             <DialogDescription className="text-slate-600">
-              Completa la información del nuevo miembro del personal
+              {editingStaff ? 'Modifica la información y reglas del personal' : 'Completa la información del nuevo miembro del personal'}
             </DialogDescription>
           </DialogHeader>
 
