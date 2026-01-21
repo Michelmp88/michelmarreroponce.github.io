@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '@/App';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function HoursTrackingView() {
@@ -12,6 +14,13 @@ export default function HoursTrackingView() {
   const [staff, setStaff] = useState([]);
   const [hoursData, setHoursData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingStaff, setEditingStaff] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    max_hours_daily: '',
+    max_hours_monthly: '',
+    hours_per_shift: ''
+  });
 
   useEffect(() => {
     fetchData();
