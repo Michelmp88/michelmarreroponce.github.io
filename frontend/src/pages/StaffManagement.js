@@ -492,6 +492,39 @@ export default function StaffManagement() {
             </div>
 
             <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Máximo Horas Diarias</label>
+              <input
+                type="number"
+                value={formData.max_hours_daily}
+                onChange={(e) => setFormData({...formData, max_hours_daily: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 12"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Máximo Horas Mensuales</label>
+              <input
+                type="number"
+                value={formData.max_hours_monthly}
+                onChange={(e) => setFormData({...formData, max_hours_monthly: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 240"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Horas por Turno</label>
+              <input
+                type="number"
+                value={formData.hours_per_shift}
+                onChange={(e) => setFormData({...formData, hours_per_shift: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 8 (asistentes) o 24 (cuidadoras)"
+              />
+            </div>
+
+            <div>
               <label className="text-sm font-semibold text-slate-700 mb-2 block">Casa Asignada</label>
               <Select value={formData.fixed_house_id} onValueChange={(value) => setFormData({...formData, fixed_house_id: value})}>
                 <SelectTrigger>
