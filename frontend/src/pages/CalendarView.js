@@ -147,9 +147,28 @@ export default function CalendarView() {
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight" data-testid="calendar-title">
               Calendario de Coberturas
             </h1>
-            <p className="text-slate-500 mt-2">
-              {new Date(year, month - 1).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
-            </p>
+            <div className="flex items-center gap-3 mt-3">
+              <Select value={String(month)} onValueChange={(value) => setMonth(parseInt(value))}>
+                <SelectTrigger className="w-40" data-testid="month-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((m, i) => (
+                    <SelectItem key={i + 1} value={String(i + 1)}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={String(year)} onValueChange={(value) => setYear(parseInt(value))}>
+                <SelectTrigger className="w-32" data-testid="year-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({length: 5}, (_, i) => new Date().getFullYear() - 2 + i).map(y => (
+                    <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
