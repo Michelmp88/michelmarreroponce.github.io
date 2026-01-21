@@ -127,6 +127,41 @@ export default function CalendarView() {
     }
   };
 
+  const handleResetHouse = async () => {
+    if (!selectedHouse) return;
+    
+    setResetting(true);
+    try {
+      const response = await axios.delete(`${API}/coverage/reset/${selectedHouse}/${year}/${month}`);
+      toast.success(response.data.message);
+      setShowResetModal(false);
+      setSelectedHouse(null);
+      setResetType(null);
+      await fetchData();
+    } catch (error) {
+      console.error('Error resetting coverage:', error);
+      toast.error('Error al limpiar asignaciones');
+    } finally {
+      setResetting(false);
+    }
+  };
+
+  const handleResetMonth = async () => {
+    setResetting(true);
+    try {
+      const response = await axios.delete(`${API}/coverage/reset-all/${year}/${month}`);
+      toast.success(response.data.message);
+      setShowResetModal(false);
+      setResetType(null);
+      await fetchData();
+    } catch (error) {
+      console.error('Error resetting all coverage:', error);
+      toast.error('Error al limpiar asignaciones del mes');
+    } finally {
+      setResetting(false);
+    }
+  };
+
   const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
