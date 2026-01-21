@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '@/App';
+import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -9,6 +10,7 @@ import { Users, UserCheck, Calendar, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function StaffManagement() {
+  const { hasPermission } = useAuth();
   const [staff, setStaff] = useState([]);
   const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
