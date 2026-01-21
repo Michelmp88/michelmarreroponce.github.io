@@ -476,7 +476,10 @@ export default function StaffManagement() {
 
           <DialogFooter>
             <Button
-              onClick={() => setShowAddModal(false)}
+              onClick={() => {
+                setShowAddModal(false);
+                setEditingStaff(null);
+              }}
               variant="outline"
               data-testid="cancel-add-btn"
             >
@@ -487,7 +490,7 @@ export default function StaffManagement() {
               className="bg-indigo-600 hover:bg-indigo-700"
               data-testid="save-staff-btn"
             >
-              Guardar Personal
+              {editingStaff ? 'Actualizar Personal' : 'Guardar Personal'}
             </Button>
           </DialogFooter>
         </DialogContent>
