@@ -10,6 +10,7 @@ import { Home, Plus, Trash2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function HousesManagement() {
+  const { hasPermission } = useAuth();
   const [houses, setHouses] = useState([]);
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
