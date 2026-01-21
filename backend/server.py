@@ -760,6 +760,115 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
         "skipped_details": skipped_details[:10]
     }
 
+@api_router.delete("/coverage/reset/{house_id}/{year}/{month}")
+async def reset_house_coverage(house_id: str, year: int, month: int):
+    """
+    Reset all assignments for a specific house in a given month.
+    Sets assigned_staff_id to null and status to incomplete.
+    """
+    house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
+    if not house:
+        raise HTTPException(status_code=404, detail="House not found")
+    
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    result = await db.coverage.update_many(
+        {
+            "house_id": house_id,
+            "date": {"$gte": start_date, "$lt": end_date}
+        },
+        {
+            "$set": {
+                "assigned_staff_id": None,
+                "assigned_staff_name": None,
+                "status": "incomplete"
+            }
+        }
+    )
+    
+    return {
+        "house_id": house_id,
+        "year": year,
+        "month": month,
+        "entries_reset": result.modified_count,
+        "message": f"Se limpiaron {result.modified_count} asignaciones de {house['name']}"
+    }
+
+@api_router.delete("/coverage/reset-all/{year}/{month}")
+async def reset_all_coverage(year: int, month: int):
+    """
+    Reset ALL assignments for a given month across all houses.
+    Sets assigned_staff_id to null and status to incomplete.
+    """
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    result = await db.coverage.update_many(
+        {
+            "date": {"$gte": start_date, "$lt": end_date}
+        },
+        {
+            "$set": {
+                "assigned_staff_id": None,
+                "assigned_staff_name": None,
+                "status": "incomplete"
+            }
+        }
+    )
+    
+    return {
+        "year": year,
+        "month": month,
+        "entries_reset": result.modified_count,
+        "message": f"Se limpiaron {result.modified_count} asignaciones del mes {month}/{year}"
+    }
+
+@api_router.delete("/coverage/reset-staff/{staff_id}/{year}/{month}")
+async def reset_staff_coverage(staff_id: str, year: int, month: int):
+    """
+    Reset all assignments for a specific staff member in a given month.
+    Useful for removing double-bookings or reassigning a person.
+    """
+    staff = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    if not staff:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    result = await db.coverage.update_many(
+        {
+            "assigned_staff_id": staff_id,
+            "date": {"$gte": start_date, "$lt": end_date}
+        },
+        {
+            "$set": {
+                "assigned_staff_id": None,
+                "assigned_staff_name": None,
+                "status": "incomplete"
+            }
+        }
+    )
+    
+    return {
+        "staff_id": staff_id,
+        "staff_name": staff["name"],
+        "year": year,
+        "month": month,
+        "entries_reset": result.modified_count,
+        "message": f"Se limpiaron {result.modified_count} asignaciones de {staff['name']}"
+    }
+
 @api_router.get("/coverage/export/{year}/{month}")
 async def export_coverage(year: int, month: int, format: str = "excel"):
     if format not in ["excel", "pdf"]:
