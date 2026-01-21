@@ -293,6 +293,46 @@ async def get_coverage_gaps(year: int, month: int):
     
     return gaps
 
+@api_router.get("/staff/{staff_id}/hours/{year}/{month}")
+async def get_staff_hours(staff_id: str, year: int, month: int):
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    staff = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    if not staff:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    
+    assignments = await db.coverage.find(
+        {
+            "assigned_staff_id": staff_id,
+            "date": {"$gte": start_date, "$lt": end_date}
+        },
+        {"_id": 0}
+    ).to_list(1000)
+    
+    hours_per_shift = staff.get("hours_per_shift", 24 if staff["staff_type"] == "caregiver" else 8)
+    total_hours = len(assignments) * hours_per_shift
+    days_worked = len(set([a["date"] for a in assignments]))
+    
+    max_daily = staff.get("max_hours_daily", 24 if staff["staff_type"] == "caregiver" else 12)
+    max_monthly = staff.get("max_hours_monthly", 480)
+    
+    return {
+        "staff_id": staff_id,
+        "staff_name": staff["name"],
+        "period": f"{year}-{month:02d}",
+        "total_hours": total_hours,
+        "days_worked": days_worked,
+        "max_hours_daily": max_daily,
+        "max_hours_monthly": max_monthly,
+        "remaining_hours": max_monthly - total_hours,
+        "is_over_limit": total_hours > max_monthly,
+        "assignments": len(assignments)
+    }
+
 @api_router.get("/stats/{year}/{month}")
 async def get_monthly_stats(year: int, month: int):
     start_date = f"{year}-{month:02d}-01"
