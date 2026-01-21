@@ -260,6 +260,18 @@ export default function CalendarView() {
 
           <div className="flex items-center gap-3">
             <Button
+              onClick={() => {
+                setResetType('month');
+                setShowResetModal(true);
+              }}
+              variant="outline"
+              data-testid="reset-month-btn"
+              className="border-orange-300 text-orange-700 hover:bg-orange-50"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Limpiar Mes
+            </Button>
+            <Button
               onClick={() => handleExport('excel')}
               variant="outline"
               data-testid="export-excel-btn"
@@ -297,18 +309,33 @@ export default function CalendarView() {
             <React.Fragment key={house.house_id}>
               <div className="house-label flex flex-col items-center justify-center font-bold text-slate-900 p-4 border border-slate-200 rounded-lg space-y-2">
                 <span>{house.name}</span>
-                <Button
-                  onClick={() => {
-                    setSelectedHouse(house.house_id);
-                    setShowAutoAssignModal(true);
-                  }}
-                  size="sm"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-xs"
-                  data-testid={`auto-assign-${house.house_id}`}
-                >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Auto
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    onClick={() => {
+                      setSelectedHouse(house.house_id);
+                      setShowAutoAssignModal(true);
+                    }}
+                    size="sm"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-xs"
+                    data-testid={`auto-assign-${house.house_id}`}
+                  >
+                    <Sparkles className="w-3 h-3 mr-1" />
+                    Auto
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedHouse(house.house_id);
+                      setResetType('house');
+                      setShowResetModal(true);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="border-orange-300 text-orange-600 hover:bg-orange-50 text-xs"
+                    data-testid={`reset-house-${house.house_id}`}
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
               {days.map(day => {
                 const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
