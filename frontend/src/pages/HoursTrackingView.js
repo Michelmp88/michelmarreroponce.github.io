@@ -152,22 +152,33 @@ export default function HoursTrackingView() {
               data-testid={`hours-card-${data.staff_id}`}
             >
               <div className="flex items-start justify-between mb-4">
-                <div>
+                <div className="flex-1">
                   <h3 className="text-lg font-bold text-slate-900">{data.staff_name}</h3>
                   <p className="text-sm text-slate-600">{data.period}</p>
                 </div>
-                <div className={`p-2 rounded-lg ${
-                  data.is_over_limit
-                    ? 'bg-rose-100'
-                    : data.remaining_hours < 20
-                    ? 'bg-amber-100'
-                    : 'bg-emerald-100'
-                }`}>
-                  {data.is_over_limit ? (
-                    <AlertTriangle className="w-5 h-5 text-rose-600" />
-                  ) : (
-                    <CheckCircle className="w-5 h-5 text-emerald-600" />
-                  )}
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => handleEditHours(data)}
+                    variant="outline"
+                    size="sm"
+                    className="text-indigo-600 border-indigo-300 hover:bg-indigo-50"
+                    data-testid={`edit-hours-${data.staff_id}`}
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <div className={`p-2 rounded-lg ${
+                    data.is_over_limit
+                      ? 'bg-rose-100'
+                      : data.remaining_hours < 20
+                      ? 'bg-amber-100'
+                      : 'bg-emerald-100'
+                  }`}>
+                    {data.is_over_limit ? (
+                      <AlertTriangle className="w-5 h-5 text-rose-600" />
+                    ) : (
+                      <CheckCircle className="w-5 h-5 text-emerald-600" />
+                    )}
+                  </div>
                 </div>
               </div>
 
