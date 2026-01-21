@@ -190,6 +190,19 @@ async def delete_staff(staff_id: str):
         raise HTTPException(status_code=404, detail="Staff not found")
     return {"message": "Staff deleted successfully"}
 
+@api_router.put("/staff/{staff_id}", response_model=Staff)
+async def update_staff(staff_id: str, staff: StaffCreate):
+    existing = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    
+    staff_dict = staff.model_dump()
+    staff_dict["staff_id"] = staff_id
+    await db.staff.update_one({"staff_id": staff_id}, {"$set": staff_dict})
+    
+    updated = await db.staff.find_one({"staff_id": staff_id}, {"_id": 0})
+    return Staff(**updated)
+
 @api_router.get("/coverage/{year}/{month}", response_model=List[CoverageEntry])
 async def get_coverage_by_month(year: int, month: int):
     start_date = f"{year}-{month:02d}-01"
