@@ -175,26 +175,28 @@ export default function StaffManagement() {
                 {getSubtypeLabel(member.subtype, member.staff_type)}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => handleEditStaff(member)}
-                variant="outline"
-                size="sm"
-                className="text-indigo-600 border-indigo-300 hover:bg-indigo-50"
-                data-testid={`edit-staff-${member.staff_id}`}
-              >
-                <UserCheck className="w-4 h-4" />
-              </Button>
-              <Button
-                onClick={() => handleDeleteStaff(member.staff_id, member.name)}
-                variant="outline"
-                size="sm"
-                className="text-rose-600 border-rose-300 hover:bg-rose-50 ml-2"
-                data-testid={`delete-staff-${member.staff_id}`}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
+            {hasPermission('manage_staff') && (
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => handleEditStaff(member)}
+                  variant="outline"
+                  size="sm"
+                  className="text-indigo-600 border-indigo-300 hover:bg-indigo-50"
+                  data-testid={`edit-staff-${member.staff_id}`}
+                >
+                  <UserCheck className="w-4 h-4" />
+                </Button>
+                <Button
+                  onClick={() => handleDeleteStaff(member.staff_id, member.name)}
+                  variant="outline"
+                  size="sm"
+                  className="text-rose-600 border-rose-300 hover:bg-rose-50 ml-2"
+                  data-testid={`delete-staff-${member.staff_id}`}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
           {member.work_days && (
             <p className="text-xs text-slate-500 mt-1">
