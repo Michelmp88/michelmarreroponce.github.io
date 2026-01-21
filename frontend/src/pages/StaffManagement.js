@@ -26,7 +26,7 @@ export default function StaffManagement() {
     max_hours_daily: '',
     max_hours_monthly: '',
     hours_per_shift: '',
-    fixed_house_id: '',
+    fixed_house_id: 'none',
     work_schedule: '',
     notes: ''
   });
