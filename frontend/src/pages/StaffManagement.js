@@ -53,23 +53,43 @@ export default function StaffManagement() {
     }
 
     try {
-      const staffId = `staff_${formData.name.toLowerCase().replace(/\s+/g, '_')}`;
-      const dataToSend = {
-        staff_id: staffId,
-        name: formData.name,
-        staff_type: formData.staff_type,
-        subtype: formData.subtype,
-        work_days: formData.work_days ? parseInt(formData.work_days) : null,
-        rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
-        weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
-        fixed_house_id: formData.fixed_house_id || null,
-        work_schedule: formData.work_schedule || null,
-        notes: formData.notes || null
-      };
+      if (editingStaff) {
+        const dataToSend = {
+          staff_id: editingStaff.staff_id,
+          name: formData.name,
+          staff_type: formData.staff_type,
+          subtype: formData.subtype,
+          work_days: formData.work_days ? parseInt(formData.work_days) : null,
+          rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
+          weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
+          fixed_house_id: formData.fixed_house_id || null,
+          work_schedule: formData.work_schedule || null,
+          notes: formData.notes || null
+        };
+        
+        await axios.put(`${API}/staff/${editingStaff.staff_id}`, dataToSend);
+        toast.success('Personal actualizado correctamente');
+      } else {
+        const staffId = `staff_${formData.name.toLowerCase().replace(/\s+/g, '_')}`;
+        const dataToSend = {
+          staff_id: staffId,
+          name: formData.name,
+          staff_type: formData.staff_type,
+          subtype: formData.subtype,
+          work_days: formData.work_days ? parseInt(formData.work_days) : null,
+          rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
+          weekly_hours: formData.weekly_hours ? parseInt(formData.weekly_hours) : null,
+          fixed_house_id: formData.fixed_house_id || null,
+          work_schedule: formData.work_schedule || null,
+          notes: formData.notes || null
+        };
 
-      await axios.post(`${API}/staff`, dataToSend);
-      toast.success('Personal agregado correctamente');
+        await axios.post(`${API}/staff`, dataToSend);
+        toast.success('Personal agregado correctamente');
+      }
+      
       setShowAddModal(false);
+      setEditingStaff(null);
       setFormData({
         name: '',
         staff_type: 'caregiver',
@@ -83,9 +103,25 @@ export default function StaffManagement() {
       });
       fetchData();
     } catch (error) {
-      console.error('Error adding staff:', error);
-      toast.error('Error al agregar personal');
+      console.error('Error saving staff:', error);
+      toast.error('Error al guardar personal');
     }
+  };
+
+  const handleEditStaff = (member) => {
+    setEditingStaff(member);
+    setFormData({
+      name: member.name,
+      staff_type: member.staff_type,
+      subtype: member.subtype,
+      work_days: member.work_days || '',
+      rest_days: member.rest_days || '',
+      weekly_hours: member.weekly_hours || '',
+      fixed_house_id: member.fixed_house_id || '',
+      work_schedule: member.work_schedule || '',
+      notes: member.notes || ''
+    });
+    setShowAddModal(true);
   };
 
   const handleDeleteStaff = async (staffId, staffName) => {
