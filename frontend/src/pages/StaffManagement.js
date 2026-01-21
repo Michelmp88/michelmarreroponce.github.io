@@ -70,7 +70,7 @@ export default function StaffManagement() {
           max_hours_daily: formData.max_hours_daily ? parseInt(formData.max_hours_daily) : null,
           max_hours_monthly: formData.max_hours_monthly ? parseInt(formData.max_hours_monthly) : null,
           hours_per_shift: formData.hours_per_shift ? parseInt(formData.hours_per_shift) : null,
-          fixed_house_id: formData.fixed_house_id || null,
+          fixed_house_id: formData.fixed_house_id === 'none' ? null : formData.fixed_house_id,
           work_schedule: formData.work_schedule || null,
           notes: formData.notes || null
         };
@@ -90,7 +90,7 @@ export default function StaffManagement() {
           max_hours_daily: formData.max_hours_daily ? parseInt(formData.max_hours_daily) : null,
           max_hours_monthly: formData.max_hours_monthly ? parseInt(formData.max_hours_monthly) : null,
           hours_per_shift: formData.hours_per_shift ? parseInt(formData.hours_per_shift) : null,
-          fixed_house_id: formData.fixed_house_id || null,
+          fixed_house_id: formData.fixed_house_id === 'none' ? null : formData.fixed_house_id,
           work_schedule: formData.work_schedule || null,
           notes: formData.notes || null
         };
