@@ -78,12 +78,17 @@ export default function HousesManagement() {
       formData.house_id = `house_${formData.name.toLowerCase().replace(/\s+/g, '_')}`;
     }
 
+    const dataToSend = {
+      ...formData,
+      encargada_staff_id: formData.encargada_staff_id === 'none' ? null : formData.encargada_staff_id
+    };
+
     try {
       if (editingHouse) {
-        await axios.put(`${API}/houses/${formData.house_id}`, formData);
+        await axios.put(`${API}/houses/${formData.house_id}`, dataToSend);
         toast.success('Casa actualizada correctamente');
       } else {
-        await axios.post(`${API}/houses`, formData);
+        await axios.post(`${API}/houses`, dataToSend);
         toast.success('Casa creada correctamente');
       }
       setShowModal(false);
