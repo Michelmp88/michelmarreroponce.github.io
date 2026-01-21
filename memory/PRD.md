@@ -11,13 +11,24 @@ Aplicación web interna para gestionar la cobertura mensual 24/7 del personal de
 ## Funcionalidades Implementadas
 
 ### ✅ Core - Auto-Asignación Inteligente (P0) - COMPLETADO 21/01/2025
-El algoritmo de auto-asignación ahora incluye:
+El algoritmo de auto-asignación incluye:
 1. **Prevención de doble reserva**: Verifica que un empleado NO esté asignado a otra casa el mismo día
 2. **Control de horas diarias/mensuales**: Respeta `max_hours_daily` y `max_hours_monthly`
 3. **Sistema de puntuación**: Clasifica candidatos por score (prioridad, preferencias, casa fija)
 4. **Respeto de ausencias**: No asigna personal con ausencias registradas
 5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera (cuidadoras) / Mensual → Jornalera (asistentes)
 6. **Parsing de preferencias**: Lee campo `notes` para preferencias (prefiere/evita casa, no fines de semana)
+
+### ✅ Funcionalidad de Limpieza/Reset - COMPLETADO 21/01/2025
+- `DELETE /api/coverage/reset/{house_id}/{year}/{month}` - Limpiar asignaciones de una casa
+- `DELETE /api/coverage/reset-all/{year}/{month}` - Limpiar TODO un mes
+- `DELETE /api/coverage/reset-staff/{staff_id}/{year}/{month}` - Limpiar asignaciones de un empleado específico
+- Botón "Limpiar Mes" en la barra de herramientas del calendario
+- Botón de limpieza (icono basura) junto a cada casa
+
+### ✅ Datos Legacy Limpiados - COMPLETADO 21/01/2025
+- Eliminados los 31 double-bookings de Nellina (house_2 + house_4)
+- Sistema listo para nuevas asignaciones sin conflictos
 
 ### ✅ CRUD Completo
 - Gestión de casas (crear, editar, eliminar)
@@ -29,20 +40,33 @@ El algoritmo de auto-asignación ahora incluye:
 - Filtros por casa y estado
 - Exportación a PDF y Excel
 - Botón "Auto" por casa para generar cobertura automática
+- Botón "Limpiar" por casa para resetear asignaciones
+
+### ✅ Control de Horas - VERIFICADO 21/01/2025
+- Vista de control de horas por empleado
+- Horas trabajadas vs. límite mensual
+- Indicadores visuales de límite excedido (rojo) y cerca del límite (amarillo)
+- Modal de edición de límites (máx. diario, máx. mensual, horas por turno)
 
 ### ✅ Sistema de Acceso
 - Login básico (mock) con roles: Administrador / Operador
 - Administrador: acceso completo CRUD
 - Operador: solo lectura y asignación
 
-### ✅ Tracking de Horas
-- Vista de control de horas por empleado
-- Horas trabajadas vs. límite mensual
-
 ## Endpoints API Principales
+
+### Auto-Asignación y Limpieza
 - `POST /api/coverage/auto-assign/{house_id}/{year}/{month}` - Auto-asignación inteligente
+- `DELETE /api/coverage/reset/{house_id}/{year}/{month}` - Limpiar casa específica
+- `DELETE /api/coverage/reset-all/{year}/{month}` - Limpiar todo el mes
+- `DELETE /api/coverage/reset-staff/{staff_id}/{year}/{month}` - Limpiar empleado específico
+
+### Coberturas
 - `GET /api/coverage/{year}/{month}` - Obtener coberturas del mes
 - `GET /api/coverage/gaps/{year}/{month}` - Ver huecos de cobertura
+- `GET /api/coverage/export/{year}/{month}` - Exportar a PDF/Excel
+
+### CRUD
 - `GET/POST/PUT/DELETE /api/staff` - CRUD personal
 - `GET/POST/PUT/DELETE /api/houses` - CRUD casas
 - `GET/POST/DELETE /api/absences` - Gestión ausencias
@@ -56,16 +80,8 @@ El algoritmo de auto-asignación ahora incluye:
 
 ## Tareas Pendientes
 
-### P1 - Alta Prioridad
-1. **Notificaciones Automáticas**: Avisar al personal cuando se le asigna un nuevo turno (requiere integración con servicio de email/SMS)
-2. **Verificar edición de horas**: El usuario reportó problemas con "Control de Horas"
-
 ### P2 - Media Prioridad
 1. **Backup Automático**: Sistema de respaldo y restauración de datos históricos
-
-### Datos Legacy por Limpiar (Opcional)
-- 31 double-bookings de Nellina (house_2 + house_4) - datos del algoritmo anterior
-- 3 empleados sobre límite mensual - datos del algoritmo anterior
 
 ## Testing
 - Test suite: `/app/tests/test_auto_assign.py` (16 tests)
@@ -75,5 +91,6 @@ El algoritmo de auto-asignación ahora incluye:
 ## Archivos de Referencia
 - `backend/server.py` - API y lógica de negocio
 - `frontend/src/pages/CalendarView.js` - Vista principal del calendario
+- `frontend/src/pages/HoursTrackingView.js` - Control de horas trabajadas
 - `frontend/src/pages/StaffManagement.js` - Gestión de personal
 - `frontend/src/pages/HousesManagement.js` - Gestión de casas
