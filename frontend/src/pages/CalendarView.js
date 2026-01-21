@@ -10,8 +10,8 @@ import { toast } from 'sonner';
 import AssignmentModal from '@/components/AssignmentModal';
 
 export default function CalendarView() {
-  const [year, setYear] = useState(2025);
-  const [month, setMonth] = useState(1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [coverage, setCoverage] = useState([]);
   const [houses, setHouses] = useState([]);
   const [staff, setStaff] = useState([]);
