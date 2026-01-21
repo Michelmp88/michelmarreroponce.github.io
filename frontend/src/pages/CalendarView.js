@@ -445,6 +445,54 @@ export default function CalendarView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
+        <DialogContent className="max-w-md" data-testid="reset-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900">
+              {resetType === 'month' ? 'Limpiar Todo el Mes' : 'Limpiar Casa'}
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              {resetType === 'month' 
+                ? `¿Estás seguro de que quieres limpiar TODAS las asignaciones de ${['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][month-1]} ${year}?`
+                : `¿Estás seguro de que quieres limpiar las asignaciones de esta casa para ${['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][month-1]} ${year}?`
+              }
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg">
+              <p className="text-sm text-rose-800">
+                <strong>⚠️ Advertencia:</strong> Esta acción eliminará las asignaciones de personal. 
+                Las entradas de cobertura quedarán en estado "incompleto" y podrás volver a asignar personal manualmente o con auto-asignación.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowResetModal(false);
+                setResetType(null);
+                setSelectedHouse(null);
+              }}
+              variant="outline"
+              disabled={resetting}
+              data-testid="cancel-reset"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={resetType === 'month' ? handleResetMonth : handleResetHouse}
+              disabled={resetting}
+              className="bg-rose-600 hover:bg-rose-700"
+              data-testid="confirm-reset"
+            >
+              {resetting ? 'Limpiando...' : 'Confirmar Limpieza'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
