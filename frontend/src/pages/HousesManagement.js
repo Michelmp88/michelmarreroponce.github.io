@@ -51,7 +51,7 @@ export default function HousesManagement() {
         name: house.name,
         caregivers_required: house.caregivers_required,
         assistant_required: house.assistant_required,
-        encargada_staff_id: house.encargada_staff_id || '',
+        encargada_staff_id: house.encargada_staff_id || 'none',
         notes: house.notes || ''
       });
     } else {
@@ -61,7 +61,7 @@ export default function HousesManagement() {
         name: '',
         caregivers_required: 1,
         assistant_required: false,
-        encargada_staff_id: '',
+        encargada_staff_id: 'none',
         notes: ''
       });
     }
