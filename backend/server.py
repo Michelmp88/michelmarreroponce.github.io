@@ -164,6 +164,13 @@ async def create_staff(staff: StaffCreate):
     await db.staff.insert_one(staff_dict)
     return Staff(**staff_dict)
 
+@api_router.delete("/staff/{staff_id}")
+async def delete_staff(staff_id: str):
+    result = await db.staff.delete_one({"staff_id": staff_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    return {"message": "Staff deleted successfully"}
+
 @api_router.get("/coverage/{year}/{month}", response_model=List[CoverageEntry])
 async def get_coverage_by_month(year: int, month: int):
     start_date = f"{year}-{month:02d}-01"
