@@ -6,6 +6,7 @@ import Dashboard from '@/pages/Dashboard';
 import CalendarView from '@/pages/CalendarView';
 import GapsView from '@/pages/GapsView';
 import StaffManagement from '@/pages/StaffManagement';
+import HousesManagement from '@/pages/HousesManagement';
 import AbsencesView from '@/pages/AbsencesView';
 import ReportsView from '@/pages/ReportsView';
 import Sidebar from '@/components/Sidebar';
@@ -26,6 +27,7 @@ function App() {
               <Route path="/calendar" element={<CalendarView />} />
               <Route path="/gaps" element={<GapsView />} />
               <Route path="/staff" element={<StaffManagement />} />
+              <Route path="/houses" element={<HousesManagement />} />
               <Route path="/absences" element={<AbsencesView />} />
               <Route path="/reports" element={<ReportsView />} />
             </Routes>
