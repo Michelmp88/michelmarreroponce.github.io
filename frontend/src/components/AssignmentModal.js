@@ -1,25 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '@/App';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { User, Calendar, Home, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { User, Calendar, Home } from 'lucide-react';
 
 export default function AssignmentModal({ open, onClose, cell, staff, onComplete }) {
   const [selectedStaff, setSelectedStaff] = useState('');
   const [loading, setLoading] = useState(false);
+  const [absences, setAbsences] = useState([]);
+
+  useEffect(() => {
+    if (open && cell) {
+      fetchAbsences();
+    }
+  }, [open, cell]);
+
+  const fetchAbsences = async () => {
+    try {
+      const response = await axios.get(`${API}/absences`);
+      setAbsences(response.data);
+    } catch (error) {
+      console.error('Error fetching absences:', error);
+    }
+  };
 
   if (!cell) return null;
 
   const { house, date, coverageType, entry } = cell;
 
+  const isStaffAvailable = (staffId) => {
+    return !absences.some(absence => 
+      absence.staff_id === staffId &&
+      absence.start_date <= date &&
+      absence.end_date >= date
+    );
+  };
+
   const availableStaff = staff.filter(s => {
     if (coverageType === 'caregiver_24h') {
-      return s.staff_type === 'caregiver';
+      return s.staff_type === 'caregiver' && isStaffAvailable(s.staff_id);
     } else {
-      return s.staff_type === 'assistant';
+      return s.staff_type === 'assistant' && isStaffAvailable(s.staff_id);
     }
   });
 
@@ -65,6 +90,14 @@ export default function AssignmentModal({ open, onClose, cell, staff, onComplete
     }
   };
 
+  const unavailableCount = staff.filter(s => {
+    if (coverageType === 'caregiver_24h') {
+      return s.staff_type === 'caregiver' && !isStaffAvailable(s.staff_id);
+    } else {
+      return s.staff_type === 'assistant' && !isStaffAvailable(s.staff_id);
+    }
+  }).length;
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md" data-testid="assignment-modal">
@@ -108,9 +141,18 @@ export default function AssignmentModal({ open, onClose, cell, staff, onComplete
             </div>
           )}
 
+          {unavailableCount > 0 && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5" />
+              <p className="text-sm text-amber-800">
+                <strong>{unavailableCount}</strong> {unavailableCount === 1 ? 'persona' : 'personas'} no disponible{unavailableCount === 1 ? '' : 's'} por ausencias registradas
+              </p>
+            </div>
+          )}
+
           <div>
             <label className="text-sm font-semibold text-slate-700 mb-2 block">
-              Seleccionar Personal
+              Seleccionar Personal Disponible
             </label>
             <Select value={selectedStaff} onValueChange={setSelectedStaff}>
               <SelectTrigger data-testid="staff-select">
@@ -184,6 +226,11 @@ export default function AssignmentModal({ open, onClose, cell, staff, onComplete
                       </div>
                     )}
                   </>
+                )}
+                {availableStaff.length === 0 && (
+                  <div className="px-2 py-4 text-center text-sm text-slate-500">
+                    No hay personal disponible para esta fecha
+                  </div>
                 )}
               </SelectContent>
             </Select>
