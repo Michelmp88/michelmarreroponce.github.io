@@ -227,6 +227,83 @@ export default function HoursTrackingView() {
           ))}
         </div>
       )}
+
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="max-w-md" data-testid="edit-hours-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900">
+              Editar Límites de Horas
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              Configura los límites de horas para {editingStaff?.name}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                Máximo Horas Diarias
+              </label>
+              <input
+                type="number"
+                value={editForm.max_hours_daily}
+                onChange={(e) => setEditForm({...editForm, max_hours_daily: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 12"
+                data-testid="max-daily-input"
+              />
+              <p className="text-xs text-slate-500 mt-1">Máximo de horas que puede trabajar por día</p>
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                Máximo Horas Mensuales
+              </label>
+              <input
+                type="number"
+                value={editForm.max_hours_monthly}
+                onChange={(e) => setEditForm({...editForm, max_hours_monthly: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 240"
+                data-testid="max-monthly-input"
+              />
+              <p className="text-xs text-slate-500 mt-1">Máximo de horas que puede trabajar por mes</p>
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                Horas por Turno
+              </label>
+              <input
+                type="number"
+                value={editForm.hours_per_shift}
+                onChange={(e) => setEditForm({...editForm, hours_per_shift: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                placeholder="Ej: 8 o 24"
+                data-testid="hours-shift-input"
+              />
+              <p className="text-xs text-slate-500 mt-1">Horas que trabaja en cada asignación</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => setShowEditModal(false)}
+              variant="outline"
+              data-testid="cancel-edit-btn"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSaveHours}
+              className="bg-indigo-600 hover:bg-indigo-700"
+              data-testid="save-hours-btn"
+            >
+              Guardar Cambios
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
