@@ -16,7 +16,7 @@ El algoritmo de auto-asignación incluye:
 2. **Control de horas diarias/mensuales**: Respeta `max_hours_daily` y `max_hours_monthly`
 3. **Sistema de puntuación**: Clasifica candidatos por score (prioridad, preferencias, casa fija)
 4. **Respeto de ausencias**: No asigna personal con ausencias registradas
-5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera (cuidadoras) / Mensual → Jornalera (asistentes)
+5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera → Educadora (tías) / Mensual → Jornalera (asistentes)
 6. **Parsing de preferencias**: Lee campo `notes` para preferencias (prefiere/evita casa, no fines de semana)
 
 ### ✅ Funcionalidad de Limpieza/Reset - COMPLETADO 21/01/2025
@@ -26,9 +26,11 @@ El algoritmo de auto-asignación incluye:
 - Botón "Limpiar Mes" en la barra de herramientas del calendario
 - Botón de limpieza (icono basura) junto a cada casa
 
-### ✅ Datos Legacy Limpiados - COMPLETADO 21/01/2025
-- Eliminados los 31 double-bookings de Nellina (house_2 + house_4)
-- Sistema listo para nuevas asignaciones sin conflictos
+### ✅ Gestión de Personal Mejorada - COMPLETADO 22/01/2025
+- **Tipo "Tía"** (antes "Cuidadora")
+- **Subtipos actualizados**: Rotativa, Encargada, Jornalera, Educadora
+- **Modal de confirmación** para eliminar personal (no más window.confirm bloqueado)
+- **Modal scrollable** para edición de personal (botones visibles)
 
 ### ✅ CRUD Completo
 - Gestión de casas (crear, editar, eliminar)
@@ -74,7 +76,7 @@ El algoritmo de auto-asignación incluye:
 
 ## Esquema de Datos
 - **houses**: `{house_id, name, caregivers_required, assistant_required, encargada_staff_id, notes}`
-- **staff**: `{staff_id, name, staff_type, subtype, max_hours_daily, max_hours_monthly, hours_per_shift, priority, fixed_house_id, work_schedule, notes}`
+- **staff**: `{staff_id, name, staff_type (tia/caregiver/assistant), subtype (rotativa/encargada/jornalera/educadora/mensual), max_hours_daily, max_hours_monthly, hours_per_shift, priority, fixed_house_id, work_schedule, notes}`
 - **coverage**: `{coverage_id, date, house_id, coverage_type, assigned_staff_id, assigned_staff_name, status}`
 - **absences**: `{absence_id, staff_id, staff_name, start_date, end_date, absence_type, notes}`
 
