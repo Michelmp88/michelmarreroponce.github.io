@@ -63,15 +63,23 @@ export default function CalendarView() {
     return new Date(year, month, 0).getDate();
   };
 
-  const getCoverageForCell = (houseId, date, coverageType) => {
+  const getCoverageForCell = (houseId, date, coverageType, shiftTime = null) => {
     return coverage.find(
-      c => c.house_id === houseId && c.date === date && c.coverage_type === coverageType
+      c => c.house_id === houseId && c.date === date && c.coverage_type === coverageType &&
+           (shiftTime === null || c.shift_time === shiftTime)
     );
   };
 
-  const handleCellClick = (house, date, coverageType) => {
-    const entry = getCoverageForCell(house.house_id, date, coverageType);
-    setSelectedCell({ house, date, coverageType, entry });
+  const getShiftCoveragesForDay = (houseId, date) => {
+    // Get all caregiver coverages for this day (may include multiple shifts)
+    return coverage.filter(
+      c => c.house_id === houseId && c.date === date && c.coverage_type === 'caregiver_24h'
+    );
+  };
+
+  const handleCellClick = (house, date, coverageType, shiftTime = null) => {
+    const entry = getCoverageForCell(house.house_id, date, coverageType, shiftTime);
+    setSelectedCell({ house, date, coverageType, entry, shiftTime });
   };
 
   const handleAssignmentComplete = async () => {
