@@ -178,7 +178,7 @@ export default function AbsencesView() {
                         </div>
                       </div>
                       <Button
-                        onClick={() => handleDeleteAbsence(absence.absence_id)}
+                        onClick={() => handleDeleteAbsence(absence)}
                         variant="outline"
                         size="sm"
                         className="text-rose-600 border-rose-300 hover:bg-rose-50"
