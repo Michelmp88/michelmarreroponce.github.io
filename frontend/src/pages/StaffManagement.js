@@ -106,8 +106,8 @@ export default function StaffManagement() {
       setEditingStaff(null);
       setFormData({
         name: '',
-        staff_type: 'caregiver',
-        subtype: 'encargada',
+        staff_type: 'tia',
+        subtype: 'rotativa',
         work_days: '',
         rest_days: '',
         weekly_hours: '',
@@ -127,10 +127,17 @@ export default function StaffManagement() {
 
   const handleEditStaff = (member) => {
     setEditingStaff(member);
+    // Map old types to new types
+    let staffType = member.staff_type;
+    if (staffType === 'caregiver') staffType = 'tia';
+    
+    let subtype = member.subtype;
+    if (subtype === 'rotativa_mensual') subtype = 'rotativa';
+    
     setFormData({
       name: member.name,
-      staff_type: member.staff_type,
-      subtype: member.subtype,
+      staff_type: staffType,
+      subtype: subtype,
       work_days: member.work_days || '',
       rest_days: member.rest_days || '',
       weekly_hours: member.weekly_hours || '',
@@ -144,34 +151,47 @@ export default function StaffManagement() {
     setShowAddModal(true);
   };
 
-  const handleDeleteStaff = async (staffId, staffName) => {
-    if (!window.confirm(`¿Estás seguro de eliminar a ${staffName}?`)) return;
+  const handleDeleteClick = (member) => {
+    setStaffToDelete(member);
+    setShowDeleteConfirm(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!staffToDelete) return;
+    
+    setDeleting(true);
     try {
-      await axios.delete(`${API}/staff/${staffId}`);
-      toast.success('Personal eliminado correctamente');
+      await axios.delete(`${API}/staff/${staffToDelete.staff_id}`);
+      toast.success(`${staffToDelete.name} eliminado correctamente`);
+      setShowDeleteConfirm(false);
+      setStaffToDelete(null);
       fetchData();
     } catch (error) {
       console.error('Error deleting staff:', error);
       toast.error('Error al eliminar personal');
+    } finally {
+      setDeleting(false);
     }
   };
 
-  const caregivers = staff.filter(s => s.staff_type === 'caregiver');
+  // Support both old "caregiver" and new "tia" types
+  const tias = staff.filter(s => s.staff_type === 'caregiver' || s.staff_type === 'tia');
   const assistants = staff.filter(s => s.staff_type === 'assistant');
 
-  const encargadas = caregivers.filter(s => s.subtype === 'encargada');
-  const rotativas = caregivers.filter(s => s.subtype === 'rotativa_mensual');
-  const caregiverJornaleras = caregivers.filter(s => s.subtype === 'jornalera');
+  const encargadas = tias.filter(s => s.subtype === 'encargada');
+  const rotativas = tias.filter(s => s.subtype === 'rotativa_mensual' || s.subtype === 'rotativa');
+  const tiaJornaleras = tias.filter(s => s.subtype === 'jornalera');
+  const educadoras = tias.filter(s => s.subtype === 'educadora');
 
   const assistantsMensuales = assistants.filter(s => s.subtype === 'mensual');
   const assistantJornaleras = assistants.filter(s => s.subtype === 'jornalera');
 
   const getSubtypeLabel = (subtype, staffType) => {
-    if (staffType === 'caregiver') {
+    if (staffType === 'caregiver' || staffType === 'tia') {
       if (subtype === 'encargada') return 'Encargada';
-      if (subtype === 'rotativa_mensual') return 'Rotativa Mensual';
+      if (subtype === 'rotativa_mensual' || subtype === 'rotativa') return 'Rotativa';
       if (subtype === 'jornalera') return 'Jornalera';
+      if (subtype === 'educadora') return 'Educadora';
     } else {
       if (subtype === 'mensual') return 'Mensual';
       if (subtype === 'jornalera') return 'Jornalera';
