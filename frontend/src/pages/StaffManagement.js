@@ -225,7 +225,7 @@ export default function StaffManagement() {
                   <UserCheck className="w-4 h-4" />
                 </Button>
                 <Button
-                  onClick={() => handleDeleteStaff(member.staff_id, member.name)}
+                  onClick={() => handleDeleteClick(member)}
                   variant="outline"
                   size="sm"
                   className="text-rose-600 border-rose-300 hover:bg-rose-50 ml-2"
