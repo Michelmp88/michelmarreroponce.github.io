@@ -210,13 +210,23 @@ export default function StaffManagement() {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h4 className="font-bold text-slate-900">{member.name}</h4>
-          <p className="text-sm text-slate-500">{getSubtypeLabel(member.subtype)}</p>
+          <p className="text-sm text-slate-500">{getSubtypeLabel(member.subtype, member.staff_type)}</p>
           {member.hours_per_shift && (
             <p className="text-xs text-slate-400 mt-1">{member.hours_per_shift}h/turno</p>
           )}
           {member.fixed_house_id && (
             <p className="text-xs text-indigo-600 mt-1">
               Casa fija: {houses.find(h => h.house_id === member.fixed_house_id)?.name || member.fixed_house_id}
+            </p>
+          )}
+          {member.specific_schedule && (
+            <p className="text-xs text-purple-600 mt-1">
+              Horario: {member.specific_schedule}
+            </p>
+          )}
+          {member.specific_work_days && member.specific_work_days.length > 0 && (
+            <p className="text-xs text-emerald-600 mt-1">
+              Días: {member.specific_work_days.join(', ')}
             </p>
           )}
         </div>
