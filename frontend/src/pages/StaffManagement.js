@@ -98,7 +98,8 @@ export default function StaffManagement() {
         preferred_house_1: formData.preferred_house_1 === 'none' ? null : formData.preferred_house_1,
         preferred_house_2: formData.preferred_house_2 === 'none' ? null : formData.preferred_house_2,
         preferred_house_3: formData.preferred_house_3 === 'none' ? null : formData.preferred_house_3,
-        specific_schedule: formData.specific_schedule || null
+        specific_schedule: formData.specific_schedule || null,
+        specific_work_days: formData.specific_work_days?.length > 0 ? formData.specific_work_days : null
       };
 
       if (editingStaff) {
@@ -134,6 +135,7 @@ export default function StaffManagement() {
       preferred_house_2: member.preferred_house_2 || 'none',
       preferred_house_3: member.preferred_house_3 || 'none',
       specific_schedule: member.specific_schedule || '',
+      specific_work_days: member.specific_work_days || [],
       notes: member.notes || ''
     });
     setShowAddModal(true);
