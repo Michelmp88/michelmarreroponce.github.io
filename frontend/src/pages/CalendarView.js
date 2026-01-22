@@ -556,6 +556,8 @@ export default function CalendarView() {
           cell={selectedCell}
           staff={staff}
           onComplete={handleAssignmentComplete}
+          year={year}
+          month={month}
         />
       )}
 
