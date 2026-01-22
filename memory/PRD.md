@@ -10,27 +10,40 @@ Aplicación web interna para gestionar la cobertura mensual 24/7 del personal de
 
 ## Funcionalidades Implementadas
 
-### ✅ Core - Auto-Asignación Inteligente (P0) - COMPLETADO 21/01/2025
+### ✅ Core - Auto-Asignación Inteligente (P0)
 El algoritmo de auto-asignación incluye:
 1. **Prevención de doble reserva**: Verifica que un empleado NO esté asignado a otra casa el mismo día
 2. **Control de horas diarias/mensuales**: Respeta `max_hours_daily` y `max_hours_monthly`
 3. **Sistema de puntuación**: Clasifica candidatos por score (prioridad, preferencias, casa fija)
 4. **Respeto de ausencias**: No asigna personal con ausencias registradas
-5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera → Educadora (tías) / Mensual → Jornalera (asistentes)
-6. **Parsing de preferencias**: Lee campo `notes` para preferencias (prefiere/evita casa, no fines de semana)
+5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera → Educadora
+6. **Casas excluidas**: Respeta las casas que cada persona NO puede cubrir
+7. **Casas preferidas**: Prioriza casas preferidas (#1, #2, #3)
 
-### ✅ Funcionalidad de Limpieza/Reset - COMPLETADO 21/01/2025
-- `DELETE /api/coverage/reset/{house_id}/{year}/{month}` - Limpiar asignaciones de una casa
-- `DELETE /api/coverage/reset-all/{year}/{month}` - Limpiar TODO un mes
-- `DELETE /api/coverage/reset-staff/{staff_id}/{year}/{month}` - Limpiar asignaciones de un empleado específico
-- Botón "Limpiar Mes" en la barra de herramientas del calendario
-- Botón de limpieza (icono basura) junto a cada casa
+### ✅ Funcionalidad de Limpieza/Reset
+- Limpiar asignaciones de una casa específica
+- Limpiar TODO un mes
+- Limpiar asignaciones de un empleado específico
 
-### ✅ Gestión de Personal Mejorada - COMPLETADO 22/01/2025
-- **Tipo "Tía"** (antes "Cuidadora")
-- **Subtipos actualizados**: Rotativa, Encargada, Jornalera, Educadora
-- **Modal de confirmación** para eliminar personal (no más window.confirm bloqueado)
-- **Modal scrollable** para edición de personal (botones visibles)
+### ✅ Aleatorización de Posición (NUEVO)
+- Regenerar aleatoriamente solo una posición (Tía o Asistente)
+- Útil para cambiar asistentes manteniendo encargadas fijas
+
+### ✅ Asignación Múltiple (NUEVO)
+- Asignar una persona a varios días a la vez
+- Selección rápida: Primeros 7 días, Primera/Segunda quincena, Días alternos
+- Calendario interactivo para selección individual
+
+### ✅ Gestión de Personal Mejorada (NUEVO)
+- **Solo tipo "Tía"** con subtipos: Encargada, Jornalera, Educadora, Rotativa
+- **Cálculo automático** de horas semanales/mensuales basado en días trabajo/descanso + horas por turno
+- **Casa asignada** (fija) + 3 casas preferidas en orden de prioridad
+- **Casas excluidas** que la persona NO puede cubrir
+- **Horario específico** con selector de hora
+
+### ✅ Gestión de Ausencias Mejorada (NUEVO)
+- Modal de confirmación para eliminar ausencias
+- Mensaje de "Reincorporación" cuando la persona vuelve a estar disponible
 
 ### ✅ CRUD Completo
 - Gestión de casas (crear, editar, eliminar)
@@ -41,58 +54,39 @@ El algoritmo de auto-asignación incluye:
 - Vista mensual con selector mes/año
 - Filtros por casa y estado
 - Exportación a PDF y Excel
-- Botón "Auto" por casa para generar cobertura automática
-- Botón "Limpiar" por casa para resetear asignaciones
+- 4 botones por casa: Auto, Aleatorizar, Asignar Múltiple, Limpiar
 
-### ✅ Control de Horas - VERIFICADO 21/01/2025
+### ✅ Control de Horas
 - Vista de control de horas por empleado
 - Horas trabajadas vs. límite mensual
-- Indicadores visuales de límite excedido (rojo) y cerca del límite (amarillo)
-- Modal de edición de límites (máx. diario, máx. mensual, horas por turno)
-
-### ✅ Sistema de Acceso
-- Login básico (mock) con roles: Administrador / Operador
-- Administrador: acceso completo CRUD
-- Operador: solo lectura y asignación
+- Indicadores visuales de límite excedido
 
 ## Endpoints API Principales
 
-### Auto-Asignación y Limpieza
+### Auto-Asignación y Control
 - `POST /api/coverage/auto-assign/{house_id}/{year}/{month}` - Auto-asignación inteligente
-- `DELETE /api/coverage/reset/{house_id}/{year}/{month}` - Limpiar casa específica
+- `POST /api/coverage/randomize-position/{house_id}/{year}/{month}/{position}` - Aleatorizar posición
+- `POST /api/coverage/bulk-assign/{house_id}` - Asignación múltiple
+- `DELETE /api/coverage/reset/{house_id}/{year}/{month}` - Limpiar casa
 - `DELETE /api/coverage/reset-all/{year}/{month}` - Limpiar todo el mes
-- `DELETE /api/coverage/reset-staff/{staff_id}/{year}/{month}` - Limpiar empleado específico
-
-### Coberturas
-- `GET /api/coverage/{year}/{month}` - Obtener coberturas del mes
-- `GET /api/coverage/gaps/{year}/{month}` - Ver huecos de cobertura
-- `GET /api/coverage/export/{year}/{month}` - Exportar a PDF/Excel
 
 ### CRUD
 - `GET/POST/PUT/DELETE /api/staff` - CRUD personal
 - `GET/POST/PUT/DELETE /api/houses` - CRUD casas
 - `GET/POST/DELETE /api/absences` - Gestión ausencias
-- `GET /api/staff/{id}/hours/{year}/{month}` - Horas trabajadas
 
-## Esquema de Datos
-- **houses**: `{house_id, name, caregivers_required, assistant_required, encargada_staff_id, notes}`
-- **staff**: `{staff_id, name, staff_type (tia/caregiver/assistant), subtype (rotativa/encargada/jornalera/educadora/mensual), max_hours_daily, max_hours_monthly, hours_per_shift, priority, fixed_house_id, work_schedule, notes}`
-- **coverage**: `{coverage_id, date, house_id, coverage_type, assigned_staff_id, assigned_staff_name, status}`
-- **absences**: `{absence_id, staff_id, staff_name, start_date, end_date, absence_type, notes}`
+## Esquema de Datos Actualizado
+- **staff**: `{staff_id, name, staff_type (tia), subtype (encargada/jornalera/educadora/rotativa), work_days, rest_days, hours_per_shift, weekly_hours (calculado), max_hours_monthly (calculado), fixed_house_id, excluded_houses[], preferred_house_1, preferred_house_2, preferred_house_3, specific_schedule, notes}`
+
+## Tareas Completadas Esta Sesión
+1. ✅ Eliminación de ausencias con modal de confirmación
+2. ✅ Formulario de personal simplificado (solo Tía con subtipos)
+3. ✅ Cálculo automático de horas semanales/mensuales
+4. ✅ Casas preferidas (#1, #2, #3) y casas excluidas
+5. ✅ Horario específico con selector de hora
+6. ✅ Aleatorización de posición (solo asistentes o solo tías)
+7. ✅ Asignación múltiple (días consecutivos o alternos)
 
 ## Tareas Pendientes
-
 ### P2 - Media Prioridad
 1. **Backup Automático**: Sistema de respaldo y restauración de datos históricos
-
-## Testing
-- Test suite: `/app/tests/test_auto_assign.py`, `/app/tests/test_reset_endpoints.py` (26 tests)
-- Reportes: `/app/test_reports/iteration_3.json`
-- Cobertura: Endpoints básicos, auto-asignación, prevención de doble reserva, límites de horas, ausencias, jerarquía de prioridad, reset, staff CRUD
-
-## Archivos de Referencia
-- `backend/server.py` - API y lógica de negocio
-- `frontend/src/pages/CalendarView.js` - Vista principal del calendario
-- `frontend/src/pages/HoursTrackingView.js` - Control de horas trabajadas
-- `frontend/src/pages/StaffManagement.js` - Gestión de personal
-- `frontend/src/pages/HousesManagement.js` - Gestión de casas
