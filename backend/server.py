@@ -272,35 +272,35 @@ async def generate_month_coverage(year: int, month: int, house_id: str = None):
         for day in range(1, days_in_month + 1):
             date_str = f"{year}-{month:02d}-{day:02d}"
             
-            # Create caregiver entries
-            for i in range(caregivers_required):
-                # Check if entry already exists
-                existing = await db.coverage.find_one({
+            # Count existing caregiver entries for this day
+            existing_caregiver_count = await db.coverage.count_documents({
+                "house_id": h_id,
+                "date": date_str,
+                "coverage_type": "caregiver_24h"
+            })
+            
+            # Create missing caregiver entries
+            for i in range(existing_caregiver_count, caregivers_required):
+                coverage_id = f"cov_{h_id}_{date_str}_caregiver_{i}_{uuid.uuid4().hex[:8]}"
+                await db.coverage.insert_one({
+                    "coverage_id": coverage_id,
                     "house_id": h_id,
                     "date": date_str,
-                    "coverage_type": "caregiver_24h"
+                    "coverage_type": "caregiver_24h",
+                    "assigned_staff_id": None,
+                    "assigned_staff_name": None,
+                    "status": "incomplete"
                 })
-                if not existing:
-                    coverage_id = f"cov_{h_id}_{date_str}_caregiver_{i}_{uuid.uuid4().hex[:8]}"
-                    await db.coverage.insert_one({
-                        "coverage_id": coverage_id,
-                        "house_id": h_id,
-                        "date": date_str,
-                        "coverage_type": "caregiver_24h",
-                        "assigned_staff_id": None,
-                        "assigned_staff_name": None,
-                        "status": "incomplete"
-                    })
-                    entries_created += 1
+                entries_created += 1
             
-            # Create assistant entry if required
+            # Create assistant entry if required and doesn't exist
             if assistant_required:
-                existing = await db.coverage.find_one({
+                existing_assistant = await db.coverage.find_one({
                     "house_id": h_id,
                     "date": date_str,
                     "coverage_type": "assistant_8h"
                 })
-                if not existing:
+                if not existing_assistant:
                     coverage_id = f"cov_{h_id}_{date_str}_assistant_{uuid.uuid4().hex[:8]}"
                     await db.coverage.insert_one({
                         "coverage_id": coverage_id,
