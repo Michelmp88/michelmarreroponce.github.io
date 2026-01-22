@@ -95,6 +95,12 @@ El algoritmo de auto-asignación incluye:
 - **Solución**: `random.choice(available_staff)` ahora funciona correctamente
 - **Verificación**: 5 llamadas consecutivas retornaron 5 personas diferentes (Nellina, Silvia, Tatiana, Iliana, Leticia)
 
+### ✅ Bug Fix: Cálculo de horas semanales/mensuales incorrecto
+- **Problema**: Al ingresar 5 días trabajo, 2 descanso, 8h/turno → mostraba 9h semanales en lugar de 40h
+- **Causa**: El sistema interpretaba "días de trabajo" como días/mes en lugar de días/semana
+- **Solución**: Corregida la fórmula: `horas_semanales = días_trabajo × horas_turno` → `horas_mensuales = horas_semanales × 4.3`
+- **Verificación**: 5 días × 8h = 40h semanales, 172h mensuales ✓
+
 ### ✅ Bug Fix: No se podía generar cobertura para casas sin datos previos
 - **Problema**: Casas como "Casa Unión" no tenían entradas de cobertura
 - **Solución**: Nuevo endpoint `POST /api/coverage/generate/{year}/{month}` para crear entradas vacías
