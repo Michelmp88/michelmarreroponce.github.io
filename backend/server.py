@@ -479,34 +479,8 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
         "assigned_staff": selected_staff["name"],
         "message": message
     }
-            score += 20
-        
-        # Bonus for fixed house assignment
-        if staff.get("fixed_house_id") == house_id:
-            score += 50
-        
-        # Priority bonus (lower priority number = higher score)
-        priority = staff.get("priority")
-        if priority is not None:
-            score += (100 - priority)
-        
-        staff_scores.append((staff, score))
-    
-    if not staff_scores:
-        return {
-            "house_id": house_id,
-            "position": position,
-            "message": "No hay personal compatible con esta casa",
-            "assignments_made": 0
-        }
-    
-    # Sort by score (highest first) and select the best one
-    staff_scores.sort(key=lambda x: x[1], reverse=True)
-    selected_staff = staff_scores[0][0]
-    
-    # Assign this ONE person to ALL days
-    assignments_made = 0
-    for entry in entries:
+
+@api_router.get("/coverage/gaps/{year}/{month}")
         check_date = entry["date"]
         
         # Check if staff has absence on this day
