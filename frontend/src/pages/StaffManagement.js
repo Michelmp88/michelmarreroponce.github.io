@@ -301,8 +301,8 @@ export default function StaffManagement() {
           <div className="flex items-center gap-3">
             <Calendar className="w-6 h-6 text-indigo-600" />
             <div>
-              <p className="text-sm text-slate-500 uppercase tracking-wider">Cuidadoras</p>
-              <p className="text-3xl font-bold text-slate-900" data-testid="total-caregivers">{caregivers.length}</p>
+              <p className="text-sm text-slate-500 uppercase tracking-wider">Tías</p>
+              <p className="text-3xl font-bold text-slate-900" data-testid="total-caregivers">{tias.length}</p>
             </div>
           </div>
         </Card>
@@ -330,14 +330,46 @@ export default function StaffManagement() {
 
       <div className="space-y-8">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Cuidadoras (Tías)</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">Tías</h2>
           
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-slate-700 mb-3">Rotativas</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {rotativas.map(member => (
+                <StaffCard key={member.staff_id} member={member} />
+              ))}
+            </div>
+          </div>
+
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-slate-700 mb-3">Encargadas</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {encargadas.map(member => (
                 <StaffCard key={member.staff_id} member={member} />
               ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-slate-700 mb-3">Jornaleras</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {tiaJornaleras.map(member => (
+                <StaffCard key={member.staff_id} member={member} />
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-slate-700 mb-3">Educadoras</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {educadoras.length > 0 ? educadoras.map(member => (
+                <StaffCard key={member.staff_id} member={member} />
+              )) : (
+                <p className="text-slate-400 italic">No hay educadoras registradas</p>
+              )}
+            </div>
+          </div>
+        </div>
             </div>
           </div>
 
