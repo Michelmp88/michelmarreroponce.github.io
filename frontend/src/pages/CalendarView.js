@@ -501,45 +501,76 @@ export default function CalendarView() {
               </div>
               {days.map(day => {
                 const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const caregiverEntry = getCoverageForCell(house.house_id, date, 'caregiver_24h');
+                const shiftCoverages = getShiftCoveragesForDay(house.house_id, date);
+                const hasShifts = shiftCoverages.some(c => c.shift_time);
                 const assistantEntry = house.assistant_required 
                   ? getCoverageForCell(house.house_id, date, 'assistant_8h')
                   : null;
 
+                // For filtering
+                const allComplete = shiftCoverages.every(c => c.status === 'complete');
+                const anyIncomplete = shiftCoverages.some(c => c.status === 'incomplete');
+
                 const shouldShow = filterStatus === 'all' ||
-                  (filterStatus === 'complete' && caregiverEntry?.status === 'complete') ||
-                  (filterStatus === 'incomplete' && caregiverEntry?.status === 'incomplete');
+                  (filterStatus === 'complete' && allComplete) ||
+                  (filterStatus === 'incomplete' && anyIncomplete);
 
                 if (!shouldShow) return <div key={day} className="min-h-[80px]" />;
 
                 return (
-                  <div key={day} className="space-y-2">
-                    <div
-                      onClick={() => handleCellClick(house, date, 'caregiver_24h')}
-                      data-testid={`coverage-cell-${house.house_id}-${day}-caregiver`}
-                      className={`coverage-cell p-3 border-2 rounded-lg cursor-pointer min-h-[80px] ${
-                        caregiverEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
-                      }`}
-                    >
-                      <div className="text-xs font-semibold text-slate-700 mb-1">Cuidadora</div>
-                      {caregiverEntry?.assigned_staff_name ? (
-                        <div className="text-sm font-medium text-slate-900">
-                          {caregiverEntry.assigned_staff_name.split(' ').slice(0, 2).join(' ')}
+                  <div key={day} className="space-y-1">
+                    {hasShifts ? (
+                      // Render multiple shifts
+                      shiftCoverages.filter(c => c.shift_time).map((shiftEntry, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => handleCellClick(house, date, 'caregiver_24h', shiftEntry.shift_time)}
+                          data-testid={`coverage-cell-${house.house_id}-${day}-shift-${idx}`}
+                          className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
+                            shiftEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
+                          }`}
+                        >
+                          <div className="text-xs text-purple-600 font-semibold">
+                            {shiftEntry.shift_time}
+                          </div>
+                          {shiftEntry?.assigned_staff_name ? (
+                            <div className="text-xs font-medium text-slate-900 truncate">
+                              {shiftEntry.assigned_staff_name.split(' ')[0]}
+                            </div>
+                          ) : (
+                            <div className="text-xs text-rose-600 font-medium">-</div>
+                          )}
                         </div>
-                      ) : (
-                        <div className="text-xs text-rose-600 font-medium">Sin asignar</div>
-                      )}
-                    </div>
+                      ))
+                    ) : (
+                      // Single 24h coverage (legacy)
+                      <div
+                        onClick={() => handleCellClick(house, date, 'caregiver_24h')}
+                        data-testid={`coverage-cell-${house.house_id}-${day}-caregiver`}
+                        className={`coverage-cell p-3 border-2 rounded-lg cursor-pointer min-h-[80px] ${
+                          shiftCoverages[0]?.status === 'complete' ? 'status-complete' : 'status-incomplete'
+                        }`}
+                      >
+                        <div className="text-xs font-semibold text-slate-700 mb-1">Cuidadora</div>
+                        {shiftCoverages[0]?.assigned_staff_name ? (
+                          <div className="text-sm font-medium text-slate-900">
+                            {shiftCoverages[0].assigned_staff_name.split(' ').slice(0, 2).join(' ')}
+                          </div>
+                        ) : (
+                          <div className="text-xs text-rose-600 font-medium">Sin asignar</div>
+                        )}
+                      </div>
+                    )}
 
                     {assistantEntry && (
                       <div
                         onClick={() => handleCellClick(house, date, 'assistant_8h')}
                         data-testid={`coverage-cell-${house.house_id}-${day}-assistant`}
-                        className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer min-h-[60px] ${
+                        className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
                           assistantEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
                         }`}
                       >
-                        <div className="text-xs font-semibold text-slate-700 mb-1">Asist.</div>
+                        <div className="text-xs font-semibold text-slate-700">Asist.</div>
                         {assistantEntry?.assigned_staff_name ? (
                           <div className="text-xs font-medium text-slate-900">
                             {assistantEntry.assigned_staff_name.split(' ')[0]}
@@ -548,6 +579,7 @@ export default function CalendarView() {
                           <div className="text-xs text-rose-600 font-medium">-</div>
                         )}
                       </div>
+                    )}
                     )}
                   </div>
                 );
