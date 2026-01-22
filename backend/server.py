@@ -947,6 +947,9 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     assignments_details = []
     skipped_details = []
     
+    # IMPORTANT: Get staff with fixed_house_id for this house (highest priority)
+    staff_with_fixed_house = [s for s in all_staff if s.get("fixed_house_id") == house_id]
+    
     # Sort entries by date to process in order
     incomplete_entries = sorted(
         [e for e in coverage_entries if e.get("status") != "complete"],
@@ -964,8 +967,26 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
         if coverage_type == "caregiver_24h":
             shift_hours = 24
             
+            # PRIORITY 0 (HIGHEST): Staff with fixed_house_id for this house
+            if not selected_staff and staff_with_fixed_house:
+                candidates = []
+                for staff in staff_with_fixed_house:
+                    # Only consider tias/caregivers for caregiver positions
+                    if staff.get("staff_type") not in ["caregiver", "tia"]:
+                        continue
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
+            
             # Priority 1: House's assigned encargada
-            if house.get("encargada_staff_id"):
+            if not selected_staff and house.get("encargada_staff_id"):
                 encargada = next(
                     (s for s in encargadas if s["staff_id"] == house["encargada_staff_id"]), 
                     None
