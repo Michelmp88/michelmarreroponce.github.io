@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { ChevronLeft, ChevronRight, Filter, Download, Sparkles, FileText, FileSpreadsheet, Trash2, RefreshCw, Shuffle, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Filter, Download, Sparkles, FileText, FileSpreadsheet, Trash2, RefreshCw, Shuffle, Users, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import AssignmentModal from '@/components/AssignmentModal';
 
