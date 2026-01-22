@@ -1171,7 +1171,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                     if staff.get("staff_type") != "assistant":
                         continue
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1186,7 +1186,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in mensuales:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1201,7 +1201,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in jornaleras_asist:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1216,7 +1216,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in assistants:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
