@@ -429,22 +429,14 @@ export default function CalendarView() {
         </Card>
       )}
 
-      <Card className="p-6 overflow-x-auto border-slate-200">
-        <div className="calendar-grid">
-          <div className="house-label" />
-          {days.map(day => (
-            <div key={day} className="text-center font-semibold text-slate-700 py-2">
-              <div className="text-lg">{day}</div>
-              <div className="text-xs text-slate-500">
-                {new Date(year, month - 1, day).toLocaleDateString('es-ES', { weekday: 'short' })}
-              </div>
-            </div>
-          ))}
-
-          {filteredHouses.map(house => (
-            <React.Fragment key={house.house_id}>
-              <div className="house-label flex flex-col items-center justify-center font-bold text-slate-900 p-4 border border-slate-200 rounded-lg space-y-2">
-                <span className="text-sm">{house.name}</span>
+      <Card className="p-6 border-slate-200">
+        <div className="flex">
+          {/* Fixed left column with house names and buttons */}
+          <div className="flex-shrink-0 border-r-2 border-slate-200 pr-4" style={{width: '200px'}}>
+            <div className="h-16 mb-1" /> {/* Header spacer */}
+            {filteredHouses.map(house => (
+              <div key={`label-${house.house_id}`} className="flex flex-col items-center justify-center p-3 mb-1 bg-white border border-slate-200 rounded-lg" style={{minHeight: '120px'}}>
+                <span className="text-sm font-bold text-slate-900 mb-2">{house.name}</span>
                 <div className="flex flex-wrap gap-1 justify-center">
                   <Button
                     onClick={() => {
@@ -499,92 +491,112 @@ export default function CalendarView() {
                   </Button>
                 </div>
               </div>
-              {days.map(day => {
-                const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const shiftCoverages = getShiftCoveragesForDay(house.house_id, date);
-                const hasShifts = shiftCoverages.some(c => c.shift_time);
-                const assistantEntry = house.assistant_required 
-                  ? getCoverageForCell(house.house_id, date, 'assistant_8h')
-                  : null;
+            ))}
+          </div>
 
-                // For filtering
-                const allComplete = shiftCoverages.every(c => c.status === 'complete');
-                const anyIncomplete = shiftCoverages.some(c => c.status === 'incomplete');
-
-                const shouldShow = filterStatus === 'all' ||
-                  (filterStatus === 'complete' && allComplete) ||
-                  (filterStatus === 'incomplete' && anyIncomplete);
-
-                if (!shouldShow) return <div key={day} className="min-h-[80px]" />;
-
-                return (
-                  <div key={day} className="space-y-1">
-                    {hasShifts ? (
-                      // Render multiple shifts
-                      shiftCoverages.filter(c => c.shift_time).map((shiftEntry, idx) => (
-                        <div
-                          key={idx}
-                          onClick={() => handleCellClick(house, date, 'caregiver_24h', shiftEntry.shift_time)}
-                          data-testid={`coverage-cell-${house.house_id}-${day}-shift-${idx}`}
-                          className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
-                            shiftEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
-                          }`}
-                        >
-                          <div className="text-xs text-purple-600 font-semibold">
-                            {shiftEntry.shift_time}
-                          </div>
-                          {shiftEntry?.assigned_staff_name ? (
-                            <div className="text-xs font-medium text-slate-900 truncate">
-                              {shiftEntry.assigned_staff_name.split(' ')[0]}
-                            </div>
-                          ) : (
-                            <div className="text-xs text-rose-600 font-medium">-</div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      // Single 24h coverage (legacy)
-                      <div
-                        onClick={() => handleCellClick(house, date, 'caregiver_24h')}
-                        data-testid={`coverage-cell-${house.house_id}-${day}-caregiver`}
-                        className={`coverage-cell p-3 border-2 rounded-lg cursor-pointer min-h-[80px] ${
-                          shiftCoverages[0]?.status === 'complete' ? 'status-complete' : 'status-incomplete'
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-slate-700 mb-1">Cuidadora</div>
-                        {shiftCoverages[0]?.assigned_staff_name ? (
-                          <div className="text-sm font-medium text-slate-900">
-                            {shiftCoverages[0].assigned_staff_name.split(' ').slice(0, 2).join(' ')}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-rose-600 font-medium">Sin asignar</div>
-                        )}
-                      </div>
-                    )}
-
-                    {assistantEntry && (
-                      <div
-                        onClick={() => handleCellClick(house, date, 'assistant_8h')}
-                        data-testid={`coverage-cell-${house.house_id}-${day}-assistant`}
-                        className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
-                          assistantEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-slate-700">Asist.</div>
-                        {assistantEntry?.assigned_staff_name ? (
-                          <div className="text-xs font-medium text-slate-900">
-                            {assistantEntry.assigned_staff_name.split(' ')[0]}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-rose-600 font-medium">-</div>
-                        )}
-                      </div>
-                    )}
+          {/* Scrollable calendar grid */}
+          <div className="flex-1 overflow-x-auto pl-4">
+            <div className="calendar-days-grid">
+              {/* Day headers */}
+              <div className="flex mb-1">
+                {days.map(day => (
+                  <div key={day} className="flex-shrink-0 text-center font-semibold text-slate-700 py-2" style={{width: '85px'}}>
+                    <div className="text-lg">{day}</div>
+                    <div className="text-xs text-slate-500">
+                      {new Date(year, month - 1, day).toLocaleDateString('es-ES', { weekday: 'short' })}
+                    </div>
                   </div>
-                );
-              })}
-            </React.Fragment>
-          ))}
+                ))}
+              </div>
+
+              {/* Coverage rows */}
+              {filteredHouses.map(house => (
+                <div key={`row-${house.house_id}`} className="flex mb-1" style={{minHeight: '120px'}}>
+                  {days.map(day => {
+                    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const shiftCoverages = getShiftCoveragesForDay(house.house_id, date);
+                    const hasShifts = shiftCoverages.some(c => c.shift_time);
+                    const assistantEntry = house.assistant_required 
+                      ? getCoverageForCell(house.house_id, date, 'assistant_8h')
+                      : null;
+
+                    const allComplete = shiftCoverages.every(c => c.status === 'complete');
+                    const anyIncomplete = shiftCoverages.some(c => c.status === 'incomplete');
+
+                    const shouldShow = filterStatus === 'all' ||
+                      (filterStatus === 'complete' && allComplete) ||
+                      (filterStatus === 'incomplete' && anyIncomplete);
+
+                    if (!shouldShow) return <div key={day} className="flex-shrink-0" style={{width: '85px', minHeight: '120px'}} />;
+
+                    return (
+                      <div key={day} className="flex-shrink-0 space-y-1 p-1" style={{width: '85px'}}>
+                        {hasShifts ? (
+                          shiftCoverages.filter(c => c.shift_time).map((shiftEntry, idx) => (
+                            <div
+                              key={idx}
+                              onClick={() => handleCellClick(house, date, 'caregiver_24h', shiftEntry.shift_time)}
+                              data-testid={`coverage-cell-${house.house_id}-${day}-shift-${idx}`}
+                              className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
+                                shiftEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
+                              }`}
+                            >
+                              <div className="text-xs text-purple-600 font-semibold">
+                                {shiftEntry.shift_time}
+                              </div>
+                              {shiftEntry?.assigned_staff_name ? (
+                                <div className="text-xs font-medium text-slate-900 truncate">
+                                  {shiftEntry.assigned_staff_name.split(' ')[0]}
+                                </div>
+                              ) : (
+                                <div className="text-xs text-rose-600 font-medium">-</div>
+                              )}
+                            </div>
+                          ))
+                        ) : (
+                          <div
+                            onClick={() => handleCellClick(house, date, 'caregiver_24h')}
+                            data-testid={`coverage-cell-${house.house_id}-${day}-caregiver`}
+                            className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
+                              shiftCoverages[0]?.status === 'complete' ? 'status-complete' : 'status-incomplete'
+                            }`}
+                          >
+                            <div className="text-xs font-semibold text-slate-700">Cuidadora</div>
+                            {shiftCoverages[0]?.assigned_staff_name ? (
+                              <div className="text-xs font-medium text-slate-900 truncate">
+                                {shiftCoverages[0].assigned_staff_name.split(' ')[0]}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-rose-600 font-medium">Sin asignar</div>
+                            )}
+                          </div>
+                        )}
+
+                        {assistantEntry && (
+                          <div
+                            onClick={() => handleCellClick(house, date, 'assistant_8h')}
+                            data-testid={`coverage-cell-${house.house_id}-${day}-assistant`}
+                            className={`coverage-cell p-2 border-2 rounded-lg cursor-pointer ${
+                              assistantEntry?.status === 'complete' ? 'status-complete' : 'status-incomplete'
+                            }`}
+                          >
+                            <div className="text-xs font-semibold text-slate-700">Asist.</div>
+                            {assistantEntry?.assigned_staff_name ? (
+                              <div className="text-xs font-medium text-slate-900 truncate">
+                                {assistantEntry.assigned_staff_name.split(' ')[0]}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-rose-600 font-medium">-</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </Card>
 
