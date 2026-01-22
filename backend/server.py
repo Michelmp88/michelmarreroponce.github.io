@@ -865,11 +865,13 @@ def schedules_overlap(staff_schedule: str, shift_time: str) -> bool:
     except:
         return True  # If parsing fails, assume compatible
 
-async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int, month: int, shift_hours: int) -> tuple:
+async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int, month: int, shift_hours: int, shift_time: str = None) -> tuple:
     """
-    Comprehensive check if staff can work on a given date for a specific house.
+    Comprehensive check if staff can work on a given date for a specific house and shift.
     Returns (can_work: bool, reason: str, score: int)
     Score is used for ranking candidates (higher is better)
+    
+    shift_time: Optional string like "06:00-14:00" for specific shift matching
     """
     staff_id = staff["staff_id"]
     score = 100  # Base score
@@ -878,9 +880,16 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     if await is_staff_on_absence(staff_id, check_date):
         return (False, "en ausencia", 0)
     
-    # Check 2: Is staff already assigned to another house on this day?
-    if await is_staff_already_assigned(staff_id, check_date, exclude_house_id=house_id):
-        return (False, "ya asignado a otra casa", 0)
+    # Check 2: Is staff already assigned to this specific shift on this day?
+    existing_query = {
+        "assigned_staff_id": staff_id,
+        "date": check_date
+    }
+    if shift_time:
+        existing_query["shift_time"] = shift_time
+    existing_assignment = await db.coverage.find_one(existing_query)
+    if existing_assignment:
+        return (False, "ya asignado a este turno", 0)
     
     # Check 3: Is this house excluded for this staff?
     excluded_houses = staff.get("excluded_houses") or []
@@ -899,7 +908,16 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
         if day_name not in normalized_work_days:
             return (False, f"no trabaja los {day_name}", 0)
     
-    # Check 5: Daily hour limit
+    # Check 5: Shift time compatibility
+    staff_schedule = staff.get("specific_schedule")
+    if shift_time and staff_schedule:
+        if not schedules_overlap(staff_schedule, shift_time):
+            return (False, f"horario no compatible ({staff_schedule} vs {shift_time})", 0)
+        else:
+            # BONUS: Staff schedule matches the shift - give high priority
+            score += 100
+    
+    # Check 6: Daily hour limit
     max_daily = staff.get("max_hours_daily")
     if max_daily is None:
         max_daily = 24 if staff.get("staff_type") in ["caregiver", "tia"] else 12
@@ -907,7 +925,7 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     if current_daily_hours + shift_hours > max_daily:
         return (False, f"excede limite diario ({current_daily_hours + shift_hours}/{max_daily}h)", 0)
     
-    # Check 6: Monthly hour limit
+    # Check 7: Monthly hour limit
     max_monthly = staff.get("max_hours_monthly") or 480
     current_monthly_hours = await get_staff_hours_for_month(staff_id, year, month)
     if current_monthly_hours + shift_hours > max_monthly:
@@ -916,7 +934,7 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     # Parse preferences from notes
     preferences = parse_staff_preferences(staff.get("notes", ""), house_id)
     
-    # Check 7: Weekend preference
+    # Check 8: Weekend preference
     if preferences["no_weekends"] and is_weekend(check_date):
         score -= 50  # Penalize but don't exclude
     
