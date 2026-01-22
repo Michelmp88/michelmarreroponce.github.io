@@ -256,6 +256,8 @@ async def generate_month_coverage(year: int, month: int, house_id: str = None):
     Generate empty coverage entries for a month.
     If house_id is provided, generates only for that house.
     Otherwise, generates for all houses.
+    
+    Now supports shifts: if a house has shifts defined, creates one entry per shift per day.
     """
     import uuid
     from calendar import monthrange
@@ -275,32 +277,56 @@ async def generate_month_coverage(year: int, month: int, house_id: str = None):
     
     for house in houses:
         h_id = house["house_id"]
-        caregivers_required = house.get("caregivers_required", 1)
         assistant_required = house.get("assistant_required", True)
+        shifts = house.get("shifts") or []  # List of shifts like ["06:00-14:00", "14:00-22:00", "22:00-06:00"]
         
         for day in range(1, days_in_month + 1):
             date_str = f"{year}-{month:02d}-{day:02d}"
             
-            # Count existing caregiver entries for this day
-            existing_caregiver_count = await db.coverage.count_documents({
-                "house_id": h_id,
-                "date": date_str,
-                "coverage_type": "caregiver_24h"
-            })
-            
-            # Create missing caregiver entries
-            for i in range(existing_caregiver_count, caregivers_required):
-                coverage_id = f"cov_{h_id}_{date_str}_caregiver_{i}_{uuid.uuid4().hex[:8]}"
-                await db.coverage.insert_one({
-                    "coverage_id": coverage_id,
+            if shifts:
+                # House has defined shifts - create one entry per shift
+                for shift in shifts:
+                    existing = await db.coverage.find_one({
+                        "house_id": h_id,
+                        "date": date_str,
+                        "coverage_type": "caregiver_24h",
+                        "shift_time": shift
+                    })
+                    if not existing:
+                        coverage_id = f"cov_{h_id}_{date_str}_shift_{shift.replace(':', '')}_{uuid.uuid4().hex[:8]}"
+                        await db.coverage.insert_one({
+                            "coverage_id": coverage_id,
+                            "house_id": h_id,
+                            "date": date_str,
+                            "coverage_type": "caregiver_24h",
+                            "shift_time": shift,
+                            "assigned_staff_id": None,
+                            "assigned_staff_name": None,
+                            "status": "incomplete"
+                        })
+                        entries_created += 1
+            else:
+                # No shifts defined - use old behavior with caregivers_required
+                caregivers_required = house.get("caregivers_required", 1)
+                existing_caregiver_count = await db.coverage.count_documents({
                     "house_id": h_id,
                     "date": date_str,
-                    "coverage_type": "caregiver_24h",
-                    "assigned_staff_id": None,
-                    "assigned_staff_name": None,
-                    "status": "incomplete"
+                    "coverage_type": "caregiver_24h"
                 })
-                entries_created += 1
+                
+                for i in range(existing_caregiver_count, caregivers_required):
+                    coverage_id = f"cov_{h_id}_{date_str}_caregiver_{i}_{uuid.uuid4().hex[:8]}"
+                    await db.coverage.insert_one({
+                        "coverage_id": coverage_id,
+                        "house_id": h_id,
+                        "date": date_str,
+                        "coverage_type": "caregiver_24h",
+                        "shift_time": None,
+                        "assigned_staff_id": None,
+                        "assigned_staff_name": None,
+                        "status": "incomplete"
+                    })
+                    entries_created += 1
             
             # Create assistant entry if required and doesn't exist
             if assistant_required:
@@ -316,6 +342,7 @@ async def generate_month_coverage(year: int, month: int, house_id: str = None):
                         "house_id": h_id,
                         "date": date_str,
                         "coverage_type": "assistant_8h",
+                        "shift_time": None,
                         "assigned_staff_id": None,
                         "assigned_staff_name": None,
                         "status": "incomplete"
