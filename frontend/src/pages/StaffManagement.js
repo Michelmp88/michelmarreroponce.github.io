@@ -367,6 +367,29 @@ export default function StaffManagement() {
             )) : <p className="text-slate-400 italic">No hay rotativas registradas</p>}
           </div>
         </div>
+
+        {/* Asistentes Section */}
+        <div className="border-t-4 border-purple-300 pt-8 mt-8">
+          <h2 className="text-3xl font-bold text-purple-800 mb-6">Asistentes</h2>
+          
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Asistentes Mensuales</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {asistentes_mensuales.length > 0 ? asistentes_mensuales.map(member => (
+                <StaffCard key={member.staff_id} member={member} />
+              )) : <p className="text-slate-400 italic">No hay asistentes mensuales registradas</p>}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Asistentes Jornaleras</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {asistentes_jornaleras.length > 0 ? asistentes_jornaleras.map(member => (
+                <StaffCard key={member.staff_id} member={member} />
+              )) : <p className="text-slate-400 italic">No hay asistentes jornaleras registradas</p>}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Add/Edit Modal */}
