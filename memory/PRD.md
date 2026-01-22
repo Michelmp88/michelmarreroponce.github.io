@@ -19,6 +19,15 @@ El algoritmo de auto-asignación incluye:
 5. **Jerarquía de prioridad**: Encargada → Rotativa → Jornalera → Educadora
 6. **Casas excluidas**: Respeta las casas que cada persona NO puede cubrir
 7. **Casas preferidas**: Prioriza casas preferidas (#1, #2, #3)
+8. **NUEVO - Casa fija obligatoria**: Si una persona tiene `fixed_house_id`, SOLO se asigna a esa casa
+9. **NUEVO - Días específicos de trabajo**: Respeta días de la semana (lunes, martes, etc.)
+10. **NUEVO - Turnos por horario**: Asigna personas según su `specific_schedule` al turno correspondiente
+
+### ✅ Sistema de Turnos por Casa (NUEVO)
+- Las casas pueden definir múltiples turnos (ej: "06:00-15:00", "15:00-23:00", "23:00-07:00")
+- Cada turno genera una entrada de cobertura separada por día
+- La auto-asignación empareja `specific_schedule` del staff con el `shift_time` de la cobertura
+- Endpoint de limpieza de entradas obsoletas cuando se cambian los turnos
 
 ### ✅ Funcionalidad de Limpieza/Reset
 - Limpiar asignaciones de una casa específica
