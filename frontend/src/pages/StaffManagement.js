@@ -175,14 +175,26 @@ export default function StaffManagement() {
     });
   };
 
-  // Group staff by subtype
+  // Group staff by type and subtype
   const tias = staff.filter(s => s.staff_type === 'caregiver' || s.staff_type === 'tia');
   const encargadas = tias.filter(s => s.subtype === 'encargada');
   const rotativas = tias.filter(s => s.subtype === 'rotativa_mensual' || s.subtype === 'rotativa');
   const jornaleras = tias.filter(s => s.subtype === 'jornalera');
   const educadoras = tias.filter(s => s.subtype === 'educadora');
+  
+  // Assistants
+  const asistentes = staff.filter(s => s.staff_type === 'assistant');
+  const asistentes_mensuales = asistentes.filter(s => s.subtype === 'mensual');
+  const asistentes_jornaleras = asistentes.filter(s => s.subtype === 'jornalera');
 
-  const getSubtypeLabel = (subtype) => {
+  const getSubtypeLabel = (subtype, staffType) => {
+    if (staffType === 'assistant') {
+      const labels = {
+        'mensual': 'Asistente Mensual',
+        'jornalera': 'Asistente Jornalera'
+      };
+      return labels[subtype] || 'Asistente';
+    }
     const labels = {
       'encargada': 'Encargada',
       'rotativa': 'Rotativa',
