@@ -421,13 +421,13 @@ export default function StaffManagement() {
             <div>
               <label className="text-sm font-semibold text-slate-700 mb-2 block">Tipo *</label>
               <Select value={formData.staff_type} onValueChange={(value) => {
-                setFormData({...formData, staff_type: value, subtype: value === 'caregiver' ? 'encargada' : 'mensual'});
+                setFormData({...formData, staff_type: value, subtype: value === 'tia' ? 'rotativa' : 'mensual'});
               }}>
                 <SelectTrigger data-testid="staff-type-select">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="caregiver">Cuidadora</SelectItem>
+                  <SelectItem value="tia">Tía</SelectItem>
                   <SelectItem value="assistant">Asistente</SelectItem>
                 </SelectContent>
               </Select>
@@ -440,11 +440,12 @@ export default function StaffManagement() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {formData.staff_type === 'caregiver' ? (
+                  {formData.staff_type === 'tia' ? (
                     <>
+                      <SelectItem value="rotativa">Rotativa</SelectItem>
                       <SelectItem value="encargada">Encargada</SelectItem>
-                      <SelectItem value="rotativa_mensual">Rotativa Mensual</SelectItem>
                       <SelectItem value="jornalera">Jornalera</SelectItem>
+                      <SelectItem value="educadora">Educadora</SelectItem>
                     </>
                   ) : (
                     <>
