@@ -1051,24 +1051,58 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
         elif coverage_type == "assistant_8h":
             shift_hours = 8
             
-            # Priority 1: Mensuales (monthly assistants)
-            candidates = []
-            for staff in mensuales:
-                can_work, reason, score = await can_staff_work(
-                    staff, check_date, house_id, year, month, shift_hours
-                )
-                if can_work:
-                    candidates.append((staff, score))
+            # PRIORITY 0 (HIGHEST): Staff with fixed_house_id for this house
+            if staff_with_fixed_house:
+                candidates = []
+                for staff in staff_with_fixed_house:
+                    # Only consider assistants for assistant positions
+                    if staff.get("staff_type") != "assistant":
+                        continue
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
             
-            if candidates:
-                candidates.sort(key=lambda x: x[1], reverse=True)
-                selected_staff = candidates[0][0]
-                best_score = candidates[0][1]
+            # Priority 1: Mensuales (monthly assistants)
+            if not selected_staff:
+                candidates = []
+                for staff in mensuales:
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
             
             # Priority 2: Jornaleras asistentes
             if not selected_staff:
                 candidates = []
                 for staff in jornaleras_asist:
+                    can_work, reason, score = await can_staff_work(
+                        staff, check_date, house_id, year, month, shift_hours
+                    )
+                    if can_work:
+                        candidates.append((staff, score))
+                
+                if candidates:
+                    candidates.sort(key=lambda x: x[1], reverse=True)
+                    selected_staff = candidates[0][0]
+                    best_score = candidates[0][1]
+            
+            # Priority 3: Any assistant available
+            if not selected_staff:
+                candidates = []
+                for staff in assistants:
                     can_work, reason, score = await can_staff_work(
                         staff, check_date, house_id, year, month, shift_hours
                     )
