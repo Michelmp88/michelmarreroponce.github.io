@@ -85,7 +85,13 @@ class Staff(BaseModel):
     hours_per_shift: Optional[int] = None
     priority: Optional[int] = None
     fixed_house_id: Optional[str] = None
-    preferred_houses: Optional[str] = None
+    # New fields for house preferences
+    excluded_houses: Optional[List[str]] = None  # Houses this person cannot cover
+    preferred_house_1: Optional[str] = None  # First priority house preference
+    preferred_house_2: Optional[str] = None  # Second priority house preference
+    preferred_house_3: Optional[str] = None  # Third priority house preference
+    # Specific work schedule (time format HH:MM-HH:MM)
+    specific_schedule: Optional[str] = None  # e.g., "08:00-16:00"
     work_schedule: Optional[str] = None
     notes: Optional[str] = None
 
@@ -102,7 +108,11 @@ class StaffCreate(BaseModel):
     hours_per_shift: Optional[int] = None
     priority: Optional[int] = None
     fixed_house_id: Optional[str] = None
-    preferred_houses: Optional[str] = None
+    excluded_houses: Optional[List[str]] = None
+    preferred_house_1: Optional[str] = None
+    preferred_house_2: Optional[str] = None
+    preferred_house_3: Optional[str] = None
+    specific_schedule: Optional[str] = None
     work_schedule: Optional[str] = None
     notes: Optional[str] = None
 
