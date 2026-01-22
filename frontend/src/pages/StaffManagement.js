@@ -443,6 +443,57 @@ export default function StaffManagement() {
                 </div>
               )}
 
+              {/* Specific Work Days */}
+              <div className="mt-4">
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Días Específicos de Trabajo</label>
+                <div className="flex flex-wrap gap-2">
+                  {['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'].map(day => {
+                    const dayLabels = {
+                      lunes: 'Lun', martes: 'Mar', miercoles: 'Mié', 
+                      jueves: 'Jue', viernes: 'Vie', sabado: 'Sáb', domingo: 'Dom'
+                    };
+                    const isSelected = formData.specific_work_days?.includes(day);
+                    return (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => {
+                          const current = formData.specific_work_days || [];
+                          if (isSelected) {
+                            setFormData({...formData, specific_work_days: current.filter(d => d !== day)});
+                          } else {
+                            setFormData({...formData, specific_work_days: [...current, day]});
+                          }
+                        }}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          isSelected 
+                            ? 'bg-indigo-600 text-white' 
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {dayLabels[day]}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  {formData.specific_work_days?.length > 0 
+                    ? `Trabaja: ${formData.specific_work_days.join(', ')}` 
+                    : 'Sin días específicos (trabaja todos los días según ciclo trabajo/descanso)'}
+                </p>
+                {formData.specific_work_days?.length > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFormData({...formData, specific_work_days: []})}
+                    className="mt-2 text-rose-600 border-rose-300 hover:bg-rose-50"
+                  >
+                    Limpiar días
+                  </Button>
+                )}
+              </div>
+
               <div className="mt-4">
                 <label className="text-sm font-semibold text-slate-700 mb-2 block">Horario Específico (opcional)</label>
                 <div className="flex gap-2 items-center">
@@ -476,7 +527,6 @@ export default function StaffManagement() {
                       Limpiar
                     </Button>
                   )}
-                  />
                 </div>
               </div>
             </div>
