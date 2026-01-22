@@ -33,6 +33,7 @@ export default function StaffManagement() {
     preferred_house_2: 'none',
     preferred_house_3: 'none',
     specific_schedule: '',
+    specific_work_days: [], // Días específicos de la semana
     notes: ''
   };
   
