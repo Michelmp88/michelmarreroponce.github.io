@@ -116,6 +116,7 @@ class StaffCreate(BaseModel):
     preferred_house_3: Optional[str] = None
     specific_schedule: Optional[str] = None
     work_schedule: Optional[str] = None
+    specific_work_days: Optional[List[str]] = None  # e.g., ["lunes", "martes", "miercoles"]
     notes: Optional[str] = None
 
 class CoverageEntry(BaseModel):
