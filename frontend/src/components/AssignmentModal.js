@@ -554,34 +554,37 @@ export default function AssignmentModal({ open, onClose, cell, staff, onComplete
           </div>
         </div>
 
-        <DialogFooter className="flex-wrap gap-2">
-          {entry?.assigned_staff_name && applyMode === 'single' && (
+        <DialogFooter className="flex-col sm:flex-row gap-2">
+          {/* Unassign button - shows when there's an assignment */}
+          {entry?.assigned_staff_name && (
             <Button
               onClick={handleUnassign}
               disabled={loading}
               variant="outline"
-              className="border-rose-300 text-rose-700 hover:bg-rose-50"
+              className="border-rose-300 text-rose-700 hover:bg-rose-50 w-full sm:w-auto"
               data-testid="unassign-btn"
             >
-              Eliminar Asignación
+              Eliminar Asignación Actual
             </Button>
           )}
-          <Button
-            onClick={onClose}
-            disabled={loading}
-            variant="outline"
-            data-testid="cancel-btn"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleAssign}
-            disabled={loading || !selectedStaff}
-            className="bg-indigo-600 hover:bg-indigo-700"
-            data-testid="assign-btn"
-          >
-            {loading ? 'Asignando...' : `Asignar${targetDatesCount > 1 ? ` (${targetDatesCount} días)` : ''}`}
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto justify-end">
+            <Button
+              onClick={onClose}
+              disabled={loading}
+              variant="outline"
+              data-testid="cancel-btn"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleAssign}
+              disabled={loading || !selectedStaff}
+              className="bg-indigo-600 hover:bg-indigo-700"
+              data-testid="assign-btn"
+            >
+              {loading ? 'Asignando...' : `Asignar${targetDatesCount > 1 ? ` (${targetDatesCount} días)` : ''}`}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
