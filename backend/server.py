@@ -128,6 +128,7 @@ class CoverageEntry(BaseModel):
     date: str
     house_id: str
     coverage_type: CoverageType
+    shift_time: Optional[str] = None  # e.g., "06:00-14:00" - specific shift for this coverage
     assigned_staff_id: Optional[str] = None
     assigned_staff_name: Optional[str] = None
     status: CoverageStatus
@@ -137,11 +138,13 @@ class CoverageEntryCreate(BaseModel):
     date: str
     house_id: str
     coverage_type: CoverageType
+    shift_time: Optional[str] = None
     assigned_staff_id: Optional[str] = None
     notes: Optional[str] = None
 
 class CoverageEntryUpdate(BaseModel):
     assigned_staff_id: Optional[str] = None
+    shift_time: Optional[str] = None
     notes: Optional[str] = None
 
 class Absence(BaseModel):
