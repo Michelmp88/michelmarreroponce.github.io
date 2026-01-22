@@ -23,13 +23,14 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 class StaffType(str, Enum):
-    CAREGIVER = "caregiver"
+    TIA = "tia"  # Changed from caregiver to tia
     ASSISTANT = "assistant"
 
-class CaregiverSubtype(str, Enum):
+class TiaSubtype(str, Enum):
+    ROTATIVA = "rotativa"
     ENCARGADA = "encargada"
-    ROTATIVA_MENSUAL = "rotativa_mensual"
     JORNALERA = "jornalera"
+    EDUCADORA = "educadora"
 
 class AssistantSubtype(str, Enum):
     MENSUAL = "mensual"
