@@ -334,6 +334,51 @@ export default function AbsencesView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent className="max-w-md" data-testid="delete-absence-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <AlertTriangle className="w-6 h-6 text-rose-500" />
+              Eliminar Ausencia
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              ¿Estás seguro de que quieres eliminar la ausencia de <strong>{absenceToDelete?.staff_name}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <p className="text-sm text-emerald-800">
+                <strong>✓ Reincorporación:</strong> Al eliminar esta ausencia, {absenceToDelete?.staff_name} estará disponible nuevamente para asignaciones.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowDeleteConfirm(false);
+                setAbsenceToDelete(null);
+              }}
+              variant="outline"
+              disabled={deleting}
+              data-testid="cancel-delete-absence-btn"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className="bg-emerald-600 hover:bg-emerald-700"
+              data-testid="confirm-delete-absence-btn"
+            >
+              {deleting ? 'Eliminando...' : 'Confirmar Reincorporación'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
