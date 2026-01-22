@@ -392,26 +392,28 @@ export default function StaffManagement() {
               <h3 className="font-semibold text-slate-800 mb-3">Horario de Trabajo</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">Días de Trabajo</label>
+                  <label className="text-sm font-semibold text-slate-700 mb-2 block">Días de Trabajo/Semana</label>
                   <input
                     type="number"
                     value={formData.work_days}
                     onChange={(e) => setFormData({...formData, work_days: e.target.value})}
                     className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    placeholder="Ej: 20"
+                    placeholder="Ej: 5"
                     min="0"
+                    max="7"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">Días de Descanso</label>
+                  <label className="text-sm font-semibold text-slate-700 mb-2 block">Días de Descanso/Semana</label>
                   <input
                     type="number"
                     value={formData.rest_days}
                     onChange={(e) => setFormData({...formData, rest_days: e.target.value})}
                     className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    placeholder="Ej: 8"
+                    placeholder="Ej: 2"
                     min="0"
+                    max="7"
                   />
                 </div>
 
@@ -422,8 +424,9 @@ export default function StaffManagement() {
                     value={formData.hours_per_shift}
                     onChange={(e) => setFormData({...formData, hours_per_shift: e.target.value})}
                     className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    placeholder="Ej: 24"
+                    placeholder="Ej: 8"
                     min="1"
+                    max="24"
                   />
                 </div>
               </div>
