@@ -292,6 +292,167 @@ async def delete_coverage(coverage_id: str):
         raise HTTPException(status_code=404, detail="Coverage entry not found")
     return {"message": "Coverage deleted successfully"}
 
+class BulkAssignRequest(BaseModel):
+    staff_id: str
+    dates: List[str]  # List of dates in YYYY-MM-DD format
+    coverage_type: str  # "caregiver_24h" or "assistant_8h"
+
+@api_router.post("/coverage/bulk-assign/{house_id}")
+async def bulk_assign_coverage(house_id: str, request: BulkAssignRequest):
+    """
+    Assign a staff member to multiple days at once.
+    Useful for assigning consecutive or alternate days without going day by day.
+    """
+    house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
+    if not house:
+        raise HTTPException(status_code=404, detail="House not found")
+    
+    staff = await db.staff.find_one({"staff_id": request.staff_id}, {"_id": 0})
+    if not staff:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    
+    assignments_made = 0
+    assignments_failed = 0
+    
+    for date_str in request.dates:
+        # Find the coverage entry for this date and house
+        entry = await db.coverage.find_one({
+            "house_id": house_id,
+            "date": date_str,
+            "coverage_type": request.coverage_type
+        }, {"_id": 0})
+        
+        if entry:
+            await db.coverage.update_one(
+                {"coverage_id": entry["coverage_id"]},
+                {
+                    "$set": {
+                        "assigned_staff_id": staff["staff_id"],
+                        "assigned_staff_name": staff["name"],
+                        "status": "complete"
+                    }
+                }
+            )
+            assignments_made += 1
+        else:
+            assignments_failed += 1
+    
+    return {
+        "house_id": house_id,
+        "staff_name": staff["name"],
+        "dates_requested": len(request.dates),
+        "assignments_made": assignments_made,
+        "assignments_failed": assignments_failed,
+        "message": f"Se asignó a {staff['name']} en {assignments_made} días"
+    }
+
+@api_router.post("/coverage/randomize-position/{house_id}/{year}/{month}/{position}")
+async def randomize_position_coverage(house_id: str, year: int, month: int, position: str):
+    """
+    Randomize assignments for a specific position (caregiver_24h or assistant_8h) in a house.
+    Keeps the other position unchanged.
+    Position can be: 'caregiver' or 'assistant'
+    """
+    import random
+    
+    house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
+    if not house:
+        raise HTTPException(status_code=404, detail="House not found")
+    
+    start_date = f"{year}-{month:02d}-01"
+    if month == 12:
+        end_date = f"{year + 1}-01-01"
+    else:
+        end_date = f"{year}-{month + 1:02d}-01"
+    
+    # Determine coverage type based on position
+    if position == "caregiver":
+        coverage_type = "caregiver_24h"
+        staff_filter = {"staff_type": {"$in": ["caregiver", "tia"]}}
+    elif position == "assistant":
+        coverage_type = "assistant_8h"
+        staff_filter = {"staff_type": "assistant"}
+    else:
+        raise HTTPException(status_code=400, detail="Position must be 'caregiver' or 'assistant'")
+    
+    # Get all coverage entries for this position
+    entries = await db.coverage.find(
+        {
+            "house_id": house_id,
+            "date": {"$gte": start_date, "$lt": end_date},
+            "coverage_type": coverage_type
+        },
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Get available staff for this position
+    all_staff = await db.staff.find(staff_filter, {"_id": 0}).to_list(100)
+    
+    if not all_staff:
+        return {
+            "house_id": house_id,
+            "position": position,
+            "message": "No hay personal disponible para esta posición",
+            "assignments_made": 0
+        }
+    
+    assignments_made = 0
+    
+    for entry in entries:
+        check_date = entry["date"]
+        
+        # Get staff not on absence and not already assigned elsewhere
+        available_staff = []
+        for staff in all_staff:
+            # Check absence
+            absence = await db.absences.find_one({
+                "staff_id": staff["staff_id"],
+                "start_date": {"$lte": check_date},
+                "end_date": {"$gte": check_date}
+            })
+            if absence:
+                continue
+            
+            # Check if excluded from this house
+            excluded = staff.get("excluded_houses", []) or []
+            if house_id in excluded:
+                continue
+            
+            # Check if already assigned to another house on this day
+            other_assignment = await db.coverage.find_one({
+                "assigned_staff_id": staff["staff_id"],
+                "date": check_date,
+                "house_id": {"$ne": house_id},
+                "status": "complete"
+            })
+            if other_assignment:
+                continue
+            
+            available_staff.append(staff)
+        
+        if available_staff:
+            # Random selection
+            selected = random.choice(available_staff)
+            await db.coverage.update_one(
+                {"coverage_id": entry["coverage_id"]},
+                {
+                    "$set": {
+                        "assigned_staff_id": selected["staff_id"],
+                        "assigned_staff_name": selected["name"],
+                        "status": "complete"
+                    }
+                }
+            )
+            assignments_made += 1
+    
+    return {
+        "house_id": house_id,
+        "position": position,
+        "total_entries": len(entries),
+        "assignments_made": assignments_made,
+        "message": f"Se regeneraron aleatoriamente {assignments_made} asignaciones de {position}"
+    }
+
 @api_router.get("/coverage/gaps/{year}/{month}")
 async def get_coverage_gaps(year: int, month: int):
     start_date = f"{year}-{month:02d}-01"
