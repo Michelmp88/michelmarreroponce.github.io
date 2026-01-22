@@ -61,6 +61,8 @@ class House(BaseModel):
     caregivers_required: int
     assistant_required: bool
     encargada_staff_id: Optional[str] = None
+    # Shifts define the time slots for coverage (e.g., ["06:00-14:00", "14:00-22:00", "22:00-06:00"])
+    shifts: Optional[List[str]] = None  # If None, uses single 24h coverage
     notes: Optional[str] = None
 
 class HouseCreate(BaseModel):
@@ -69,6 +71,7 @@ class HouseCreate(BaseModel):
     caregivers_required: int
     assistant_required: bool
     encargada_staff_id: Optional[str] = None
+    shifts: Optional[List[str]] = None
     notes: Optional[str] = None
 
 class Staff(BaseModel):
