@@ -22,8 +22,11 @@ export default function HousesManagement() {
     caregivers_required: 1,
     assistant_required: false,
     encargada_staff_id: '',
+    shifts: [], // Array of shift times like ["06:00-14:00", "14:00-22:00", "22:00-06:00"]
     notes: ''
   });
+  const [newShiftStart, setNewShiftStart] = useState('');
+  const [newShiftEnd, setNewShiftEnd] = useState('');
 
   useEffect(() => {
     fetchData();
