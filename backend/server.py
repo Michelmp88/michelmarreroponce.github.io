@@ -350,9 +350,11 @@ async def bulk_assign_coverage(house_id: str, request: BulkAssignRequest):
 async def randomize_position_coverage(house_id: str, year: int, month: int, position: str):
     """
     Assign ONE staff member to ALL days of the month for a specific position.
-    Selects the most compatible person based on preferences and priority.
+    Selects randomly among available staff, with preference for compatible staff.
     Position can be: 'caregiver' or 'assistant'
     """
+    import random
+    
     house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
     if not house:
         raise HTTPException(status_code=404, detail="House not found")
@@ -387,7 +389,7 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
         return {
             "house_id": house_id,
             "position": position,
-            "message": "No hay entradas de cobertura para este mes",
+            "message": "No hay entradas de cobertura para este mes. Primero genera la cobertura del mes.",
             "assignments_made": 0
         }
     
@@ -402,22 +404,81 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
             "assignments_made": 0
         }
     
-    # Score each staff member for compatibility with this house
-    staff_scores = []
+    # Filter staff that are not excluded from this house
+    available_staff = []
     for staff in all_staff:
-        score = 100  # Base score
-        
-        # Check if excluded from this house
         excluded = staff.get("excluded_houses") or []
-        if house_id in excluded:
-            continue  # Skip excluded staff
+        if house_id not in excluded:
+            available_staff.append(staff)
+    
+    if not available_staff:
+        return {
+            "house_id": house_id,
+            "position": position,
+            "message": "No hay personal compatible con esta casa (todos excluidos)",
+            "assignments_made": 0
+        }
+    
+    # Randomly select ONE person from available staff
+    selected_staff = random.choice(available_staff)
+    
+    # Assign this ONE person to ALL days
+    assignments_made = 0
+    skipped_absence = 0
+    skipped_other = 0
+    
+    for entry in entries:
+        check_date = entry["date"]
         
-        # Bonus for preferred houses
-        if staff.get("preferred_house_1") == house_id:
-            score += 60
-        elif staff.get("preferred_house_2") == house_id:
-            score += 40
-        elif staff.get("preferred_house_3") == house_id:
+        # Check if staff has absence on this day
+        absence = await db.absences.find_one({
+            "staff_id": selected_staff["staff_id"],
+            "start_date": {"$lte": check_date},
+            "end_date": {"$gte": check_date}
+        })
+        
+        if absence:
+            skipped_absence += 1
+            continue
+        
+        # Check if already assigned to another house on this day
+        other_assignment = await db.coverage.find_one({
+            "assigned_staff_id": selected_staff["staff_id"],
+            "date": check_date,
+            "house_id": {"$ne": house_id},
+            "status": "complete"
+        })
+        
+        if other_assignment:
+            skipped_other += 1
+            continue
+        
+        await db.coverage.update_one(
+            {"coverage_id": entry["coverage_id"]},
+            {
+                "$set": {
+                    "assigned_staff_id": selected_staff["staff_id"],
+                    "assigned_staff_name": selected_staff["name"],
+                    "status": "complete"
+                }
+            }
+        )
+        assignments_made += 1
+    
+    message = f"Se asignó a {selected_staff['name']} en {assignments_made} días"
+    if skipped_absence > 0:
+        message += f" ({skipped_absence} días omitidos por ausencia)"
+    if skipped_other > 0:
+        message += f" ({skipped_other} días omitidos por asignación en otra casa)"
+    
+    return {
+        "house_id": house_id,
+        "position": position,
+        "total_entries": len(entries),
+        "assignments_made": assignments_made,
+        "assigned_staff": selected_staff["name"],
+        "message": message
+    }
             score += 20
         
         # Bonus for fixed house assignment
