@@ -93,6 +93,8 @@ class Staff(BaseModel):
     # Specific work schedule (time format HH:MM-HH:MM)
     specific_schedule: Optional[str] = None  # e.g., "08:00-16:00"
     work_schedule: Optional[str] = None
+    # Specific work days (list of day names in Spanish)
+    specific_work_days: Optional[List[str]] = None  # e.g., ["lunes", "martes", "miercoles", "jueves", "viernes"]
     notes: Optional[str] = None
 
 class StaffCreate(BaseModel):
