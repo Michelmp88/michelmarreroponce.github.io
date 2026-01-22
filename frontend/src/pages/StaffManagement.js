@@ -370,27 +370,6 @@ export default function StaffManagement() {
             </div>
           </div>
         </div>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-slate-700 mb-3">Rotativas Mensuales</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {rotativas.map(member => (
-                <StaffCard key={member.staff_id} member={member} />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold text-slate-700 mb-3">Jornaleras</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {caregiverJornaleras.map(member => (
-                <StaffCard key={member.staff_id} member={member} />
-              ))}
-            </div>
-          </div>
-        </div>
 
         <div>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">Asistentes</h2>
