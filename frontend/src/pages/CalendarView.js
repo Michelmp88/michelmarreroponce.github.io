@@ -606,6 +606,165 @@ export default function CalendarView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Randomize Position Modal */}
+      <Dialog open={showRandomizeModal} onOpenChange={setShowRandomizeModal}>
+        <DialogContent className="max-w-md" data-testid="randomize-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900">
+              Aleatorizar Posición
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              Regenera aleatoriamente las asignaciones de una posición específica, manteniendo las demás intactas.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4">
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Posición a aleatorizar</label>
+              <Select value={randomizePosition} onValueChange={setRandomizePosition}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="caregiver">Tía (Cuidadora 24h)</SelectItem>
+                  <SelectItem value="assistant">Asistente (8h)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <p className="text-sm text-purple-800">
+                <strong>ℹ️ Nota:</strong> Esto reasignará aleatoriamente solo la posición seleccionada.
+                Útil cuando quieres cambiar los asistentes manteniendo las encargadas fijas.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowRandomizeModal(false);
+                setSelectedHouse(null);
+              }}
+              variant="outline"
+              disabled={autoAssigning}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleRandomizePosition}
+              disabled={autoAssigning}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              {autoAssigning ? 'Aleatorizando...' : 'Aleatorizar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Assign Modal */}
+      <Dialog open={showBulkAssignModal} onOpenChange={setShowBulkAssignModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="bulk-assign-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900">
+              Asignación Múltiple
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              Asigna una persona a varios días a la vez (consecutivos o alternos)
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Personal</label>
+                <Select value={bulkAssignData.staff_id} onValueChange={(value) => setBulkAssignData({...bulkAssignData, staff_id: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar persona" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {staff.map(s => (
+                      <SelectItem key={s.staff_id} value={s.staff_id}>{s.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Tipo de Cobertura</label>
+                <Select value={bulkAssignData.coverage_type} onValueChange={(value) => setBulkAssignData({...bulkAssignData, coverage_type: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="caregiver_24h">Tía (24h)</SelectItem>
+                    <SelectItem value="assistant_8h">Asistente (8h)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Selección Rápida</label>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => selectConsecutiveDays(1, 7)}>Primeros 7 días</Button>
+                <Button size="sm" variant="outline" onClick={() => selectConsecutiveDays(1, 15)}>Primera quincena</Button>
+                <Button size="sm" variant="outline" onClick={() => selectConsecutiveDays(16, 15)}>Segunda quincena</Button>
+                <Button size="sm" variant="outline" onClick={() => selectAlternateDays(1, 2)}>Días alternos (1, 3, 5...)</Button>
+                <Button size="sm" variant="outline" onClick={() => selectAlternateDays(2, 2)}>Días alternos (2, 4, 6...)</Button>
+                <Button size="sm" variant="outline" onClick={() => setBulkAssignData({...bulkAssignData, selectedDates: []})}>Limpiar selección</Button>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                Días seleccionados ({bulkAssignData.selectedDates.length})
+              </label>
+              <div className="grid grid-cols-7 gap-1 p-3 bg-slate-50 rounded-lg">
+                {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
+                  const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                  const isSelected = bulkAssignData.selectedDates.includes(date);
+                  return (
+                    <button
+                      key={day}
+                      onClick={() => toggleDateSelection(date)}
+                      className={`p-2 text-sm rounded transition-colors ${
+                        isSelected 
+                          ? 'bg-emerald-500 text-white' 
+                          : 'bg-white border border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowBulkAssignModal(false);
+                setSelectedHouse(null);
+                setBulkAssignData({ staff_id: '', coverage_type: 'caregiver_24h', selectedDates: [] });
+              }}
+              variant="outline"
+              disabled={autoAssigning}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleBulkAssign}
+              disabled={autoAssigning || !bulkAssignData.staff_id || bulkAssignData.selectedDates.length === 0}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {autoAssigning ? 'Asignando...' : `Asignar ${bulkAssignData.selectedDates.length} días`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
