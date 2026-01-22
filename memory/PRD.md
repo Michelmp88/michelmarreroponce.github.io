@@ -81,11 +81,12 @@ El algoritmo de auto-asignación incluye:
 ## Tareas Completadas Esta Sesión
 1. ✅ Eliminación de ausencias con modal de confirmación
 2. ✅ Formulario de personal simplificado (solo Tía con subtipos)
-3. ✅ Cálculo automático de horas semanales/mensuales
+3. ✅ **Cálculo automático CORREGIDO**: días trabajo × horas turno = horas mensuales (ej: 20 días × 24h = 480h)
 4. ✅ Casas preferidas (#1, #2, #3) y casas excluidas
-5. ✅ Horario específico con selector de hora
-6. ✅ Aleatorización de posición (solo asistentes o solo tías)
+5. ✅ Horario específico con selector de hora y **botón "Limpiar"**
+6. ✅ **Aleatorización corregida**: Asigna UNA MISMA persona a TODO el mes (no una diferente cada día)
 7. ✅ Asignación múltiple (días consecutivos o alternos)
+8. ✅ **Ausencias con fecha indefinida**: Opción para cuando no se sabe cuándo regresa la persona
 
 ## Tareas Pendientes
 ### P2 - Media Prioridad
