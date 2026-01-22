@@ -604,9 +604,9 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     # Get all staff
     all_staff = await db.staff.find({}, {"_id": 0}).to_list(100)
     
-    # Separate and sort by priority
-    caregivers = sorted(
-        [s for s in all_staff if s["staff_type"] == "caregiver"],
+    # Separate and sort by priority - support both old "caregiver" and new "tia" types
+    tias = sorted(
+        [s for s in all_staff if s["staff_type"] in ["caregiver", "tia"]],
         key=lambda x: x.get("priority", 50)
     )
     assistants = sorted(
@@ -614,10 +614,11 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
         key=lambda x: x.get("priority", 50)
     )
     
-    # Further categorize caregivers by subtype for hierarchy
-    encargadas = [s for s in caregivers if s["subtype"] == "encargada"]
-    rotativas = [s for s in caregivers if s["subtype"] == "rotativa_mensual"]
-    jornaleras_cuidadora = [s for s in caregivers if s["subtype"] == "jornalera"]
+    # Further categorize tias by subtype for hierarchy (support old and new subtypes)
+    encargadas = [s for s in tias if s["subtype"] == "encargada"]
+    rotativas = [s for s in tias if s["subtype"] in ["rotativa_mensual", "rotativa"]]
+    jornaleras_tia = [s for s in tias if s["subtype"] == "jornalera"]
+    educadoras = [s for s in tias if s["subtype"] == "educadora"]
     
     mensuales = [s for s in assistants if s["subtype"] == "mensual"]
     jornaleras_asist = [s for s in assistants if s["subtype"] == "jornalera"]
