@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, UserCheck, Calendar, Plus, Trash2 } from 'lucide-react';
+import { Users, UserCheck, Calendar, Plus, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function StaffManagement() {
@@ -16,10 +16,13 @@ export default function StaffManagement() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingStaff, setEditingStaff] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [staffToDelete, setStaffToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    staff_type: 'caregiver',
-    subtype: 'encargada',
+    staff_type: 'tia',
+    subtype: 'rotativa',
     work_days: '',
     rest_days: '',
     weekly_hours: '',
