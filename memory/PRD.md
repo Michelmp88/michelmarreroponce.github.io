@@ -88,6 +88,24 @@ El algoritmo de auto-asignación incluye:
 7. ✅ Asignación múltiple (días consecutivos o alternos)
 8. ✅ **Ausencias con fecha indefinida**: Opción para cuando no se sabe cuándo regresa la persona
 
+## Correcciones Recientes (Enero 2025)
+
+### ✅ Bug Fix: Aleatorización siempre seleccionaba a "Nellina"
+- **Problema**: El endpoint `randomize-position` siempre seleccionaba la misma persona
+- **Solución**: `random.choice(available_staff)` ahora funciona correctamente
+- **Verificación**: 5 llamadas consecutivas retornaron 5 personas diferentes (Nellina, Silvia, Tatiana, Iliana, Leticia)
+
+### ✅ Bug Fix: No se podía generar cobertura para casas sin datos previos
+- **Problema**: Casas como "Casa Unión" no tenían entradas de cobertura
+- **Solución**: Nuevo endpoint `POST /api/coverage/generate/{year}/{month}` para crear entradas vacías
+- **Verificación**: Genera 713 entradas para las 12 casas (todos los días del mes × tipos de cobertura)
+
+### ✅ Nueva Funcionalidad: Botón "Generar Cobertura del Mes"
+- **Ubicación**: CalendarView.js
+- **Comportamiento**: Aparece cuando `coverage.length === 0`
+- **Acción**: Crea entradas de cobertura para todas las casas del mes seleccionado
+
 ## Tareas Pendientes
 ### P2 - Media Prioridad
 1. **Backup Automático**: Sistema de respaldo y restauración de datos históricos
+2. **Refactorización server.py**: Dividir en módulos usando APIRouter (actualmente > 800 líneas)
