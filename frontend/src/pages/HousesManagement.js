@@ -57,6 +57,7 @@ export default function HousesManagement() {
         caregivers_required: house.caregivers_required,
         assistant_required: house.assistant_required,
         encargada_staff_id: house.encargada_staff_id || 'none',
+        shifts: house.shifts || [],
         notes: house.notes || ''
       });
     } else {
@@ -67,10 +68,31 @@ export default function HousesManagement() {
         caregivers_required: 1,
         assistant_required: false,
         encargada_staff_id: 'none',
+        shifts: [],
         notes: ''
       });
     }
+    setNewShiftStart('');
+    setNewShiftEnd('');
     setShowModal(true);
+  };
+
+  const addShift = () => {
+    if (newShiftStart && newShiftEnd) {
+      const newShift = `${newShiftStart}-${newShiftEnd}`;
+      if (!formData.shifts.includes(newShift)) {
+        setFormData({...formData, shifts: [...formData.shifts, newShift]});
+      }
+      setNewShiftStart('');
+      setNewShiftEnd('');
+    }
+  };
+
+  const removeShift = (shiftToRemove) => {
+    setFormData({
+      ...formData, 
+      shifts: formData.shifts.filter(s => s !== shiftToRemove)
+    });
   };
 
   const handleSaveHouse = async () => {
