@@ -111,6 +111,16 @@ El algoritmo de auto-asignación incluye:
 - **Comportamiento**: Aparece cuando `coverage.length === 0`
 - **Acción**: Crea entradas de cobertura para todas las casas del mes seleccionado
 
+### ✅ Nueva Funcionalidad: Modal de Asignación Manual Mejorado
+- **Cambio de posición**: Ahora permite cambiar tanto Tía/Cuidadora como Asistente desde el mismo modal
+- **Opciones de aplicación múltiple**:
+  - Solo el día seleccionado
+  - Todo el mes (31 días)
+  - Por semana (Sem 1, Sem 2, etc.)
+  - Por quincena (1ra o 2da)
+  - Días alternos (cada 2, 3, 4, 5 o 7 días)
+- **Personal agrupado por tipo**: Encargadas, Rotativas, Jornaleras, Educadoras, Asistentes
+
 ## Tareas Pendientes
 ### P2 - Media Prioridad
 1. **Backup Automático**: Sistema de respaldo y restauración de datos históricos
