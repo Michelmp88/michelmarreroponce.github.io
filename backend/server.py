@@ -819,6 +819,52 @@ def is_weekend(date_str: str) -> bool:
     d = datetime.fromisoformat(date_str)
     return d.weekday() >= 5  # 5=Saturday, 6=Sunday
 
+def schedules_overlap(staff_schedule: str, shift_time: str) -> bool:
+    """
+    Check if staff's schedule overlaps with the coverage shift.
+    Both are in format "HH:MM-HH:MM"
+    Returns True if they match or overlap significantly.
+    """
+    if not staff_schedule or not shift_time:
+        return True  # If no schedule defined, assume they can work any shift
+    
+    try:
+        # Parse staff schedule
+        staff_start, staff_end = staff_schedule.split('-')
+        staff_start_h, staff_start_m = map(int, staff_start.split(':'))
+        staff_end_h, staff_end_m = map(int, staff_end.split(':'))
+        staff_start_mins = staff_start_h * 60 + staff_start_m
+        staff_end_mins = staff_end_h * 60 + staff_end_m
+        
+        # Parse shift time
+        shift_start, shift_end = shift_time.split('-')
+        shift_start_h, shift_start_m = map(int, shift_start.split(':'))
+        shift_end_h, shift_end_m = map(int, shift_end.split(':'))
+        shift_start_mins = shift_start_h * 60 + shift_start_m
+        shift_end_mins = shift_end_h * 60 + shift_end_m
+        
+        # Handle overnight shifts (end time < start time)
+        if staff_end_mins < staff_start_mins:
+            staff_end_mins += 24 * 60
+        if shift_end_mins < shift_start_mins:
+            shift_end_mins += 24 * 60
+        
+        # Check if staff schedule covers at least 80% of the shift
+        # or if the shift is within the staff's schedule
+        overlap_start = max(staff_start_mins, shift_start_mins)
+        overlap_end = min(staff_end_mins, shift_end_mins)
+        
+        if overlap_end <= overlap_start:
+            return False
+        
+        overlap_duration = overlap_end - overlap_start
+        shift_duration = shift_end_mins - shift_start_mins
+        
+        # Match if overlap is at least 70% of shift duration
+        return overlap_duration >= (shift_duration * 0.7)
+    except:
+        return True  # If parsing fails, assume compatible
+
 async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int, month: int, shift_hours: int) -> tuple:
     """
     Comprehensive check if staff can work on a given date for a specific house.
