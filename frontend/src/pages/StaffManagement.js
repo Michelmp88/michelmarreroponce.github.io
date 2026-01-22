@@ -87,7 +87,7 @@ export default function StaffManagement() {
       const staffData = {
         ...formData,
         staff_id: editingStaff?.staff_id || `staff_${formData.name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`,
-        staff_type: 'tia', // Always tia now
+        staff_type: formData.staff_type || 'tia',
         work_days: formData.work_days ? parseInt(formData.work_days) : null,
         rest_days: formData.rest_days ? parseInt(formData.rest_days) : null,
         hours_per_shift: formData.hours_per_shift ? parseInt(formData.hours_per_shift) : null,
