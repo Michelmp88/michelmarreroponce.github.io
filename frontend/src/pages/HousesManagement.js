@@ -107,7 +107,8 @@ export default function HousesManagement() {
 
     const dataToSend = {
       ...formData,
-      encargada_staff_id: formData.encargada_staff_id === 'none' ? null : formData.encargada_staff_id
+      encargada_staff_id: formData.encargada_staff_id === 'none' ? null : formData.encargada_staff_id,
+      shifts: formData.shifts.length > 0 ? formData.shifts : null
     };
 
     try {
