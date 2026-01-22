@@ -1056,15 +1056,30 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     for entry in incomplete_entries:
         check_date = entry["date"]
         coverage_type = entry["coverage_type"]
+        shift_time = entry.get("shift_time")  # Get the specific shift for this entry
         
         selected_staff = None
         best_score = -1
         skip_reason = None
         
         if coverage_type == "caregiver_24h":
-            shift_hours = 24
+            # Calculate shift hours from shift_time if available
+            if shift_time:
+                try:
+                    start, end = shift_time.split('-')
+                    start_h, start_m = map(int, start.split(':'))
+                    end_h, end_m = map(int, end.split(':'))
+                    start_mins = start_h * 60 + start_m
+                    end_mins = end_h * 60 + end_m
+                    if end_mins < start_mins:  # Overnight shift
+                        end_mins += 24 * 60
+                    shift_hours = (end_mins - start_mins) // 60
+                except:
+                    shift_hours = 24
+            else:
+                shift_hours = 24
             
-            # PRIORITY 0 (HIGHEST): Staff with fixed_house_id for this house
+            # PRIORITY 0 (HIGHEST): Staff with fixed_house_id AND matching schedule for this house
             if not selected_staff and staff_with_fixed_house:
                 candidates = []
                 for staff in staff_with_fixed_house:
@@ -1072,7 +1087,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                     if staff.get("staff_type") not in ["caregiver", "tia"]:
                         continue
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1090,7 +1105,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 )
                 if encargada:
                     can_work, reason, score = await can_staff_work(
-                        encargada, check_date, house_id, year, month, shift_hours
+                        encargada, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work and score > best_score:
                         selected_staff = encargada
@@ -1101,7 +1116,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in rotativas:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1117,7 +1132,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in jornaleras_tia:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1132,7 +1147,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                 candidates = []
                 for staff in educadoras:
                     can_work, reason, score = await can_staff_work(
-                        staff, check_date, house_id, year, month, shift_hours
+                        staff, check_date, house_id, year, month, shift_hours, shift_time
                     )
                     if can_work:
                         candidates.append((staff, score))
@@ -1143,7 +1158,7 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
                     best_score = candidates[0][1]
             
             if not selected_staff:
-                skip_reason = "No hay tías disponibles"
+                skip_reason = f"No hay tías disponibles para el turno {shift_time or '24h'}"
         
         elif coverage_type == "assistant_8h":
             shift_hours = 8
