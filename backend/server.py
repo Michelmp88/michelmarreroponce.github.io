@@ -693,14 +693,21 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     if await is_staff_already_assigned(staff_id, check_date, exclude_house_id=house_id):
         return (False, "ya asignado a otra casa", 0)
     
-    # Check 3: Daily hour limit
-    max_daily = staff.get("max_hours_daily", 24 if staff["staff_type"] == "caregiver" else 12)
+    # Check 3: Is this house excluded for this staff?
+    excluded_houses = staff.get("excluded_houses") or []
+    if house_id in excluded_houses:
+        return (False, "casa excluida para este personal", 0)
+    
+    # Check 4: Daily hour limit
+    max_daily = staff.get("max_hours_daily")
+    if max_daily is None:
+        max_daily = 24 if staff.get("staff_type") in ["caregiver", "tia"] else 12
     current_daily_hours = await get_staff_hours_for_day(staff_id, check_date)
     if current_daily_hours + shift_hours > max_daily:
         return (False, f"excede limite diario ({current_daily_hours + shift_hours}/{max_daily}h)", 0)
     
-    # Check 4: Monthly hour limit
-    max_monthly = staff.get("max_hours_monthly", 480)
+    # Check 5: Monthly hour limit
+    max_monthly = staff.get("max_hours_monthly") or 480
     current_monthly_hours = await get_staff_hours_for_month(staff_id, year, month)
     if current_monthly_hours + shift_hours > max_monthly:
         return (False, f"excede limite mensual ({current_monthly_hours + shift_hours}/{max_monthly}h)", 0)
@@ -708,30 +715,38 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     # Parse preferences from notes
     preferences = parse_staff_preferences(staff.get("notes", ""), house_id)
     
-    # Check 5: Weekend preference
+    # Check 6: Weekend preference
     if preferences["no_weekends"] and is_weekend(check_date):
         score -= 50  # Penalize but don't exclude
     
-    # Check 6: House preference
+    # Check 7: House preference from notes
     if preferences["avoids_house"]:
         score -= 30  # Penalize avoiding this house
     if preferences["prefers_house"]:
         score += 30  # Bonus for preferring this house
     
-    # Check 7: Fixed house assignment
+    # Check 8: New preferred houses (structured fields)
+    if staff.get("preferred_house_1") == house_id:
+        score += 60  # Big bonus for first choice house
+    elif staff.get("preferred_house_2") == house_id:
+        score += 40  # Medium bonus for second choice
+    elif staff.get("preferred_house_3") == house_id:
+        score += 20  # Small bonus for third choice
+    
+    # Check 9: Fixed house assignment
     if staff.get("fixed_house_id"):
         if staff["fixed_house_id"] == house_id:
             score += 50  # Big bonus for being assigned to this house
         else:
             score -= 40  # Penalize assigning to different house
     
-    # Check 8: Priority (lower priority number = higher priority = higher score)
+    # Check 10: Priority (lower priority number = higher priority = higher score)
     priority = staff.get("priority")
     if priority is None:
         priority = 50
     score += (100 - priority)  # Convert priority to score bonus
     
-    # Check 9: Work/rest day pattern (simplified check)
+    # Check 11: Work/rest day pattern (simplified check)
     work_days = staff.get("work_days")
     rest_days = staff.get("rest_days")
     if work_days and rest_days:
