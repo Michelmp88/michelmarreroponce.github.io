@@ -357,6 +357,38 @@ async def generate_month_coverage(year: int, month: int, house_id: str = None):
         "message": f"Se generaron {entries_created} entradas de cobertura para {len(houses)} casa(s)"
     }
 
+@api_router.delete("/coverage/cleanup-obsolete/{year}/{month}")
+async def cleanup_obsolete_coverage(year: int, month: int):
+    """
+    Remove obsolete coverage entries that don't match the house's current shift configuration.
+    For example, if a house now has shifts defined, entries without shift_time are obsolete.
+    """
+    houses = await db.houses.find({}, {"_id": 0}).to_list(100)
+    deleted_count = 0
+    
+    for house in houses:
+        h_id = house["house_id"]
+        shifts = house.get("shifts") or []
+        
+        if shifts:
+            # House has shifts - delete entries without shift_time or with non-matching shifts
+            result = await db.coverage.delete_many({
+                "house_id": h_id,
+                "date": {"$regex": f"^{year}-{month:02d}"},
+                "$or": [
+                    {"shift_time": None},
+                    {"shift_time": {"$nin": shifts}}
+                ]
+            })
+            deleted_count += result.deleted_count
+    
+    return {
+        "year": year,
+        "month": month,
+        "deleted_count": deleted_count,
+        "message": f"Se eliminaron {deleted_count} entradas obsoletas"
+    }
+
 @api_router.post("/coverage", response_model=CoverageEntry)
 async def create_coverage(coverage: CoverageEntryCreate):
     import uuid
