@@ -204,11 +204,18 @@ export default function AbsencesView() {
                         <CalendarIcon className="w-4 h-4" />
                         <span>
                           {new Date(absence.start_date).toLocaleDateString('es-ES')} -{' '}
-                          {new Date(absence.end_date).toLocaleDateString('es-ES')}
+                          {isIndefinite(absence) ? (
+                            <span className="text-amber-600 font-semibold">Indefinido</span>
+                          ) : (
+                            new Date(absence.end_date).toLocaleDateString('es-ES')
+                          )}
                         </span>
                       </div>
-                      {absence.notes && (
+                      {absence.notes && !absence.notes.includes('[INDEFINIDO]') && (
                         <p className="text-slate-500 italic">{absence.notes}</p>
+                      )}
+                      {absence.notes && absence.notes.includes('[INDEFINIDO]') && (
+                        <p className="text-slate-500 italic">{absence.notes.replace('[INDEFINIDO]', '').trim()}</p>
                       )}
                     </div>
                   </Card>
