@@ -416,7 +416,7 @@ export default function CalendarView() {
         <Card className="p-8 border-amber-200 bg-amber-50 mb-6">
           <div className="text-center">
             <h3 className="text-lg font-semibold text-amber-800 mb-2">No hay cobertura generada para este mes</h3>
-            <p className="text-amber-700 mb-4">Haz clic en "Generar Cobertura del Mes" para crear las entradas de cobertura para todas las casas.</p>
+            <p className="text-amber-700 mb-4">Haz clic en el botón para crear las entradas de cobertura para todas las casas.</p>
             <Button
               onClick={handleGenerateCoverage}
               disabled={generating}
