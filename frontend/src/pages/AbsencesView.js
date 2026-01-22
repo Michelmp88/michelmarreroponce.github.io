@@ -301,7 +301,7 @@ export default function AbsencesView() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-semibold text-slate-700 mb-2 block">Fecha Inicio</label>
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Fecha Inicio *</label>
                 <input
                   type="date"
                   value={formData.start_date}
@@ -317,8 +317,25 @@ export default function AbsencesView() {
                   value={formData.end_date}
                   onChange={(e) => setFormData({...formData, end_date: e.target.value})}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                  disabled={indefiniteEndDate}
                   data-testid="end-date-input"
                 />
+                <div className="mt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={indefiniteEndDate}
+                      onChange={(e) => {
+                        setIndefiniteEndDate(e.target.checked);
+                        if (e.target.checked) {
+                          setFormData({...formData, end_date: ''});
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-slate-300 text-indigo-600"
+                    />
+                    <span className="text-sm text-slate-600">Fecha de regreso indefinida</span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -337,7 +354,10 @@ export default function AbsencesView() {
 
           <DialogFooter>
             <Button
-              onClick={() => setShowAddModal(false)}
+              onClick={() => {
+                setShowAddModal(false);
+                setIndefiniteEndDate(false);
+              }}
               variant="outline"
               data-testid="cancel-btn"
             >
