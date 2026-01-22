@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar as CalendarIcon, Plus, Trash2, AlertCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus, Trash2, AlertCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AbsencesView() {
@@ -13,6 +13,9 @@ export default function AbsencesView() {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [absenceToDelete, setAbsenceToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     staff_id: '',
     start_date: '',
