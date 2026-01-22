@@ -481,51 +481,6 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
     }
 
 @api_router.get("/coverage/gaps/{year}/{month}")
-        check_date = entry["date"]
-        
-        # Check if staff has absence on this day
-        absence = await db.absences.find_one({
-            "staff_id": selected_staff["staff_id"],
-            "start_date": {"$lte": check_date},
-            "end_date": {"$gte": check_date}
-        })
-        
-        if absence:
-            continue  # Skip days with absence
-        
-        # Check if already assigned to another house on this day
-        other_assignment = await db.coverage.find_one({
-            "assigned_staff_id": selected_staff["staff_id"],
-            "date": check_date,
-            "house_id": {"$ne": house_id},
-            "status": "complete"
-        })
-        
-        if other_assignment:
-            continue  # Skip days where assigned elsewhere
-        
-        await db.coverage.update_one(
-            {"coverage_id": entry["coverage_id"]},
-            {
-                "$set": {
-                    "assigned_staff_id": selected_staff["staff_id"],
-                    "assigned_staff_name": selected_staff["name"],
-                    "status": "complete"
-                }
-            }
-        )
-        assignments_made += 1
-    
-    return {
-        "house_id": house_id,
-        "position": position,
-        "total_entries": len(entries),
-        "assignments_made": assignments_made,
-        "assigned_staff": selected_staff["name"],
-        "message": f"Se asignó a {selected_staff['name']} en {assignments_made} días"
-    }
-
-@api_router.get("/coverage/gaps/{year}/{month}")
 async def get_coverage_gaps(year: int, month: int):
     start_date = f"{year}-{month:02d}-01"
     if month == 12:
