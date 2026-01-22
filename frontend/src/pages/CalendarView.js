@@ -35,6 +35,7 @@ export default function CalendarView() {
   });
   const [showRandomizeModal, setShowRandomizeModal] = useState(false);
   const [randomizePosition, setRandomizePosition] = useState('caregiver');
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     fetchData();
