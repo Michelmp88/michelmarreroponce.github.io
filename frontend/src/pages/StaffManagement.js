@@ -459,6 +459,18 @@ export default function StaffManagement() {
                     }}
                     className="px-3 py-2 border border-slate-300 rounded-md"
                   />
+                  {formData.specific_schedule && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFormData({...formData, specific_schedule: ''})}
+                      className="text-rose-600 border-rose-300 hover:bg-rose-50"
+                    >
+                      Limpiar
+                    </Button>
+                  )}
+                  />
                 </div>
               </div>
             </div>
