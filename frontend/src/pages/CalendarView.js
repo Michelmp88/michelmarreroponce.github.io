@@ -172,6 +172,83 @@ export default function CalendarView() {
     }
   };
 
+  const handleRandomizePosition = async () => {
+    if (!selectedHouse) return;
+    
+    setAutoAssigning(true);
+    try {
+      const response = await axios.post(`${API}/coverage/randomize-position/${selectedHouse}/${year}/${month}/${randomizePosition}`);
+      toast.success(response.data.message);
+      setShowRandomizeModal(false);
+      setSelectedHouse(null);
+      await fetchData();
+    } catch (error) {
+      console.error('Error randomizing:', error);
+      toast.error('Error al aleatorizar asignaciones');
+    } finally {
+      setAutoAssigning(false);
+    }
+  };
+
+  const handleBulkAssign = async () => {
+    if (!bulkAssignData.staff_id || bulkAssignData.selectedDates.length === 0) {
+      toast.error('Selecciona una persona y al menos un día');
+      return;
+    }
+    
+    setAutoAssigning(true);
+    try {
+      const response = await axios.post(`${API}/coverage/bulk-assign/${selectedHouse}`, {
+        staff_id: bulkAssignData.staff_id,
+        dates: bulkAssignData.selectedDates,
+        coverage_type: bulkAssignData.coverage_type
+      });
+      toast.success(response.data.message);
+      setShowBulkAssignModal(false);
+      setBulkAssignData({ staff_id: '', coverage_type: 'caregiver_24h', selectedDates: [] });
+      setSelectedHouse(null);
+      await fetchData();
+    } catch (error) {
+      console.error('Error bulk assigning:', error);
+      toast.error('Error al asignar múltiples días');
+    } finally {
+      setAutoAssigning(false);
+    }
+  };
+
+  const toggleDateSelection = (date) => {
+    setBulkAssignData(prev => {
+      const dates = prev.selectedDates.includes(date)
+        ? prev.selectedDates.filter(d => d !== date)
+        : [...prev.selectedDates, date].sort();
+      return { ...prev, selectedDates: dates };
+    });
+  };
+
+  const selectConsecutiveDays = (startDay, count) => {
+    const dates = [];
+    for (let i = 0; i < count; i++) {
+      const day = startDay + i;
+      if (day <= daysInMonth) {
+        dates.push(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+      }
+    }
+    setBulkAssignData(prev => ({ ...prev, selectedDates: dates }));
+  };
+
+  const selectAlternateDays = (startDay, interval) => {
+    const dates = [];
+    for (let day = startDay; day <= daysInMonth; day += interval) {
+      dates.push(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+    }
+    setBulkAssignData(prev => ({ ...prev, selectedDates: dates }));
+  };
+
+  const daysInMonth = getDaysInMonth(year, month);
+      setResetting(false);
+    }
+  };
+
   const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
