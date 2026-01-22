@@ -52,9 +52,16 @@ export default function AbsencesView() {
     }
 
     try {
-      await axios.post(`${API}/absences`, formData);
+      const absenceData = {
+        ...formData,
+        // Si es indefinido, usamos una fecha muy lejana (2099-12-31)
+        end_date: indefiniteEndDate ? '2099-12-31' : formData.end_date,
+        notes: indefiniteEndDate ? `[INDEFINIDO] ${formData.notes || ''}`.trim() : formData.notes
+      };
+      await axios.post(`${API}/absences`, absenceData);
       toast.success('Ausencia registrada correctamente');
       setShowAddModal(false);
+      setIndefiniteEndDate(false);
       setFormData({
         staff_id: '',
         start_date: '',
@@ -67,6 +74,10 @@ export default function AbsencesView() {
       console.error('Error adding absence:', error);
       toast.error('Error al registrar ausencia');
     }
+  };
+
+  const isIndefinite = (absence) => {
+    return absence.end_date === '2099-12-31' || (absence.notes && absence.notes.includes('[INDEFINIDO]'));
   };
 
   const handleDeleteAbsence = (absence) => {
