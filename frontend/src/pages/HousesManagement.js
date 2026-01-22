@@ -224,6 +224,19 @@ export default function HousesManagement() {
                 </div>
               )}
 
+              {house.shifts && house.shifts.length > 0 && (
+                <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  <p className="text-xs text-purple-600 mb-1">Turnos:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {house.shifts.map((shift, idx) => (
+                      <span key={idx} className="text-xs bg-purple-200 text-purple-800 px-2 py-0.5 rounded">
+                        {shift}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {house.notes && (
                 <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
                   <p className="text-xs text-amber-600 mb-1">Notas:</p>
