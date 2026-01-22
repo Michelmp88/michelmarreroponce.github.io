@@ -16,6 +16,7 @@ export default function AbsencesView() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [absenceToDelete, setAbsenceToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [indefiniteEndDate, setIndefiniteEndDate] = useState(false);
   const [formData, setFormData] = useState({
     staff_id: '',
     start_date: '',
@@ -45,7 +46,7 @@ export default function AbsencesView() {
   };
 
   const handleAddAbsence = async () => {
-    if (!formData.staff_id || !formData.start_date || !formData.end_date) {
+    if (!formData.staff_id || !formData.start_date || (!formData.end_date && !indefiniteEndDate)) {
       toast.error('Por favor completa todos los campos requeridos');
       return;
     }
