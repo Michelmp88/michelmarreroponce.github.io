@@ -86,9 +86,9 @@ El algoritmo de auto-asignación incluye:
 1. **Backup Automático**: Sistema de respaldo y restauración de datos históricos
 
 ## Testing
-- Test suite: `/app/tests/test_auto_assign.py` (16 tests)
-- Reportes: `/app/test_reports/iteration_2.json`
-- Cobertura: Endpoints básicos, auto-asignación, prevención de doble reserva, límites de horas, ausencias, jerarquía de prioridad
+- Test suite: `/app/tests/test_auto_assign.py`, `/app/tests/test_reset_endpoints.py` (26 tests)
+- Reportes: `/app/test_reports/iteration_3.json`
+- Cobertura: Endpoints básicos, auto-asignación, prevención de doble reserva, límites de horas, ausencias, jerarquía de prioridad, reset, staff CRUD
 
 ## Archivos de Referencia
 - `backend/server.py` - API y lógica de negocio
