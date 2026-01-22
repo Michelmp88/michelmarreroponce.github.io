@@ -245,12 +245,29 @@ export default function CalendarView() {
     setBulkAssignData(prev => ({ ...prev, selectedDates: dates }));
   };
 
+  const handleGenerateCoverage = async () => {
+    setGenerating(true);
+    try {
+      const response = await axios.post(`${API}/coverage/generate/${year}/${month}`);
+      toast.success(response.data.message);
+      await fetchData();
+    } catch (error) {
+      console.error('Error generating coverage:', error);
+      toast.error('Error al generar cobertura del mes');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const filteredHouses = filterHouse === 'all' 
     ? houses 
     : houses.filter(h => h.house_id === filterHouse);
+
+  // Check if there's no coverage data for current month
+  const hasCoverageData = coverage.length > 0;
 
   if (loading) {
     return (
