@@ -659,7 +659,7 @@ export default function CalendarView() {
             <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg">
               <p className="text-sm text-rose-800">
                 <strong>⚠️ Advertencia:</strong> Esta acción eliminará las asignaciones de personal. 
-                Las entradas de cobertura quedarán en estado "incompleto" y podrás volver a asignar personal manualmente o con auto-asignación.
+                Las entradas de cobertura quedarán en estado incompleto y podrás volver a asignar personal manualmente o con auto-asignación.
               </p>
             </div>
           </div>
