@@ -241,6 +241,86 @@ async def get_coverage_by_month(year: int, month: int):
     
     return coverage_entries
 
+@api_router.post("/coverage/generate/{year}/{month}")
+async def generate_month_coverage(year: int, month: int, house_id: str = None):
+    """
+    Generate empty coverage entries for a month.
+    If house_id is provided, generates only for that house.
+    Otherwise, generates for all houses.
+    """
+    import uuid
+    from calendar import monthrange
+    
+    # Get number of days in the month
+    _, days_in_month = monthrange(year, month)
+    
+    # Get houses
+    if house_id:
+        houses = await db.houses.find({"house_id": house_id}, {"_id": 0}).to_list(1)
+        if not houses:
+            raise HTTPException(status_code=404, detail="House not found")
+    else:
+        houses = await db.houses.find({}, {"_id": 0}).to_list(100)
+    
+    entries_created = 0
+    
+    for house in houses:
+        h_id = house["house_id"]
+        caregivers_required = house.get("caregivers_required", 1)
+        assistant_required = house.get("assistant_required", True)
+        
+        for day in range(1, days_in_month + 1):
+            date_str = f"{year}-{month:02d}-{day:02d}"
+            
+            # Create caregiver entries
+            for i in range(caregivers_required):
+                # Check if entry already exists
+                existing = await db.coverage.find_one({
+                    "house_id": h_id,
+                    "date": date_str,
+                    "coverage_type": "caregiver_24h"
+                })
+                if not existing:
+                    coverage_id = f"cov_{h_id}_{date_str}_caregiver_{i}_{uuid.uuid4().hex[:8]}"
+                    await db.coverage.insert_one({
+                        "coverage_id": coverage_id,
+                        "house_id": h_id,
+                        "date": date_str,
+                        "coverage_type": "caregiver_24h",
+                        "assigned_staff_id": None,
+                        "assigned_staff_name": None,
+                        "status": "incomplete"
+                    })
+                    entries_created += 1
+            
+            # Create assistant entry if required
+            if assistant_required:
+                existing = await db.coverage.find_one({
+                    "house_id": h_id,
+                    "date": date_str,
+                    "coverage_type": "assistant_8h"
+                })
+                if not existing:
+                    coverage_id = f"cov_{h_id}_{date_str}_assistant_{uuid.uuid4().hex[:8]}"
+                    await db.coverage.insert_one({
+                        "coverage_id": coverage_id,
+                        "house_id": h_id,
+                        "date": date_str,
+                        "coverage_type": "assistant_8h",
+                        "assigned_staff_id": None,
+                        "assigned_staff_name": None,
+                        "status": "incomplete"
+                    })
+                    entries_created += 1
+    
+    return {
+        "year": year,
+        "month": month,
+        "houses_processed": len(houses),
+        "entries_created": entries_created,
+        "message": f"Se generaron {entries_created} entradas de cobertura para {len(houses)} casa(s)"
+    }
+
 @api_router.post("/coverage", response_model=CoverageEntry)
 async def create_coverage(coverage: CoverageEntryCreate):
     import uuid
