@@ -606,24 +606,31 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     # Get all staff
     all_staff = await db.staff.find({}, {"_id": 0}).to_list(100)
     
+    # Helper function to get priority with default value (handles None)
+    def get_priority(staff):
+        priority = staff.get("priority")
+        if priority is None:
+            return 50  # Default priority
+        return priority
+    
     # Separate and sort by priority - support both old "caregiver" and new "tia" types
     tias = sorted(
-        [s for s in all_staff if s["staff_type"] in ["caregiver", "tia"]],
-        key=lambda x: x.get("priority", 50)
+        [s for s in all_staff if s.get("staff_type") in ["caregiver", "tia"]],
+        key=get_priority
     )
     assistants = sorted(
-        [s for s in all_staff if s["staff_type"] == "assistant"],
-        key=lambda x: x.get("priority", 50)
+        [s for s in all_staff if s.get("staff_type") == "assistant"],
+        key=get_priority
     )
     
     # Further categorize tias by subtype for hierarchy (support old and new subtypes)
-    encargadas = [s for s in tias if s["subtype"] == "encargada"]
-    rotativas = [s for s in tias if s["subtype"] in ["rotativa_mensual", "rotativa"]]
-    jornaleras_tia = [s for s in tias if s["subtype"] == "jornalera"]
-    educadoras = [s for s in tias if s["subtype"] == "educadora"]
+    encargadas = [s for s in tias if s.get("subtype") == "encargada"]
+    rotativas = [s for s in tias if s.get("subtype") in ["rotativa_mensual", "rotativa"]]
+    jornaleras_tia = [s for s in tias if s.get("subtype") == "jornalera"]
+    educadoras = [s for s in tias if s.get("subtype") == "educadora"]
     
-    mensuales = [s for s in assistants if s["subtype"] == "mensual"]
-    jornaleras_asist = [s for s in assistants if s["subtype"] == "jornalera"]
+    mensuales = [s for s in assistants if s.get("subtype") == "mensual"]
+    jornaleras_asist = [s for s in assistants if s.get("subtype") == "jornalera"]
     
     assignments_made = 0
     assignments_details = []
@@ -631,8 +638,8 @@ async def auto_assign_coverage(house_id: str, year: int, month: int):
     
     # Sort entries by date to process in order
     incomplete_entries = sorted(
-        [e for e in coverage_entries if e["status"] != "complete"],
-        key=lambda x: x["date"]
+        [e for e in coverage_entries if e.get("status") != "complete"],
+        key=lambda x: x.get("date", "")
     )
     
     for entry in incomplete_entries:
