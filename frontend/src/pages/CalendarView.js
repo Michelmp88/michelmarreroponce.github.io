@@ -245,11 +245,6 @@ export default function CalendarView() {
   };
 
   const daysInMonth = getDaysInMonth(year, month);
-      setResetting(false);
-    }
-  };
-
-  const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const filteredHouses = filterHouse === 'all' 
