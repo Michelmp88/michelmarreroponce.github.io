@@ -23,11 +23,13 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 class StaffType(str, Enum):
-    TIA = "tia"  # Changed from caregiver to tia
+    TIA = "tia"
+    CAREGIVER = "caregiver"  # Keep for backwards compatibility with existing data
     ASSISTANT = "assistant"
 
 class TiaSubtype(str, Enum):
     ROTATIVA = "rotativa"
+    ROTATIVA_MENSUAL = "rotativa_mensual"  # Keep for backwards compatibility
     ENCARGADA = "encargada"
     JORNALERA = "jornalera"
     EDUCADORA = "educadora"
