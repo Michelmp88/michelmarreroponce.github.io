@@ -349,12 +349,10 @@ async def bulk_assign_coverage(house_id: str, request: BulkAssignRequest):
 @api_router.post("/coverage/randomize-position/{house_id}/{year}/{month}/{position}")
 async def randomize_position_coverage(house_id: str, year: int, month: int, position: str):
     """
-    Randomize assignments for a specific position (caregiver_24h or assistant_8h) in a house.
-    Keeps the other position unchanged.
+    Assign ONE staff member to ALL days of the month for a specific position.
+    Selects the most compatible person based on preferences and priority.
     Position can be: 'caregiver' or 'assistant'
     """
-    import random
-    
     house = await db.houses.find_one({"house_id": house_id}, {"_id": 0})
     if not house:
         raise HTTPException(status_code=404, detail="House not found")
@@ -385,6 +383,14 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
         {"_id": 0}
     ).to_list(1000)
     
+    if not entries:
+        return {
+            "house_id": house_id,
+            "position": position,
+            "message": "No hay entradas de cobertura para este mes",
+            "assignments_made": 0
+        }
+    
     # Get available staff for this position
     all_staff = await db.staff.find(staff_filter, {"_id": 0}).to_list(100)
     
@@ -396,61 +402,92 @@ async def randomize_position_coverage(house_id: str, year: int, month: int, posi
             "assignments_made": 0
         }
     
-    assignments_made = 0
+    # Score each staff member for compatibility with this house
+    staff_scores = []
+    for staff in all_staff:
+        score = 100  # Base score
+        
+        # Check if excluded from this house
+        excluded = staff.get("excluded_houses") or []
+        if house_id in excluded:
+            continue  # Skip excluded staff
+        
+        # Bonus for preferred houses
+        if staff.get("preferred_house_1") == house_id:
+            score += 60
+        elif staff.get("preferred_house_2") == house_id:
+            score += 40
+        elif staff.get("preferred_house_3") == house_id:
+            score += 20
+        
+        # Bonus for fixed house assignment
+        if staff.get("fixed_house_id") == house_id:
+            score += 50
+        
+        # Priority bonus (lower priority number = higher score)
+        priority = staff.get("priority")
+        if priority is not None:
+            score += (100 - priority)
+        
+        staff_scores.append((staff, score))
     
+    if not staff_scores:
+        return {
+            "house_id": house_id,
+            "position": position,
+            "message": "No hay personal compatible con esta casa",
+            "assignments_made": 0
+        }
+    
+    # Sort by score (highest first) and select the best one
+    staff_scores.sort(key=lambda x: x[1], reverse=True)
+    selected_staff = staff_scores[0][0]
+    
+    # Assign this ONE person to ALL days
+    assignments_made = 0
     for entry in entries:
         check_date = entry["date"]
         
-        # Get staff not on absence and not already assigned elsewhere
-        available_staff = []
-        for staff in all_staff:
-            # Check absence
-            absence = await db.absences.find_one({
-                "staff_id": staff["staff_id"],
-                "start_date": {"$lte": check_date},
-                "end_date": {"$gte": check_date}
-            })
-            if absence:
-                continue
-            
-            # Check if excluded from this house
-            excluded = staff.get("excluded_houses", []) or []
-            if house_id in excluded:
-                continue
-            
-            # Check if already assigned to another house on this day
-            other_assignment = await db.coverage.find_one({
-                "assigned_staff_id": staff["staff_id"],
-                "date": check_date,
-                "house_id": {"$ne": house_id},
-                "status": "complete"
-            })
-            if other_assignment:
-                continue
-            
-            available_staff.append(staff)
+        # Check if staff has absence on this day
+        absence = await db.absences.find_one({
+            "staff_id": selected_staff["staff_id"],
+            "start_date": {"$lte": check_date},
+            "end_date": {"$gte": check_date}
+        })
         
-        if available_staff:
-            # Random selection
-            selected = random.choice(available_staff)
-            await db.coverage.update_one(
-                {"coverage_id": entry["coverage_id"]},
-                {
-                    "$set": {
-                        "assigned_staff_id": selected["staff_id"],
-                        "assigned_staff_name": selected["name"],
-                        "status": "complete"
-                    }
+        if absence:
+            continue  # Skip days with absence
+        
+        # Check if already assigned to another house on this day
+        other_assignment = await db.coverage.find_one({
+            "assigned_staff_id": selected_staff["staff_id"],
+            "date": check_date,
+            "house_id": {"$ne": house_id},
+            "status": "complete"
+        })
+        
+        if other_assignment:
+            continue  # Skip days where assigned elsewhere
+        
+        await db.coverage.update_one(
+            {"coverage_id": entry["coverage_id"]},
+            {
+                "$set": {
+                    "assigned_staff_id": selected_staff["staff_id"],
+                    "assigned_staff_name": selected_staff["name"],
+                    "status": "complete"
                 }
-            )
-            assignments_made += 1
+            }
+        )
+        assignments_made += 1
     
     return {
         "house_id": house_id,
         "position": position,
         "total_entries": len(entries),
         "assignments_made": assignments_made,
-        "message": f"Se regeneraron aleatoriamente {assignments_made} asignaciones de {position}"
+        "assigned_staff": selected_staff["name"],
+        "message": f"Se asignó a {selected_staff['name']} en {assignments_made} días"
     }
 
 @api_router.get("/coverage/gaps/{year}/{month}")
