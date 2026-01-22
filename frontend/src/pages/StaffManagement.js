@@ -124,7 +124,7 @@ export default function StaffManagement() {
     setEditingStaff(member);
     setFormData({
       name: member.name,
-      staff_type: 'tia',
+      staff_type: member.staff_type || 'tia',
       subtype: member.subtype === 'rotativa_mensual' ? 'rotativa' : member.subtype,
       work_days: member.work_days || '',
       rest_days: member.rest_days || '',
