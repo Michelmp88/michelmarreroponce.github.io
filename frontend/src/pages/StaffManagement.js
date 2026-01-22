@@ -39,18 +39,18 @@ export default function StaffManagement() {
   const [formData, setFormData] = useState(initialFormData);
 
   // Auto-calculate weekly and monthly hours
-  // work_days = días de trabajo por mes (ej: 20)
-  // rest_days = días de descanso por mes (ej: 10)
-  // hours_per_shift = horas por turno (ej: 24)
+  // work_days = días de trabajo por SEMANA (ej: 5)
+  // rest_days = días de descanso por SEMANA (ej: 2)
+  // hours_per_shift = horas por turno (ej: 8)
   const calculatedHours = useMemo(() => {
-    const workDays = parseInt(formData.work_days) || 0;
+    const workDaysPerWeek = parseInt(formData.work_days) || 0;
     const hoursPerShift = parseInt(formData.hours_per_shift) || 0;
     
-    if (workDays > 0 && hoursPerShift > 0) {
-      // Horas mensuales = días de trabajo × horas por turno
-      const monthlyHours = workDays * hoursPerShift;
-      // Horas semanales aproximadas (mes tiene ~4.3 semanas)
-      const weeklyHours = Math.round(monthlyHours / 4.3);
+    if (workDaysPerWeek > 0 && hoursPerShift > 0) {
+      // Horas semanales = días de trabajo por semana × horas por turno
+      const weeklyHours = workDaysPerWeek * hoursPerShift;
+      // Horas mensuales = horas semanales × 4.3 semanas por mes
+      const monthlyHours = Math.round(weeklyHours * 4.3);
       return { weeklyHours, monthlyHours };
     }
     return { weeklyHours: 0, monthlyHours: 0 };
