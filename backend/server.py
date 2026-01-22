@@ -555,7 +555,9 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
             score -= 40  # Penalize assigning to different house
     
     # Check 8: Priority (lower priority number = higher priority = higher score)
-    priority = staff.get("priority", 50)
+    priority = staff.get("priority")
+    if priority is None:
+        priority = 50
     score += (100 - priority)  # Convert priority to score bonus
     
     # Check 9: Work/rest day pattern (simplified check)
