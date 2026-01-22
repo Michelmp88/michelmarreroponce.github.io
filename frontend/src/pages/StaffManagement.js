@@ -419,17 +419,46 @@ export default function StaffManagement() {
                 />
               </div>
 
-              <div className="col-span-2">
+              <div>
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Tipo *</label>
+                <Select 
+                  value={formData.staff_type} 
+                  onValueChange={(value) => setFormData({
+                    ...formData, 
+                    staff_type: value,
+                    subtype: value === 'assistant' ? 'mensual' : 'rotativa'
+                  })}
+                >
+                  <SelectTrigger data-testid="type-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="tia">Tía / Cuidadora</SelectItem>
+                    <SelectItem value="assistant">Asistente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
                 <label className="text-sm font-semibold text-slate-700 mb-2 block">Subtipo *</label>
                 <Select value={formData.subtype} onValueChange={(value) => setFormData({...formData, subtype: value})}>
                   <SelectTrigger data-testid="subtype-select">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="encargada">Encargada</SelectItem>
-                    <SelectItem value="jornalera">Jornalera</SelectItem>
-                    <SelectItem value="educadora">Educadora</SelectItem>
-                    <SelectItem value="rotativa">Rotativa</SelectItem>
+                    {formData.staff_type === 'assistant' ? (
+                      <>
+                        <SelectItem value="mensual">Mensual</SelectItem>
+                        <SelectItem value="jornalera">Jornalera</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="encargada">Encargada</SelectItem>
+                        <SelectItem value="jornalera">Jornalera</SelectItem>
+                        <SelectItem value="educadora">Educadora</SelectItem>
+                        <SelectItem value="rotativa">Rotativa</SelectItem>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
