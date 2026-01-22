@@ -68,16 +68,26 @@ export default function AbsencesView() {
     }
   };
 
-  const handleDeleteAbsence = async (absenceId) => {
-    if (!window.confirm('¿Estás seguro de eliminar esta ausencia?')) return;
+  const handleDeleteAbsence = (absence) => {
+    setAbsenceToDelete(absence);
+    setShowDeleteConfirm(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!absenceToDelete) return;
+    
+    setDeleting(true);
     try {
-      await axios.delete(`${API}/absences/${absenceId}`);
-      toast.success('Ausencia eliminada');
+      await axios.delete(`${API}/absences/${absenceToDelete.absence_id}`);
+      toast.success(`Ausencia de ${absenceToDelete.staff_name} eliminada`);
+      setShowDeleteConfirm(false);
+      setAbsenceToDelete(null);
       fetchData();
     } catch (error) {
       console.error('Error deleting absence:', error);
       toast.error('Error al eliminar ausencia');
+    } finally {
+      setDeleting(false);
     }
   };
 
