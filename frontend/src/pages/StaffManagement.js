@@ -584,6 +584,51 @@ export default function StaffManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent className="max-w-md" data-testid="delete-confirm-modal">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <AlertTriangle className="w-6 h-6 text-rose-500" />
+              Confirmar Eliminación
+            </DialogTitle>
+            <DialogDescription className="text-slate-600">
+              ¿Estás seguro de que quieres eliminar a <strong>{staffToDelete?.name}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg">
+              <p className="text-sm text-rose-800">
+                <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer. 
+                Se eliminarán todos los registros asociados a esta persona.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowDeleteConfirm(false);
+                setStaffToDelete(null);
+              }}
+              variant="outline"
+              disabled={deleting}
+              data-testid="cancel-delete-btn"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className="bg-rose-600 hover:bg-rose-700"
+              data-testid="confirm-delete-btn"
+            >
+              {deleting ? 'Eliminando...' : 'Eliminar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
