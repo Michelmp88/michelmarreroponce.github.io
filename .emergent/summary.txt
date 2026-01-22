@@ -2,105 +2,119 @@
 Build a web application for internal use to manage monthly 24/7 staff coverage for child-care houses. This is a rule-based coverage system with strict priorities and constraints.
 
 **PRODUCT REQUIREMENTS:**
--   **Core Functionality:** A monthly calendar view to manage staff assignments for different houses. The system must distinguish between caregivers (24h shifts) and assistants (8h shifts) and handle houses with different staffing needs (1 or 2 caregivers). It must clearly show complete vs. incomplete coverage.
--   **Staff & House Rules:** The system must enforce a strict hierarchy for assigning staff (e.g., House Manager -> Rotating -> Day-based). Specific houses have fixed staff and unique rules (e.g., House 9 always needs 2 caregivers).
+-   **Core Functionality:** A monthly calendar view to manage staff assignments for different houses. The system must distinguish between staff types and handle houses with different staffing needs. It must clearly show complete vs. incomplete coverage.
+-   **Staff & House Rules:** The system must enforce a strict hierarchy for assigning staff. Specific houses have fixed staff and unique rules.
 -   **UI:** A single monthly calendar view is the primary interface. It needs filters by house, staff, and status. A dedicated Coverage Gaps view is required.
 -   **Data Model:** Must include , , and .
 -   **User-Added Features:**
     -   Export and print the monthly schedule (PDF and Excel).
     -   View historical coverage data.
     -   An automatic assignment feature that respects all rules and priorities, with an option for manual override.
-    -   Absence management (sickness, vacation, etc.) to block staff availability.
-    -   Full CRUD (Create, Read, Update, Delete) for staff and houses.
+    -   Absence management (sickness, vacation, etc.) to block staff availability, including an indefinite return date.
+    -   Full CRUD for staff and houses.
     -   Ability to edit staff work hour rules (max daily/monthly hours, rest days).
-    -   The auto-assignment logic must be intelligent: prevent double-booking staff on the same day, respect priorities, and allow hour distribution across multiple houses if a staff member has available hours.
-    -   The app should consider preferences written in the notes section of a staff member's profile during auto-assignment.
+    -   The auto-assignment logic must be intelligent: prevent double-booking, respect priorities, and consider staff preferences (preferred/excluded houses, notes).
+    -   The staff type Cuidadora should be renamed to Tía, with subtypes: Rotativa, Encargada, Jornalera, Educadora. The assistant type should be removed.
+    -   Automate the calculation of monthly/weekly hours based on work days and shift duration.
+    -   Add a feature to regenerate a specific position (e.g., assistant) for an entire month with a single, randomly chosen staff member.
+    -   Add a feature for mass assignment, allowing a user to assign one person to multiple days at once.
+    -   Add a feature to generate the initial empty coverage slots for any given month if they don't exist.
 
-**User's preferred language**: Spanish. The user explicitly requested to be communicated with in Spanish (en español escribeme). The next agent MUST continue the conversation in Spanish.
+**User's preferred language**: Spanish. The user communicates exclusively in Spanish. The next agent MUST respond in Spanish only.
 
 **what currently exists?**
-A full-stack web application built with React and FastAPI. The application features:
--   A dashboard, a main calendar view, and dedicated pages for staff management, house management, absence tracking, hour tracking, and reports.
--   Full CRUD functionality for managing staff and houses, including their specific rules and properties.
--   A basic, non-secure role-based access system (Administrator/Operator) with a login screen. Admins have full CRUD access, while Operators have read-only access.
--   Functionality to export the calendar to PDF and Excel.
--   An Auto assignment feature is present but is logically flawed, which is the current focus of development.
+A full-stack application with a React frontend and a FastAPI backend. The app provides a comprehensive interface for managing staff schedules across multiple houses.
+
+-   **Implemented Features**:
+    -   Dashboard, Calendar, Staff Management, House Management, and Absence views.
+    -   Full CRUD for staff and houses with detailed profiles, including work rules, preferences, and excluded houses.
+    -   An intelligent auto-assignment algorithm that prevents double-booking and respects priorities and preferences.
+    -   Features to reset/clear assignments by house or by month.
+    -   Features to randomly re-assign a position for a whole month and to perform mass assignments for a single person across multiple days.
+    -   A feature to generate empty coverage slots for a new month.
+    -   Absence management, including indefinite leave and the ability to delete absences to reinstate staff.
+    -   Export to PDF/Excel functionality.
+    -   A mocked login system based on role selection (Administrator/Operator).
 
 **Last working item**:
-The agent started to refactor the auto-assignment algorithm after the user reported a critical flaw: the system was assigning the same assistant to multiple houses on the same day. The goal is to make the algorithm smarter by preventing double-booking and considering staff priorities and preferences.
+The agent was addressing two issues reported by the user: 1) The randomize assistant feature always selected the same person (Nellina). 2) It was not possible to generate coverage for some houses like Casa Unión.
 
--   **Last item agent was working**: Adding priority fields to the backend data models to support a more intelligent auto-assignment logic. The agent modified the  and  Pydantic models in  to include  fields.
+-   **Last item agent was working**: Fixing the randomization logic and adding a feature to create coverage entries for months that don't have them.
+    -   **Randomization Fix**: The agent identified that all assistants had the same priority score (), causing the algorithm to always pick the first one. A fix was implemented in  to shuffle candidates in case of a score tie.
+    -   **Coverage Generation**: The agent found that Casa Unión had no coverage entries for January 2025. A new endpoint () and a corresponding Generar Cobertura button were added to  to allow the user to create these on demand.
 -   **Status**: IN PROGRESS
--   **Agent Testing Done**: N
--   **Which testing method agent to use?**: backend testing agent. After the backend logic is rewritten, the  endpoint must be thoroughly tested to ensure it respects availability, priorities, and hour limits.
+-   **Agent Testing Done**: N (Agent implemented the code but did not complete the verification cycle).
+-   **Which testing method agent to use?**: Both.
+    -   **Backend**: Use  to test the  endpoint multiple times to ensure the selected staff member varies. Test the new  endpoint.
+    -   **Frontend**: Use the screenshot tool to verify the new Generar Cobertura button appears when needed and that clicking it populates the calendar correctly. Also, test the Aleatorizar button multiple times.
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1**: The auto-assignment logic is fundamentally flawed. (P0)
+-   **Issue 1**: The randomize assistant feature is not truly random. (P0)
+-   **Issue 2**: Users cannot generate coverage for houses if the month's entries don't already exist. (P0)
 
 **Issues Detail:**
 -   **Issue 1:**
-    -   **Description**: The current auto-assignment algorithm () does not check if a staff member is already assigned to another house on the same day. This results in impossible schedules (e.g., Nellina being assigned to three houses simultaneously). It also fails to properly use staff/house priorities and hour limits.
-    -   **Attempted fixes**: The agent added  to the  and  models in . The actual algorithm rewrite has not started yet.
+    -   **Attempted fixes**: The  function in  was modified to shuffle the list of equally-scored candidates before selecting one.
     -   **Next debug checklist**:
-        1.  In , completely rewrite the auto-assignment function.
-        2.  The new logic must fetch all existing assignments for a specific day across ALL houses *before* making a new assignment.
-        3.  Implement a check to ensure a staff member is not assigned more than once on the same calendar day (unless their role and hours permit distribution).
-        4.  Incorporate the new  fields from the  and  models to guide the selection process.
-        5.  Add logic to parse the  field on the  model for keywords indicating preferences (e.g., prefers house X, no weekends).
-        6.  Track worked hours against  and  to stop assigning staff who have reached their limit.
-    -   **Why fix this issue and what will be achieved with the fix?**: This is the application's core feature. Fixing it will make the auto-assignment tool usable and reliable, which is a primary user requirement.
+        1.  Make multiple  calls to  for a house and confirm the  in the response is different across calls.
+        2.  On the frontend, navigate to the calendar, click the Aleatorizar button (purple shuffle icon) for a house multiple times, and observe if the assigned assistant changes.
+    -   **Why fix this issue and what will be achieved with the fix?**: The user wants variety in assignments when using the randomize feature. This fix makes the feature work as intended.
     -   **Status**: IN PROGRESS
     -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Backend primarily. The frontend should be checked to ensure the correctly assigned data is displayed.
+    -   **Should Test frontend/backend/both after fix?** Both
+    -   **Blocked on other issue**: None
+-   **Issue 2:**
+    -   **Attempted fixes**: A new endpoint  was created in . A corresponding button Generar Cobertura was added to  which is conditionally rendered when no coverage data exists for the selected month/year.
+    -   **Next debug checklist**:
+        1.  In the UI, navigate to a future month (e.g., a month in 2027) where no coverage exists.
+        2.  Confirm that a message No hay datos de cobertura... appears along with the Generar Cobertura button.
+        3.  Click the button. Verify a success toast appears and the calendar grid populates with Sin asignar entries.
+        4.  After generation, confirm that the Auto, Aleatorizar, and other buttons work on the newly created slots.
+    -   **Why fix this issue and what will be achieved with the fix?**: This makes the app self-sufficient by allowing users to initialize any month for scheduling without needing backend intervention.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Both
     -   **Blocked on other issue**: None
 
 **In progress Task List**:
--   **Task 1**: Implement the intelligent auto-assignment algorithm. (P0)
-
-**Task Detail:**
--   **Task 1:**
-    -   **Where to resume**: . The agent needs to rewrite the function handling the  endpoint, using the newly added  fields and implementing the logic described in Issue 1 above.
-    -   **What will be achieved with this?**: A functional, correct, and reliable auto-assignment feature that adheres to all business rules.
-    -   **Status**: IN PROGRESS
-    -   **Should Test frontend/backend/both after fix?**: Backend
-    -   **Blocked on something**: None
+None. The current work is focused on fixing the issues above.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks**:
-    -   **Task**: Implement automatic notifications. (P1)
-        -   **Description**: The user approved the agent's suggestion to send automatic notifications (e.g., email/SMS) to staff when they are assigned to a new shift.
-        -   **Files**: This will require new backend logic in  and likely a third-party integration (e.g., SendGrid, Twilio).
-    -   **Task**: Verify and fix the hour-editing functionality. (P1)
-        -   **Description**: The user reported that generating coverage doesn't work and they cannot edit hours in the Control de horas view. The agent worked on this, but the user's latest feedback implies issues persist. The functionality needs to be re-verified end-to-end.
-        -   **Files**: , , .
+    -   **Task**: Full user verification of all recently added features. (P0)
+        -   **Description**: The last few interactions involved a large number of new features (mass assignment, randomization, new staff fields, absence management changes). A full verification pass is needed to ensure everything works as the user expects before concluding the project.
 -   **Future Tasks**:
     -   **Task**: Implement automatic backup and data restoration. (P2)
-        -   **Description**: The user approved the agent's suggestion for a system to automatically back up and restore historical data.
+        -   **Description**: A previously approved suggestion for a system to automatically back up and restore historical data.
 
 **Completed work in this session**
--   **Application Scaffolding**: Created a full-stack FastAPI (backend) and React (frontend) application.
--   **Core UI Views**: Implemented Dashboard, Calendar, Staff Management, House Management, Absence Tracking, and a Reports/Metrics page.
--   **CRUD Operations**: Enabled full Create, Read, Update, and Delete functionality for Staff and Houses.
--   **Scheduling Features**:
-    -   Implemented manual and a (currently flawed) automatic assignment system.
-    -   Added a calendar with month/year selection.
-    -   Enabled export of schedules to PDF and Excel.
--   **HR Features**:
-    -   Created views for tracking staff absences and worked hours.
-    -   Added fields for max daily/monthly work hours for staff.
--   **Access Control**: Implemented a basic login screen with Admin/Operator roles to control view/edit permissions.
--   **Bug Fixes**: Resolved multiple UI bugs, including form submission errors, component rendering issues, and broken layouts.
+-   **Intelligent Auto-Assignment**: Rewrote the core algorithm to prevent double-booking, use staff priorities, and respect availability. It passed all 26 backend tests.
+-   **Assignment Management**:
+    -   Added functionality to reset assignments for a single house or an entire month.
+    -   Added a feature to randomly assign one assistant to a house for the whole month.
+    -   Implemented a mass-assignment modal to assign a staff member to multiple selected days at once.
+-   **Staff Management Overhaul**:
+    -   Changed staff type Cuidadora to Tía and removed the assistant type, making all staff Tías with different subtypes (Rotativa, Encargada, Jornalera, Educadora).
+    -   Added new staff profile fields: preferred houses, excluded houses, and specific work times with a clear button.
+    -   Automated the calculation of weekly/monthly hours based on work days and shift duration, fixing a previous miscalculation.
+    -   Improved the delete confirmation for staff using a dialog instead of .
+-   **Absence Management**:
+    -   Added an option for an indefinite return date when recording an absence.
+    -   Improved the delete confirmation for absences with a clear dialog explaining the action.
+-   **Bug Fixes**:
+    -   Fixed  caused by  during staff sorting.
+    -   Fixed a UI bug in the staff edit modal where buttons were not visible without scrolling.
+    -   Cleaned legacy data that had double-booked staff members from the old algorithm.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
 -   **Backend**: FastAPI, Pydantic for data modeling, Motor (async driver for MongoDB).
--   **Frontend**: React,  for API calls, TailwindCSS for styling,  for icons.
+-   **Frontend**: React,  for API calls, TailwindCSS, , Shadcn UI components.
 -   **Database**: MongoDB.
 -   **Architecture**: REST API backend serving a Single Page Application (SPA) frontend.
--   **State Management**: Simple React state (, ) and Context API for global state (auth role).
 
 **key DB schema**
 -   **houses**: 
@@ -109,53 +123,61 @@ The agent started to refactor the auto-assignment algorithm after the user repor
 -   **absences**: 
 
 **All files of reference**
--   : Contains all API endpoints and the critical auto-assignment logic that needs to be fixed.
--   : The main UI where the user interacts with the schedule and triggers the auto-assignment.
--   : UI for staff CRUD; was the source of several bugs that were fixed.
--   : UI for viewing and editing staff worked hours.
--   : UI for house CRUD.
+-   : Contains all API endpoints, including the recently modified  and the new  endpoints.
+-   : The main UI. Was updated to include the Generar Cobertura button and its conditional logic.
+-   : UI for staff CRUD. Was heavily refactored with new fields and logic.
+-   : UI for absence tracking. Was updated to support indefinite dates and a confirmation dialog for deletion.
+
+**Areas that need refactoring**:
+-    has grown very large (over 800 lines). It should be broken down into multiple files using FastAPI's  for better organization (e.g., , ).
 
 **key api endpoints**
--   : The critical endpoint for automatic scheduling that is currently being fixed.
--   : Endpoint for manual staff assignment.
--   : Fetches all coverage entries for a given month.
+-   : The main intelligent assignment endpoint.
+-   : Re-assigns a single position randomly for a house for the entire month. **(Recently Modified)**
+-   : Assigns a single staff member to multiple days.
+-   : Creates empty coverage entries for a given month. **(New)**
+-   : Clears assignments for a house.
+-   : Clears assignments for a full month.
 -   : Endpoints for Staff CRUD.
--   : Endpoints for House CRUD.
--   : Fetches aggregated work hours for a staff member.
+-   : Deletes an absence record.
 
 **Critical Info for New Agent**
--   The highest priority is to fix the auto-assignment logic. The user is technically savvy and provides clear, direct feedback. The current implementation is incorrect and does not meet the core business requirement.
--   The authentication system is a mock. It uses  to store a selected role ('administrador' or 'operador') without any real user accounts or passwords. This is sufficient for the internal tool's purpose.
--   The user wants the system to be intelligent. When implementing the auto-assignment fix, focus on making it robust by checking all constraints: availability, hour limits, priorities, and preferences from notes.
+-   The immediate priority is to verify the two fixes implemented in the last turn: the randomization logic and the on-demand coverage generation. The user is waiting for confirmation that these are working correctly.
+-   Many staff members in the database have . The code now handles this to avoid crashes, but for the priority system to be effective, the user may need to be prompted to update these values via the UI.
+-   The user has declared that once these fixes are verified, they will consider the application complete and will need guidance on deployment. The  was already used to provide a preliminary answer on this.
 
 **documents and test reports created in this job**
 -   
 -   
+-   
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User (Latest)**: Reports the auto-assignment logic is flawed because it assigns one assistant to multiple houses on the same day. Suggests adding intelligence: check daily availability, use priorities, distribute hours, and parse preferences from notes. (IN PROGRESS)
-2.  **User**: Reports auto-assignment shows 0 assigned and provides a screenshot of a staff editing error. (FIXED)
-3.  **User**: Reports coverage generation and hour editing features are not working. (PARTIALLY ADDRESSED, PENDING VERIFICATION)
-4.  **User**: Provides a screenshot of a blank screen caused by a syntax error. (FIXED)
-5.  **User**: Approves agent's suggestions for efficiency metrics and automatic notifications. Requests that staff absences block them from being assigned. Asks for CRUD for staff and the ability to select the month/year on the calendar. (IMPLEMENTED/PENDING)
-6.  **User**: Approves agent's suggestions for export, auto-assignment, and a generate coverage per house button. Asks for manual overrides and a section for staff leave/sickness. (IMPLEMENTED)
-7.  **User**: Reports an error when trying to edit houses. (FIXED)
-8.  **User**: Approves agent's suggestions and asks to implement CRUD for houses and the ability to modify rules for houses/people to influence auto-generation. (IMPLEMENTED)
-9.  **User**: Provides a screenshot of a blank screen after the agent implemented a login page. (FIXED)
-10. **User**: Acknowledges user clarifications, asking for data export (PDF/Excel), historical data view, auto-assignment with manual override, and no authentication. (ACKNOWLEDGED)
+1.  **User (Latest)**: Reports that randomizing assistants always picks Nellina and that they cannot generate coverage for certain houses like Casa Unión. (IN PROGRESS)
+2.  **User**: Reports an issue with the monthly hour calculation for Gaby Duarte (showing 514h). Asks for the randomize feature to assign the *same* person for the whole month. Asks for an indefinite date option in absences and a button to clear specific work hours in the staff profile. (FIXED)
+3.  **User**: Confirms that all staff should be Tía and that the manual hours-per-shift input is correct for automatic calculation. (ACKNOWLEDGED/IMPLEMENTED)
+4.  **User (and Screenshot)**: Provides a long list of new features and changes: ability to delete absences, randomize only assistants, mass-assign a person to multiple days, remove assistant type, simplify hour calculation, add preferred/excluded houses, and add specific time selectors. (IMPLEMENTED)
+5.  **User**: Says the app is almost finished but needs the final requested adjustments before deployment, and asks how to deploy it and if the Emergent subscription is required. (PARTIALLY ADDRESSED)
+6.  **User**: Reports the Save button is missing when editing staff. (FIXED, it was a scrolling issue)
+7.  **User**: Asks for a button to auto-fill the entire month with a single click. (SUGGESTED BY AGENT, NOT ACTIONED)
+8.  **User**: Confirms the agent should proceed with cleaning legacy data and implementing the reset functionality. (IMPLEMENTED)
+9.  **User**: Rejects the idea of automatic notifications for staff. (ACKNOWLEDGED)
+10. **User**: Acknowledges agreement with the agent's plan. (ACKNOWLEDGED)
 
 **Project Health Check:**
--   **Broken**: The core auto-assignment feature is logically broken and does not meet user requirements, making it unusable.
--   **Mocked**: The authentication system is a simple role-selector with no real security, which is by design for this internal tool.
+-   **Broken**: The randomization logic was not working as the user intended, and the workflow for starting a new month's schedule was incomplete. Both are currently being fixed.
+-   **Mocked**: The authentication system remains a simple, non-secure role selector by design.
 
 **3rd Party Integrations**
 -   None.
 
 **Testing status**
--   **Testing agent used after significant changes**: YES (early in development)
+-   **Testing agent used after significant changes**: YES. The last full run () executed 26 backend tests and passed all of them, covering the core logic before the latest user feedback.
 -   **Troubleshoot agent used after agent stuck in loop**: NO
--   **Test files created**: []
--   **Known regressions**: The auto-assignment feature, while technically working (i.e., the endpoint responds), produces incorrect data, which is a regression from a usable state.
+-   **Test files created**: [, , ]
+-   **Known regressions**: None.
 
 **Credentials to test flow:**
--   On the login page, enter any username and select a role from the dropdown ('administrador' for full access). No password is required.</analysis>
+-   On the login page, enter any username and select 'administrador' from the role dropdown for full access. No password is required.
+
+**What agent forgot to execute**
+-   The agent was in the middle of implementing fixes for the user's latest request. The next logical step is to perform a full verification of these new fixes (randomization and coverage generation) via both backend and frontend testing, and then present the results to the user for final approval.</analysis>
