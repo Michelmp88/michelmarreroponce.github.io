@@ -301,6 +301,68 @@ export default function HousesManagement() {
               </Select>
             </div>
 
+            {/* Shifts Section */}
+            <div className="col-span-2 border-t pt-4">
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                Turnos de la Casa
+              </label>
+              <p className="text-xs text-slate-500 mb-3">
+                Define los turnos específicos. Si no se definen turnos, se usará cobertura de 24h.
+              </p>
+              
+              {/* Current Shifts */}
+              {formData.shifts.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {formData.shifts.map((shift, idx) => (
+                    <div key={idx} className="flex items-center gap-1 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">
+                      <span>{shift}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeShift(shift)}
+                        className="ml-1 hover:text-rose-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Add New Shift */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="time"
+                  value={newShiftStart}
+                  onChange={(e) => setNewShiftStart(e.target.value)}
+                  className="px-3 py-2 border border-slate-300 rounded-md"
+                  placeholder="Inicio"
+                />
+                <span className="text-slate-500">hasta</span>
+                <input
+                  type="time"
+                  value={newShiftEnd}
+                  onChange={(e) => setNewShiftEnd(e.target.value)}
+                  className="px-3 py-2 border border-slate-300 rounded-md"
+                  placeholder="Fin"
+                />
+                <Button
+                  type="button"
+                  onClick={addShift}
+                  disabled={!newShiftStart || !newShiftEnd}
+                  variant="outline"
+                  className="border-indigo-300 text-indigo-600 hover:bg-indigo-50"
+                >
+                  <Plus className="w-4 h-4 mr-1" /> Agregar Turno
+                </Button>
+              </div>
+              
+              {formData.shifts.length === 0 && (
+                <p className="text-xs text-amber-600 mt-2">
+                  Sin turnos definidos = Se usará cobertura tradicional (24h por cuidadora)
+                </p>
+              )}
+            </div>
+
             <div className="col-span-2">
               <label className="text-sm font-semibold text-slate-700 mb-2 block">Notas / Reglas Especiales</label>
               <textarea
