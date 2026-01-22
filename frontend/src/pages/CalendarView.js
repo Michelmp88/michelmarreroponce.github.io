@@ -395,19 +395,44 @@ export default function CalendarView() {
           {filteredHouses.map(house => (
             <React.Fragment key={house.house_id}>
               <div className="house-label flex flex-col items-center justify-center font-bold text-slate-900 p-4 border border-slate-200 rounded-lg space-y-2">
-                <span>{house.name}</span>
-                <div className="flex gap-1">
+                <span className="text-sm">{house.name}</span>
+                <div className="flex flex-wrap gap-1 justify-center">
                   <Button
                     onClick={() => {
                       setSelectedHouse(house.house_id);
                       setShowAutoAssignModal(true);
                     }}
                     size="sm"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-xs"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-xs px-2"
                     data-testid={`auto-assign-${house.house_id}`}
+                    title="Auto-asignar"
                   >
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Auto
+                    <Sparkles className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedHouse(house.house_id);
+                      setShowRandomizeModal(true);
+                    }}
+                    size="sm"
+                    className="bg-purple-600 hover:bg-purple-700 text-xs px-2"
+                    data-testid={`randomize-${house.house_id}`}
+                    title="Aleatorizar posición"
+                  >
+                    <Shuffle className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedHouse(house.house_id);
+                      setBulkAssignData({ staff_id: '', coverage_type: 'caregiver_24h', selectedDates: [] });
+                      setShowBulkAssignModal(true);
+                    }}
+                    size="sm"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-xs px-2"
+                    data-testid={`bulk-assign-${house.house_id}`}
+                    title="Asignar múltiples días"
+                  >
+                    <Users className="w-3 h-3" />
                   </Button>
                   <Button
                     onClick={() => {
@@ -417,8 +442,9 @@ export default function CalendarView() {
                     }}
                     size="sm"
                     variant="outline"
-                    className="border-orange-300 text-orange-600 hover:bg-orange-50 text-xs"
+                    className="border-orange-300 text-orange-600 hover:bg-orange-50 text-xs px-2"
                     data-testid={`reset-house-${house.house_id}`}
+                    title="Limpiar"
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
