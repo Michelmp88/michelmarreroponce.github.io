@@ -359,6 +359,17 @@ export default function CalendarView() {
           </div>
 
           <div className="flex items-center gap-3">
+            {!hasCoverageData && (
+              <Button
+                onClick={handleGenerateCoverage}
+                disabled={generating}
+                data-testid="generate-coverage-btn"
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {generating ? 'Generando...' : 'Generar Cobertura del Mes'}
+              </Button>
+            )}
             <Button
               onClick={() => {
                 setResetType('month');
@@ -392,6 +403,23 @@ export default function CalendarView() {
           </div>
         </div>
       </div>
+
+      {!hasCoverageData && (
+        <Card className="p-8 border-amber-200 bg-amber-50 mb-6">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-amber-800 mb-2">No hay cobertura generada para este mes</h3>
+            <p className="text-amber-700 mb-4">Haz clic en "Generar Cobertura del Mes" para crear las entradas de cobertura para todas las casas.</p>
+            <Button
+              onClick={handleGenerateCoverage}
+              disabled={generating}
+              className="bg-amber-600 hover:bg-amber-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {generating ? 'Generando...' : 'Generar Cobertura'}
+            </Button>
+          </div>
+        </Card>
+      )}
 
       <Card className="p-6 overflow-x-auto border-slate-200">
         <div className="calendar-grid">
