@@ -808,7 +808,19 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     if house_id in excluded_houses:
         return (False, "casa excluida para este personal", 0)
     
-    # Check 4: Daily hour limit
+    # Check 4: Specific work days (days of the week)
+    specific_work_days = staff.get("specific_work_days") or []
+    if specific_work_days:
+        # Get day of week in Spanish
+        d = datetime.fromisoformat(check_date)
+        day_names_es = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+        day_name = day_names_es[d.weekday()]
+        # Normalize: remove accents for comparison
+        normalized_work_days = [day.lower().replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u") for day in specific_work_days]
+        if day_name not in normalized_work_days:
+            return (False, f"no trabaja los {day_name}", 0)
+    
+    # Check 5: Daily hour limit
     max_daily = staff.get("max_hours_daily")
     if max_daily is None:
         max_daily = 24 if staff.get("staff_type") in ["caregiver", "tia"] else 12
@@ -816,7 +828,7 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     if current_daily_hours + shift_hours > max_daily:
         return (False, f"excede limite diario ({current_daily_hours + shift_hours}/{max_daily}h)", 0)
     
-    # Check 5: Monthly hour limit
+    # Check 6: Monthly hour limit
     max_monthly = staff.get("max_hours_monthly") or 480
     current_monthly_hours = await get_staff_hours_for_month(staff_id, year, month)
     if current_monthly_hours + shift_hours > max_monthly:
@@ -825,17 +837,17 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     # Parse preferences from notes
     preferences = parse_staff_preferences(staff.get("notes", ""), house_id)
     
-    # Check 6: Weekend preference
+    # Check 7: Weekend preference
     if preferences["no_weekends"] and is_weekend(check_date):
         score -= 50  # Penalize but don't exclude
     
-    # Check 7: House preference from notes
+    # Check 8: House preference from notes
     if preferences["avoids_house"]:
         score -= 30  # Penalize avoiding this house
     if preferences["prefers_house"]:
         score += 30  # Bonus for preferring this house
     
-    # Check 8: New preferred houses (structured fields)
+    # Check 9: New preferred houses (structured fields)
     if staff.get("preferred_house_1") == house_id:
         score += 60  # Big bonus for first choice house
     elif staff.get("preferred_house_2") == house_id:
@@ -843,28 +855,29 @@ async def can_staff_work(staff: dict, check_date: str, house_id: str, year: int,
     elif staff.get("preferred_house_3") == house_id:
         score += 20  # Small bonus for third choice
     
-    # Check 9: Fixed house assignment
+    # Check 10: Fixed house assignment - THIS IS CRITICAL
     if staff.get("fixed_house_id"):
         if staff["fixed_house_id"] == house_id:
-            score += 50  # Big bonus for being assigned to this house
+            score += 200  # HUGE bonus for being assigned to this house
         else:
-            score -= 40  # Penalize assigning to different house
+            return (False, "tiene casa fija asignada diferente", 0)  # Cannot work at other houses
     
-    # Check 10: Priority (lower priority number = higher priority = higher score)
+    # Check 11: Priority (lower priority number = higher priority = higher score)
     priority = staff.get("priority")
     if priority is None:
         priority = 50
     score += (100 - priority)  # Convert priority to score bonus
     
-    # Check 11: Work/rest day pattern (simplified check)
-    work_days = staff.get("work_days")
-    rest_days = staff.get("rest_days")
-    if work_days and rest_days:
-        # This is a simplified check - could be more sophisticated
-        cycle = work_days + rest_days
-        day_of_month = int(check_date.split("-")[2])
-        if (day_of_month % cycle) >= work_days:
-            score -= 20  # Might be a rest day
+    # Check 12: Work/rest day pattern (simplified check) - only if no specific days set
+    if not specific_work_days:
+        work_days = staff.get("work_days")
+        rest_days = staff.get("rest_days")
+        if work_days and rest_days:
+            # This is a simplified check - could be more sophisticated
+            cycle = work_days + rest_days
+            day_of_month = int(check_date.split("-")[2])
+            if (day_of_month % cycle) >= work_days:
+                score -= 20  # Might be a rest day
     
     return (True, "disponible", score)
 
